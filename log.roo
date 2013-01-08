@@ -1,3 +1,14 @@
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:08:49
 project --topLevelPackage com.nanuvem.lom
 jpa setup --provider HIBERNATE --database H2_IN_MEMORY 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:14:10
+entity jpa --class ~.model.Entity --activeRecord false --testAutomatically 
+field string --fieldName name --notNull 
+field string --fieldName namespace 
+entity jpa --class ~.model.Property --activeRecord false --testAutomatically 
+field string --fieldName name --notNull 
+field string --fieldName configuration
+entity jpa --class ~.model.Instance --activeRecord false --testAutomatically 
+entity jpa --class ~.model.PropertyValue --activeRecord false --testAutomatically 
+// [failed] field string --fieldName value
+field string --fieldName _value
