@@ -12,3 +12,16 @@ entity jpa --class ~.model.Instance --activeRecord false --testAutomatically
 entity jpa --class ~.model.PropertyValue --activeRecord false --testAutomatically 
 // [failed] field string --fieldName value
 field string --fieldName _value
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:29:34
+focus --class ~.model.Entity
+field set --fieldName properties --type ~.model.Property --cardinality ONE_TO_MANY --mappedBy entity
+field set --fieldName instances --type ~.model.Instance --cardinality ONE_TO_MANY --mappedBy entity
+focus --class ~.model.Property
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE 
+focus --class ~.model.Instance
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE 
+// [failed] field set --fieldName values --type ~.model.PropertyValue --cardinality ONE_TO_MANY --mappedBy instance
+field set --fieldName _values --type ~.model.PropertyValue --cardinality ONE_TO_MANY --mappedBy instance
+focus --class ~.model.PropertyValue
+field reference --fieldName instance --type ~.model.Instance --cardinality MANY_TO_ONE 
+field reference --fieldName property --type ~.model.Property --cardinality MANY_TO_ONE 

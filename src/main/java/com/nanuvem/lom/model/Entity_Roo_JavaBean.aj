@@ -4,6 +4,9 @@
 package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.model.Instance;
+import com.nanuvem.lom.model.Property;
+import java.util.Set;
 
 privileged aspect Entity_Roo_JavaBean {
     
@@ -21,6 +24,22 @@ privileged aspect Entity_Roo_JavaBean {
     
     public void Entity.setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+    
+    public Set<Property> Entity.getProperties() {
+        return this.properties;
+    }
+    
+    public void Entity.setProperties(Set<Property> properties) {
+        this.properties = properties;
+    }
+    
+    public Set<Instance> Entity.getInstances() {
+        return this.instances;
+    }
+    
+    public void Entity.setInstances(Set<Instance> instances) {
+        this.instances = instances;
     }
     
 }
