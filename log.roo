@@ -47,3 +47,12 @@ enum constant --name _MAP
 enum constant --name _BINARY
 focus --class ~.model.Property
 field enum --fieldName type --type ~.model.PropertyType --enumType STRING --notNull 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:55:53
+ex
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 11:58:45
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:58:45
+// [failed] ex
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 11:58:45
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 12:02:46
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 12:04:53
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 12:07:09
