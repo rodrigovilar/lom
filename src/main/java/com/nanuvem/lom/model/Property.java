@@ -1,5 +1,7 @@
 package com.nanuvem.lom.model;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -18,4 +20,8 @@ public class Property {
 
     @ManyToOne
     private Entity entity;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PropertyType type;
 }

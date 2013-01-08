@@ -25,3 +25,25 @@ field set --fieldName _values --type ~.model.PropertyValue --cardinality ONE_TO_
 focus --class ~.model.PropertyValue
 field reference --fieldName instance --type ~.model.Instance --cardinality MANY_TO_ONE 
 field reference --fieldName property --type ~.model.Property --cardinality MANY_TO_ONE 
+enum type --class PropertyType
+enum constant --name TEXT
+enum constant --name LONG_TEXT
+enum constant --name PASSWORD
+enum constant --name STRING_OBJECT
+// [failed] enum constant --name BOOLEAN
+enum constant --name _BOOLEAN
+// [failed] enum constant --name INTEGER
+enum constant --name _INTEGER
+// [failed] enum constant --name REAL
+enum constant --name _REAL
+// [failed] enum constant --name DATE
+enum constant --name _DATE
+// [failed] enum constant --name TIME
+enum constant --name _TIME
+enum constant --name LIST
+// [failed] enum constant --name MAP
+enum constant --name _MAP
+// [failed] enum constant --name BINARY
+enum constant --name _BINARY
+focus --class ~.model.Property
+field enum --fieldName type --type ~.model.PropertyType --enumType STRING --notNull 

@@ -5,6 +5,7 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.Entity;
 import com.nanuvem.lom.model.Property;
+import com.nanuvem.lom.model.PropertyType;
 
 privileged aspect Property_Roo_JavaBean {
     
@@ -30,6 +31,14 @@ privileged aspect Property_Roo_JavaBean {
     
     public void Property.setEntity(Entity entity) {
         this.entity = entity;
+    }
+    
+    public PropertyType Property.getType() {
+        return this.type;
+    }
+    
+    public void Property.setType(PropertyType type) {
+        this.type = type;
     }
     
 }
