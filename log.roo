@@ -1,26 +1,23 @@
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:08:49
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-11 20:25:44
 project --topLevelPackage com.nanuvem.lom
 jpa setup --provider HIBERNATE --database H2_IN_MEMORY 
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:14:10
-entity jpa --class ~.model.Entity --activeRecord false --testAutomatically 
+entity jpa --class ~.model.Entity --activeRecord true --testAutomatically 
 field string --fieldName name --notNull 
-field string --fieldName namespace 
-entity jpa --class ~.model.Property --activeRecord false --testAutomatically 
+field string --fieldName namespace
+entity jpa --class ~.model.Property --activeRecord true --testAutomatically 
 field string --fieldName name --notNull 
 field string --fieldName configuration
-entity jpa --class ~.model.Instance --activeRecord false --testAutomatically 
-entity jpa --class ~.model.PropertyValue --activeRecord false --testAutomatically 
+entity jpa --class ~.model.Instance --activeRecord true --testAutomatically 
+entity jpa --class ~.model.PropertyValue --activeRecord true --testAutomatically 
 // [failed] field string --fieldName value
 field string --fieldName _value
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:29:34
 focus --class ~.model.Entity
 field set --fieldName properties --type ~.model.Property --cardinality ONE_TO_MANY --mappedBy entity
 field set --fieldName instances --type ~.model.Instance --cardinality ONE_TO_MANY --mappedBy entity
 focus --class ~.model.Property
-field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE 
-focus --class ~.model.Instance
-field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE 
-// [failed] field set --fieldName values --type ~.model.PropertyValue --cardinality ONE_TO_MANY --mappedBy instance
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE
+focus --class ~model.Instance
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE
 field set --fieldName _values --type ~.model.PropertyValue --cardinality ONE_TO_MANY --mappedBy instance
 focus --class ~.model.PropertyValue
 field reference --fieldName instance --type ~.model.Instance --cardinality MANY_TO_ONE 
@@ -30,49 +27,16 @@ enum constant --name TEXT
 enum constant --name LONG_TEXT
 enum constant --name PASSWORD
 enum constant --name STRING_OBJECT
-// [failed] enum constant --name BOOLEAN
 enum constant --name _BOOLEAN
-// [failed] enum constant --name INTEGER
 enum constant --name _INTEGER
-// [failed] enum constant --name REAL
 enum constant --name _REAL
-// [failed] enum constant --name DATE
 enum constant --name _DATE
-// [failed] enum constant --name TIME
 enum constant --name _TIME
 enum constant --name LIST
-// [failed] enum constant --name MAP
 enum constant --name _MAP
-// [failed] enum constant --name BINARY
 enum constant --name _BINARY
 focus --class ~.model.Property
 field enum --fieldName type --type ~.model.PropertyType --enumType STRING --notNull 
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:55:53
-ex
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 11:58:45
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 11:58:45
-// [failed] ex
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 11:58:45
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 12:02:46
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-08 12:04:53
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-08 12:07:09
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-17 20:42:01
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-17 21:04:05
 perform tests
 exit
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-17 21:05:57
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-17 21:06:53
-perform tests
-exit
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-17 21:07:55
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-17 21:08:20
-perform tests
-exit
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-17 21:09:17
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-01-28 22:17:35
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-01-28 22:31:15
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-02-04 10:05:33
-// [failed] finder list --class ~.model.Entity --filter name
-// [failed] finder list --class ~.dao.EntityDAO --filter name
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-02-07 22:51:28
-// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-02-08 00:25:51
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-11 20:55:03
