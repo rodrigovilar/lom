@@ -28,9 +28,9 @@ privileged aspect EntityServiceImpl_Roo_Service {
         entityDAO.delete(entity);
     }
     
-    public Entity EntityServiceImpl.findEntity(Long id) {
-        return entityDAO.findOne(id);
-    }
+    /*public void EntityServiceImpl.findEntity(Long id) {
+        entityDAO.findOne(id);
+    }*/
     
     public List<Entity> EntityServiceImpl.findAllEntitys() {
         return entityDAO.findAll();
@@ -38,10 +38,6 @@ privileged aspect EntityServiceImpl_Roo_Service {
     
     public List<Entity> EntityServiceImpl.findEntityEntries(int firstResult, int maxResults) {
         return entityDAO.findAll(new org.springframework.data.domain.PageRequest(firstResult / maxResults, maxResults)).getContent();
-    }
-    
-    public void EntityServiceImpl.saveEntity(Entity entity) {
-        entityDAO.save(entity);
     }
     
     public Entity EntityServiceImpl.updateEntity(Entity entity) {

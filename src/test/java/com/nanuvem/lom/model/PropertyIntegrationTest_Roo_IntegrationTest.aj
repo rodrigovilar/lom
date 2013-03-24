@@ -3,10 +3,9 @@
 
 package com.nanuvem.lom.model;
 
-import com.nanuvem.lom.dao.PropertyDAO;
+import com.nanuvem.lom.model.Property;
 import com.nanuvem.lom.model.PropertyDataOnDemand;
 import com.nanuvem.lom.model.PropertyIntegrationTest;
-import com.nanuvem.lom.service.PropertyService;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,16 +26,10 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
     @Autowired
     private PropertyDataOnDemand PropertyIntegrationTest.dod;
     
-    @Autowired
-    PropertyService PropertyIntegrationTest.propertyService;
-    
-    @Autowired
-    PropertyDAO PropertyIntegrationTest.propertyDAO;
-    
     @Test
-    public void PropertyIntegrationTest.testCountAllPropertys() {
+    public void PropertyIntegrationTest.testCountPropertys() {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
-        long count = propertyService.countAllPropertys();
+        long count = Property.countPropertys();
         Assert.assertTrue("Counter for 'Property' incorrectly reported there were no entries", count > 0);
     }
     
@@ -46,7 +39,7 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
+        obj = Property.findProperty(id);
         Assert.assertNotNull("Find method for 'Property' illegally returned null for id '" + id + "'", obj);
         Assert.assertEquals("Find method for 'Property' returned the incorrect identifier", id, obj.getId());
     }
@@ -54,9 +47,9 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
     @Test
     public void PropertyIntegrationTest.testFindAllPropertys() {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
-        long count = propertyService.countAllPropertys();
+        long count = Property.countPropertys();
         Assert.assertTrue("Too expensive to perform a find all test for 'Property', as there are " + count + " entries; set the findAllMaximum to exceed this value or set findAll=false on the integration test annotation to disable the test", count < 250);
-        List<Property> result = propertyService.findAllPropertys();
+        List<Property> result = Property.findAllPropertys();
         Assert.assertNotNull("Find all method for 'Property' illegally returned null", result);
         Assert.assertTrue("Find all method for 'Property' failed to return any data", result.size() > 0);
     }
@@ -64,11 +57,11 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
     @Test
     public void PropertyIntegrationTest.testFindPropertyEntries() {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
-        long count = propertyService.countAllPropertys();
+        long count = Property.countPropertys();
         if (count > 20) count = 20;
         int firstResult = 0;
         int maxResults = (int) count;
-        List<Property> result = propertyService.findPropertyEntries(firstResult, maxResults);
+        List<Property> result = Property.findPropertyEntries(firstResult, maxResults);
         Assert.assertNotNull("Find entries method for 'Property' illegally returned null", result);
         Assert.assertEquals("Find entries method for 'Property' returned an incorrect number of entries", count, result.size());
     }
@@ -79,50 +72,50 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
+        obj = Property.findProperty(id);
         Assert.assertNotNull("Find method for 'Property' illegally returned null for id '" + id + "'", obj);
         boolean modified =  dod.modifyProperty(obj);
         Integer currentVersion = obj.getVersion();
-        propertyDAO.flush();
+        obj.flush();
         Assert.assertTrue("Version for 'Property' failed to increment on flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void PropertyIntegrationTest.testUpdatePropertyUpdate() {
+    public void PropertyIntegrationTest.testMergeUpdate() {
         Property obj = dod.getRandomProperty();
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
+        obj = Property.findProperty(id);
         boolean modified =  dod.modifyProperty(obj);
         Integer currentVersion = obj.getVersion();
-        Property merged = propertyService.updateProperty(obj);
-        propertyDAO.flush();
+        Property merged = obj.merge();
+        obj.flush();
         Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
         Assert.assertTrue("Version for 'Property' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
     }
     
     @Test
-    public void PropertyIntegrationTest.testSaveProperty() {
+    public void PropertyIntegrationTest.testPersist() {
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
         Property obj = dod.getNewTransientProperty(Integer.MAX_VALUE);
         Assert.assertNotNull("Data on demand for 'Property' failed to provide a new transient entity", obj);
         Assert.assertNull("Expected 'Property' identifier to be null", obj.getId());
-        propertyService.saveProperty(obj);
-        propertyDAO.flush();
+        obj.persist();
+        obj.flush();
         Assert.assertNotNull("Expected 'Property' identifier to no longer be null", obj.getId());
     }
     
     @Test
-    public void PropertyIntegrationTest.testDeleteProperty() {
+    public void PropertyIntegrationTest.testRemove() {
         Property obj = dod.getRandomProperty();
         Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
         Long id = obj.getId();
         Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
-        propertyService.deleteProperty(obj);
-        propertyDAO.flush();
-        Assert.assertNull("Failed to remove 'Property' with identifier '" + id + "'", propertyService.findProperty(id));
+        obj = Property.findProperty(id);
+        obj.remove();
+        obj.flush();
+        Assert.assertNull("Failed to remove 'Property' with identifier '" + id + "'", Property.findProperty(id));
     }
     
 }

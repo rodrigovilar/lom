@@ -3,12 +3,10 @@
 
 package com.nanuvem.lom.model;
 
-import com.nanuvem.lom.dao.PropertyValueDAO;
 import com.nanuvem.lom.model.InstanceDataOnDemand;
 import com.nanuvem.lom.model.PropertyDataOnDemand;
 import com.nanuvem.lom.model.PropertyValue;
 import com.nanuvem.lom.model.PropertyValueDataOnDemand;
-import com.nanuvem.lom.service.PropertyValueService;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,12 +31,6 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
     @Autowired
     private PropertyDataOnDemand PropertyValueDataOnDemand.propertyDataOnDemand;
     
-    @Autowired
-    PropertyValueService PropertyValueDataOnDemand.propertyValueService;
-    
-    @Autowired
-    PropertyValueDAO PropertyValueDataOnDemand.propertyValueDAO;
-    
     public PropertyValue PropertyValueDataOnDemand.getNewTransientPropertyValue(int index) {
         PropertyValue obj = new PropertyValue();
         set_value(obj, index);
@@ -60,14 +52,14 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
         }
         PropertyValue obj = data.get(index);
         Long id = obj.getId();
-        return propertyValueService.findPropertyValue(id);
+        return PropertyValue.findPropertyValue(id);
     }
     
     public PropertyValue PropertyValueDataOnDemand.getRandomPropertyValue() {
         init();
         PropertyValue obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return propertyValueService.findPropertyValue(id);
+        return PropertyValue.findPropertyValue(id);
     }
     
     public boolean PropertyValueDataOnDemand.modifyPropertyValue(PropertyValue obj) {
@@ -77,7 +69,7 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
     public void PropertyValueDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = propertyValueService.findPropertyValueEntries(from, to);
+        data = PropertyValue.findPropertyValueEntries(from, to);
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'PropertyValue' illegally returned null");
         }
@@ -89,7 +81,7 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             PropertyValue obj = getNewTransientPropertyValue(i);
             try {
-                propertyValueService.savePropertyValue(obj);
+                obj.persist();
             } catch (ConstraintViolationException e) {
                 StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
@@ -98,7 +90,7 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
                 }
                 throw new RuntimeException(msg.toString(), e);
             }
-            propertyValueDAO.flush();
+            obj.flush();
             data.add(obj);
         }
     }
