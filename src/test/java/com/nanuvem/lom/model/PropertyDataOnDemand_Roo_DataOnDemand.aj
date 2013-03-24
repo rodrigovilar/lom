@@ -26,7 +26,7 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
     private List<Property> PropertyDataOnDemand.data;
     
     @Autowired
-    EntityDataOnDemand PropertyDataOnDemand.entityDataOnDemand;
+    private EntityDataOnDemand PropertyDataOnDemand.entityDataOnDemand;
     
     public Property PropertyDataOnDemand.getNewTransientProperty(int index) {
         Property obj = new Property();

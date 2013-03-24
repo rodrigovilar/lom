@@ -26,10 +26,10 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
     private List<PropertyValue> PropertyValueDataOnDemand.data;
     
     @Autowired
-    InstanceDataOnDemand PropertyValueDataOnDemand.instanceDataOnDemand;
+    private InstanceDataOnDemand PropertyValueDataOnDemand.instanceDataOnDemand;
     
     @Autowired
-    PropertyDataOnDemand PropertyValueDataOnDemand.propertyDataOnDemand;
+    private PropertyDataOnDemand PropertyValueDataOnDemand.propertyDataOnDemand;
     
     public PropertyValue PropertyValueDataOnDemand.getNewTransientPropertyValue(int index) {
         PropertyValue obj = new PropertyValue();

@@ -25,7 +25,7 @@ privileged aspect InstanceDataOnDemand_Roo_DataOnDemand {
     private List<Instance> InstanceDataOnDemand.data;
     
     @Autowired
-    EntityDataOnDemand InstanceDataOnDemand.entityDataOnDemand;
+    private EntityDataOnDemand InstanceDataOnDemand.entityDataOnDemand;
     
     public Instance InstanceDataOnDemand.getNewTransientInstance(int index) {
         Instance obj = new Instance();

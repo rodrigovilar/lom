@@ -40,3 +40,19 @@ field enum --fieldName type --type ~.model.PropertyType --enumType STRING --notN
 perform tests
 exit
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-11 20:55:03
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-11 21:15:09
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-12 00:06:29
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-12 10:10:15
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-12 10:12:11
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-23 21:48:36
+focus --class ~.model.Entity
+finder list
+finder list
+finder add --finderName findEntitysByNameEquals
+finder add --finderName findEntitysByNameLike
+finder add --finderName findEntitysByNamespaceLike
+finder add --finderName findEntitysByNamespaceEquals
+exit
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-23 21:56:16
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-23 22:05:07
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-23 22:40:36

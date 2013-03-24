@@ -24,7 +24,7 @@ privileged aspect EntityIntegrationTest_Roo_IntegrationTest {
     declare @type: EntityIntegrationTest: @Transactional;
     
     @Autowired
-    EntityDataOnDemand EntityIntegrationTest.dod;
+    private EntityDataOnDemand EntityIntegrationTest.dod;
     
     @Test
     public void EntityIntegrationTest.testCountEntitys() {
