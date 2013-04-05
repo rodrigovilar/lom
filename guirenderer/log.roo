@@ -1,0 +1,8 @@
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-05 17:37:01
+project --topLevelPackage com.nanuvem.lom.guirenderer --projectName guirenderer --java 7 --packaging JAR
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-05 17:37:03
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-05 17:37:12
+jpa setup --database H2_IN_MEMORY --provider HIBERNATE 
+web mvc setup 
+web mvc controller --class com.nanuvem.lom.guirenderer.web.EntityController
+web mvc controller --class com.nanuvem.lom.guirenderer.web.EntityController

@@ -102,3 +102,4 @@ service --entity ~.model.PropertyValue --interface ~.service.PropertyValueServic
 web mvc json add --jsonObject ~.model.Instance --class ~.web.InstanceController
 web mvc json add --jsonObject ~.model.Property --class ~.web.PropertyController
 web mvc json add --jsonObject ~.model.PropertyValue --class ~.web.PropertyValueController
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-05 16:45:40
