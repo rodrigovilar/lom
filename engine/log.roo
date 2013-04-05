@@ -99,3 +99,6 @@ web mvc json add --jsonObject ~.model.Entity --class ~.web.EntityController
 service --entity ~.model.Property --interface ~.service.PropertyService
 service --entity ~.model.Instance --interface ~.service.InstanceService
 service --entity ~.model.PropertyValue --interface ~.service.PropertyValueService
+web mvc json add --jsonObject ~.model.Instance --class ~.web.InstanceController
+web mvc json add --jsonObject ~.model.Property --class ~.web.PropertyController
+web mvc json add --jsonObject ~.model.PropertyValue --class ~.web.PropertyValueController
