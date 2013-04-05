@@ -1,10 +1,10 @@
 package com.nanuvem.lom.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import javax.persistence.CascadeType;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.OneToMany;
@@ -12,10 +12,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
+import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 
+@RooJson(deepSerialize=true)
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findEntitysByNameEquals",
