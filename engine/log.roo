@@ -88,3 +88,6 @@ finder list --depth 2 --filter "entity, name"
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-05 09:43:49
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-05 10:27:44
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-05 11:20:00
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-05 14:50:14
+service --entity ~.model.Entity --interface ~.service.EntityService
+perform tests

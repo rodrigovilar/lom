@@ -5,6 +5,7 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.Entity;
 import com.nanuvem.lom.model.EntityDataOnDemand;
+import com.nanuvem.lom.service.EntityService;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 privileged aspect EntityDataOnDemand_Roo_DataOnDemand {
@@ -21,6 +23,9 @@ privileged aspect EntityDataOnDemand_Roo_DataOnDemand {
     private Random EntityDataOnDemand.rnd = new SecureRandom();
     
     private List<Entity> EntityDataOnDemand.data;
+    
+    @Autowired
+    EntityService EntityDataOnDemand.entityService;
     
     public Entity EntityDataOnDemand.getNewTransientEntity(int index) {
         Entity obj = new Entity();
@@ -49,14 +54,14 @@ privileged aspect EntityDataOnDemand_Roo_DataOnDemand {
         }
         Entity obj = data.get(index);
         Long id = obj.getId();
-        return Entity.findEntity(id);
+        return entityService.findEntity(id);
     }
     
     public Entity EntityDataOnDemand.getRandomEntity() {
         init();
         Entity obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return Entity.findEntity(id);
+        return entityService.findEntity(id);
     }
     
     public boolean EntityDataOnDemand.modifyEntity(Entity obj) {
@@ -66,7 +71,7 @@ privileged aspect EntityDataOnDemand_Roo_DataOnDemand {
     public void EntityDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = Entity.findEntityEntries(from, to);
+        data = entityService.findEntityEntries(from, to);
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Entity' illegally returned null");
         }
@@ -78,7 +83,7 @@ privileged aspect EntityDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Entity obj = getNewTransientEntity(i);
             try {
-                obj.persist();
+                entityService.saveEntity(obj);
             } catch (ConstraintViolationException e) {
                 StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
