@@ -96,3 +96,6 @@ perform tests
 // [failed] json all --deepSerialize 
 web mvc json setup
 web mvc json add --jsonObject ~.model.Entity --class ~.web.EntityController
+service --entity ~.model.Property --interface ~.service.PropertyService
+service --entity ~.model.Instance --interface ~.service.InstanceService
+service --entity ~.model.PropertyValue --interface ~.service.PropertyValueService

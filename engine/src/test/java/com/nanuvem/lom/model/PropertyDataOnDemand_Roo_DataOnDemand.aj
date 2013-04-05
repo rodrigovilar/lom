@@ -7,6 +7,7 @@ import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.model.Property;
 import com.nanuvem.lom.model.PropertyDataOnDemand;
 import com.nanuvem.lom.model.PropertyType;
+import com.nanuvem.lom.service.PropertyService;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +28,9 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
     
     @Autowired
     private EntityDataOnDemand PropertyDataOnDemand.entityDataOnDemand;
+    
+    @Autowired
+    PropertyService PropertyDataOnDemand.propertyService;
     
     public Property PropertyDataOnDemand.getNewTransientProperty(int index) {
         Property obj = new Property();
@@ -61,14 +65,14 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
         }
         Property obj = data.get(index);
         Long id = obj.getId();
-        return Property.findProperty(id);
+        return propertyService.findProperty(id);
     }
     
     public Property PropertyDataOnDemand.getRandomProperty() {
         init();
         Property obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return Property.findProperty(id);
+        return propertyService.findProperty(id);
     }
     
     public boolean PropertyDataOnDemand.modifyProperty(Property obj) {
@@ -78,7 +82,7 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
     public void PropertyDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = Property.findPropertyEntries(from, to);
+        data = propertyService.findPropertyEntries(from, to);
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Property' illegally returned null");
         }
@@ -90,7 +94,7 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Property obj = getNewTransientProperty(i);
             try {
-                obj.persist();
+                propertyService.saveProperty(obj);
             } catch (ConstraintViolationException e) {
                 StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {

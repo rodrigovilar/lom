@@ -6,6 +6,7 @@ package com.nanuvem.lom.model;
 import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.model.Instance;
 import com.nanuvem.lom.model.InstanceDataOnDemand;
+import com.nanuvem.lom.service.InstanceService;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +28,9 @@ privileged aspect InstanceDataOnDemand_Roo_DataOnDemand {
     @Autowired
     private EntityDataOnDemand InstanceDataOnDemand.entityDataOnDemand;
     
+    @Autowired
+    InstanceService InstanceDataOnDemand.instanceService;
+    
     public Instance InstanceDataOnDemand.getNewTransientInstance(int index) {
         Instance obj = new Instance();
         return obj;
@@ -42,14 +46,14 @@ privileged aspect InstanceDataOnDemand_Roo_DataOnDemand {
         }
         Instance obj = data.get(index);
         Long id = obj.getId();
-        return Instance.findInstance(id);
+        return instanceService.findInstance(id);
     }
     
     public Instance InstanceDataOnDemand.getRandomInstance() {
         init();
         Instance obj = data.get(rnd.nextInt(data.size()));
         Long id = obj.getId();
-        return Instance.findInstance(id);
+        return instanceService.findInstance(id);
     }
     
     public boolean InstanceDataOnDemand.modifyInstance(Instance obj) {
@@ -59,7 +63,7 @@ privileged aspect InstanceDataOnDemand_Roo_DataOnDemand {
     public void InstanceDataOnDemand.init() {
         int from = 0;
         int to = 10;
-        data = Instance.findInstanceEntries(from, to);
+        data = instanceService.findInstanceEntries(from, to);
         if (data == null) {
             throw new IllegalStateException("Find entries implementation for 'Instance' illegally returned null");
         }
@@ -71,7 +75,7 @@ privileged aspect InstanceDataOnDemand_Roo_DataOnDemand {
         for (int i = 0; i < 10; i++) {
             Instance obj = getNewTransientInstance(i);
             try {
-                obj.persist();
+                instanceService.saveInstance(obj);
             } catch (ConstraintViolationException e) {
                 StringBuilder msg = new StringBuilder();
                 for (Iterator<ConstraintViolation<?>> iter = e.getConstraintViolations().iterator(); iter.hasNext();) {
