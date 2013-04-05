@@ -1,4 +1,0 @@
-lom
-===
-
-Living Object Model
