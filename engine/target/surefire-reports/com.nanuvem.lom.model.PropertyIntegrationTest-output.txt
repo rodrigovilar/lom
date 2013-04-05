@@ -1,0 +1,12 @@
+2013-03-11 20:54:32,850 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - HHH000389: Unsuccessful: alter table instance drop constraint FK21169495FE9D9C46
+2013-03-11 20:54:32,851 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - Table "INSTANCE" not found; SQL statement:
+alter table instance drop constraint FK21169495FE9D9C46 [42102-170]
+2013-03-11 20:54:32,851 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - HHH000389: Unsuccessful: alter table property drop constraint FKC4CDDDD5FE9D9C46
+2013-03-11 20:54:32,851 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - Table "PROPERTY" not found; SQL statement:
+alter table property drop constraint FKC4CDDDD5FE9D9C46 [42102-170]
+2013-03-11 20:54:32,852 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - HHH000389: Unsuccessful: alter table property_value drop constraint FKA48C5E8751DA702A
+2013-03-11 20:54:32,852 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - Table "PROPERTY_VALUE" not found; SQL statement:
+alter table property_value drop constraint FKA48C5E8751DA702A [42102-170]
+2013-03-11 20:54:32,853 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - HHH000389: Unsuccessful: alter table property_value drop constraint FKA48C5E87A6BDDAA
+2013-03-11 20:54:32,853 [main] ERROR org.hibernate.tool.hbm2ddl.SchemaExport - Table "PROPERTY_VALUE" not found; SQL statement:
+alter table property_value drop constraint FKA48C5E87A6BDDAA [42102-170]

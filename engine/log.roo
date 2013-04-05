@@ -1,0 +1,88 @@
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-11 20:25:44
+project --topLevelPackage com.nanuvem.lom
+jpa setup --provider HIBERNATE --database H2_IN_MEMORY 
+entity jpa --class ~.model.Entity --activeRecord true --testAutomatically 
+field string --fieldName name --notNull 
+field string --fieldName namespace
+entity jpa --class ~.model.Property --activeRecord true --testAutomatically 
+field string --fieldName name --notNull 
+field string --fieldName configuration
+entity jpa --class ~.model.Instance --activeRecord true --testAutomatically 
+entity jpa --class ~.model.PropertyValue --activeRecord true --testAutomatically 
+// [failed] field string --fieldName value
+field string --fieldName _value
+focus --class ~.model.Entity
+field set --fieldName properties --type ~.model.Property --cardinality ONE_TO_MANY --mappedBy entity
+field set --fieldName instances --type ~.model.Instance --cardinality ONE_TO_MANY --mappedBy entity
+focus --class ~.model.Property
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE
+focus --class ~model.Instance
+field reference --fieldName entity --type ~.model.Entity --cardinality MANY_TO_ONE
+field set --fieldName _values --type ~.model.PropertyValue --cardinality ONE_TO_MANY --mappedBy instance
+focus --class ~.model.PropertyValue
+field reference --fieldName instance --type ~.model.Instance --cardinality MANY_TO_ONE 
+field reference --fieldName property --type ~.model.Property --cardinality MANY_TO_ONE 
+enum type --class PropertyType
+enum constant --name TEXT
+enum constant --name LONG_TEXT
+enum constant --name PASSWORD
+enum constant --name STRING_OBJECT
+enum constant --name _BOOLEAN
+enum constant --name _INTEGER
+enum constant --name _REAL
+enum constant --name _DATE
+enum constant --name _TIME
+enum constant --name LIST
+enum constant --name _MAP
+enum constant --name _BINARY
+focus --class ~.model.Property
+field enum --fieldName type --type ~.model.PropertyType --enumType STRING --notNull 
+perform tests
+exit
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-11 20:55:03
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-11 21:15:09
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-12 00:06:29
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-12 10:10:15
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-12 10:12:11
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-23 21:48:36
+focus --class ~.model.Entity
+finder list
+finder list
+finder add --finderName findEntitysByNameEquals
+finder add --finderName findEntitysByNameLike
+finder add --finderName findEntitysByNamespaceLike
+finder add --finderName findEntitysByNamespaceEquals
+exit
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-23 21:56:16
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-23 22:05:07
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-23 22:40:36
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-24 00:41:00
+focus --class ~.model.Entity
+finder list
+exit
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-24 01:59:54
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-24 02:18:16
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-24 02:20:52
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-24 21:00:05
+focus --class ~.model.Property
+finder list
+finder add --finderName findPropertysByEntity
+exit
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-03-24 21:02:04
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-03-24 22:20:54
+focus --class ~.model.Property
+finder list
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-25 10:51:18
+focus --class ~.model.Property
+finder list 
+finder list --depth 2
+finder list --depth 2 --filter "entity, name"
+finder add --finderName findPropertysByEntityAndNameLike
+finder list
+finder list --depth 2 --filter "entity, name"
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-25 11:09:59
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-03-25 21:40:33
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-03-25 21:49:21
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-01 11:08:25
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-04-05 09:09:23
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-05 09:43:49
