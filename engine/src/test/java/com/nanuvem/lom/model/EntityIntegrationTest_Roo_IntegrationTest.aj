@@ -5,7 +5,6 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.model.EntityIntegrationTest;
-import com.nanuvem.lom.service.EntityService;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,9 +24,6 @@ privileged aspect EntityIntegrationTest_Roo_IntegrationTest {
     
     @Autowired
     private EntityDataOnDemand EntityIntegrationTest.dod;
-    
-    @Autowired
-    EntityService EntityIntegrationTest.entityService;
     
     @Test
     public void EntityIntegrationTest.testCountAllEntitys() {
@@ -107,18 +103,6 @@ privileged aspect EntityIntegrationTest_Roo_IntegrationTest {
         entityService.saveEntity(obj);
         obj.flush();
         Assert.assertNotNull("Expected 'Entity' identifier to no longer be null", obj.getId());
-    }
-    
-    @Test
-    public void EntityIntegrationTest.testDeleteEntity() {
-        Entity obj = dod.getRandomEntity();
-        Assert.assertNotNull("Data on demand for 'Entity' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'Entity' failed to provide an identifier", id);
-        obj = entityService.findEntity(id);
-        entityService.deleteEntity(obj);
-        obj.flush();
-        Assert.assertNull("Failed to remove 'Entity' with identifier '" + id + "'", entityService.findEntity(id));
     }
     
 }
