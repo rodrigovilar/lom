@@ -10,6 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
 import com.nanuvem.lom.service.EntityService;
@@ -18,6 +19,7 @@ import com.nanuvem.lom.service.EntityServiceImpl;
 @RooIntegrationTest(entity = Entity.class)
 public class EntityIntegrationTest {
 	private Entity entity;
+	@Autowired
 	private EntityService entityService;
 	
 	private Entity createEntity(String name, String namespace) {
@@ -31,7 +33,6 @@ public class EntityIntegrationTest {
 	@Before
 	public void init() {
 		entity = new Entity();
-		entityService = new EntityServiceImpl();
 	}
 	
 	@Test(expected=EntityNotFoundException.class)
@@ -109,6 +110,7 @@ public class EntityIntegrationTest {
 	public void nameOrNamespaceWithInvalidChar() throws Exception {
 		try {
 			entity = this.createEntity("wrongname@#$#@", "wrongnamespace@@#$%");
+			entityService.saveEntity(entity);
 			Assert.fail();
 		} catch (ValidationException e) {
 			List<Entity> allEntitiesList = Entity.findAllEntitys();
@@ -135,6 +137,7 @@ public class EntityIntegrationTest {
 		Entity entity_2 = new Entity();
 		entity_2.setName("name");
 		entity_2.setNamespace("namespace");
+		entityService.saveEntity(entity_2);
 	}
 
 	@Test
@@ -167,9 +170,11 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity2);
 
 		entity.setName("ccccc");
-
+		//entityService.saveEntity(entity);
+		
 		Entity entity_found = Entity.findEntity(entity.getId());
 		Entity entity2_found = Entity.findEntity(entity2.getId());
+		
 		Assert.assertEquals(entity_found.getName(), entity2_found.getName());
 		Assert.assertEquals("bbbbb", entity_found.getNamespace());
 		Assert.assertEquals("ddddd", entity2_found.getNamespace());
@@ -184,6 +189,7 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity2);
 
 		entity2.setName("AaAaA");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -195,6 +201,7 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity2);
 
 		entity2.setNamespace("bbbbb");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -206,6 +213,7 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity2);
 
 		entity2.setName("aaaaa");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -217,6 +225,7 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity2);
 
 		entity2.setName("aaaaa");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test
@@ -237,6 +246,7 @@ public class EntityIntegrationTest {
 		entity = this.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
 		entity.setName("");
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -244,6 +254,7 @@ public class EntityIntegrationTest {
 		entity = this.createEntity("entity", "namespace");
 		entityService.saveEntity(entity);
 		entity.setName("@#$%");
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)

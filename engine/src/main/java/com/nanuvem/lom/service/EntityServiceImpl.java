@@ -10,18 +10,18 @@ import com.nanuvem.lom.model.Entity;
 public class EntityServiceImpl implements EntityService {
 
 	public void saveEntity(Entity entity) {		
-		if (isValidName(entity) == false) {
+		if (isNameValid(entity) == false) {
 			throw new ValidationException("Invalid characters in name");
 		}
 
-		if (isValidNamespace(entity) == false) {
+		if (isNamespaceValid(entity) == false) {
 			throw new ValidationException("Invalid characters in namespace");
 		}
 		
 		entity.persist();
 	}
 
-	private static void isValidNameInThisNamespace(String name, String namespace, Entity entity) {
+	private static boolean isNameValidInThisNamespace(Entity entity) {
 		if (entity.getName().equals("") || entity.getName() == null) {
 			throw new ValidationException("Without name!");
 		}
@@ -39,26 +39,24 @@ public class EntityServiceImpl implements EntityService {
 					}
 				}
 			}
-		
+			return true;
 		}catch(org.springframework.orm.jpa.JpaSystemException e){
 			throw new ValidationException("Entity with same name already exists in this namespace!");
 		}
 	}
 
-	public static boolean isValidName(Entity entity) {
+	public static boolean isNameValid(Entity entity) {
 		if (Pattern.matches("[a-zA-Z0-9 _]+", entity.getName())) {
-			isValidNameInThisNamespace(entity.getName(), entity.getNamespace(), entity);
+			isNameValidInThisNamespace(entity);
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 
-	public static boolean isValidNamespace(Entity entity) {
+	public static boolean isNamespaceValid(Entity entity) {
 		if (Pattern.matches("[a-zA-Z0-9 _]+", entity.getNamespace())
 				|| entity.getNamespace().equals("")) {
-			isValidNameInThisNamespace(entity.getName(), entity.getNamespace(), entity);
-			return true;
+			return isNameValidInThisNamespace(entity);
 		} else {
 			return false;
 		}

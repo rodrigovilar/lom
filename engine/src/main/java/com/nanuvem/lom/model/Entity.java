@@ -42,25 +42,11 @@ public class Entity {
 	private Set<Instance> instances = new HashSet<Instance>();
 
 	public void setName(String name) {
-		String thisName = this.name;
 		this.name = name;
-		if (EntityServiceImpl.isValidName(this)) {
-			return;
-		} else {
-			this.name = thisName;
-			throw new ValidationException("Parameter is invalid!");
-		}
 	}
 
 	public void setNamespace(String namespace) {
-		String thisNamespace = this.namespace;
 		this.namespace = namespace;
-		if (EntityServiceImpl.isValidNamespace(this)){
-			return;
-		} else {
-			this.namespace = thisNamespace;
-			throw new ValidationException("Parameter is invalid!");
-		}
 	}
 
 	public void persist() {
