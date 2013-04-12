@@ -10,16 +10,24 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
+
+import com.nanuvem.lom.service.EntityService;
+import com.nanuvem.lom.service.EntityServiceImpl;
 
 @RooIntegrationTest(entity = Entity.class)
 public class EntityIntegrationTest {
 	private Entity entity;
-
+	
+	@Autowired
+   	private EntityService entityService;
+	
 	private Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);
 		entity.setNamespace(namespace);
+		
 		return entity;
 	}
 
@@ -27,28 +35,42 @@ public class EntityIntegrationTest {
 	public void init() {
 		entity = new Entity();
 	}
-
+	
+	@Test(expected=EntityNotFoundException.class)
+    public void testDeleteEntity() {
+        entity = this.createEntity("nome", "pacote");
+        Assert.assertNotNull("Data on demand for 'Entity' failed to initialize correctly", entity);
+        entityService.saveEntity(entity);
+        Long id = entity.getId();
+        Assert.assertNotNull("Data on demand for 'Entity' failed to provide an identifier", entity.getId());
+        entity = entityService.findEntity(id);
+        entityService.deleteEntity(entity);
+        entity.flush();
+        Assert.assertNull("Failed to remove 'Entity' with identifier '" + id + "'", entityService.findEntity(id));
+    }
+	
 	/* CREATE ENTITY */
-
 	@Test
 	public void validNameAndNamespace() {
 		entity = this.createEntity("name", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
+        Assert.assertNotNull("Data on demand for 'Entity' failed to provide an identifier", entity.getId());
+
 	}
 
 	@Test
 	public void withoutNamespace() {
 		entity.setName("name");
-		entity.persist();
+		entityService.saveEntity(entity);
 	}
 
 	@Test
 	public void twoEntitiesSameNameDifferentNamespaces() {
 		entity = this.createEntity("samename", "namespace1");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("samename", "namespace2");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		Entity entity_return = Entity.findEntity(entity.getId());
 		Assert.assertEquals(entity, entity_return);
@@ -57,38 +79,39 @@ public class EntityIntegrationTest {
 	@Test
 	public void nameAndNamespaceWithSpaces() {
 		entity = this.createEntity("name with spaces", "namespace with spaces");
-		entity.persist();
+		entityService.saveEntity(entity);
 		Assert.assertEquals(entity, Entity.findEntity(entity.getId()));
 	}
 
 	@Test(expected = ValidationException.class)
 	public void withoutName() {
 		entity.setNamespace("has only namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void twoEntitiesWithSameNameInDefaultPackage() {
 		entity = this.createEntity("samename", "");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("samename", "");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void twoEntitiesWithSameNameInNonDefaultPackage() {
 		entity = this.createEntity("sameName", "sameNamespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("sameName", "sameNamespace");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 	}
 
 	@Test
 	public void nameOrNamespaceWithInvalidChar() throws Exception {
 		try {
 			entity = this.createEntity("wrongname@#$#@", "wrongnamespace@@#$%");
+			entityService.saveEntity(entity);
 			Assert.fail();
 		} catch (ValidationException e) {
 			List<Entity> allEntitiesList = Entity.findAllEntitys();
@@ -99,10 +122,10 @@ public class EntityIntegrationTest {
 	@Test(expected = ValidationException.class)
 	public void caseInsensitiveName() {
 		entity = this.createEntity("NAME", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("name", "namespace");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
@@ -110,17 +133,18 @@ public class EntityIntegrationTest {
 		Entity entity_1 = new Entity();
 		entity_1.setName("name");
 		entity_1.setNamespace("NAMESPACE");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = new Entity();
 		entity_2.setName("name");
 		entity_2.setNamespace("namespace");
+		entityService.saveEntity(entity_2);
 	}
 
 	@Test
 	public void updateWithValidNewNameAndNewPackage() {
 		entity = this.createEntity("entity", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 		entity.setName("abc");
 		entity.setNamespace("cde");
 		Entity entityFound = Entity.findEntity(entity.getId());
@@ -132,7 +156,7 @@ public class EntityIntegrationTest {
 	@Test
 	public void updateRemovingPackage() {
 		Entity entity_1 = this.createEntity("test", "namespaceTest");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 		entity_1.setNamespace("");
 		Entity entityFound = Entity.findEntity(entity_1.getId());
 		Assert.assertEquals("", entityFound.getNamespace());
@@ -141,15 +165,17 @@ public class EntityIntegrationTest {
 	@Test
 	public void updateRenameTwoEntitiesWithSameNameInDifferentPackage() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("ccccc", "ddddd");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		entity.setName("ccccc");
-
+		//entityService.saveEntity(entity);
+		
 		Entity entity_found = Entity.findEntity(entity.getId());
 		Entity entity2_found = Entity.findEntity(entity2.getId());
+		
 		Assert.assertEquals(entity_found.getName(), entity2_found.getName());
 		Assert.assertEquals("bbbbb", entity_found.getNamespace());
 		Assert.assertEquals("ddddd", entity2_found.getNamespace());
@@ -158,51 +184,55 @@ public class EntityIntegrationTest {
 	@Test(expected = ValidationException.class)
 	public void updateRenameForcingCaseInsensitiveName() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("uuuuu", "bbbbb");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		entity2.setName("AaAaA");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenameForcingCaseInsensitivePackage() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("aaaaa", "ccccc");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		entity2.setNamespace("bbbbb");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenamingCausingTwoEntitiesWithSameNameInDefaultPackage() {
 		entity = this.createEntity("aaaaa", "");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("ccccc", "");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		entity2.setName("aaaaa");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenamingCausingTwoEntitiesWithSameNameInNonDefaultPackage() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 
 		Entity entity2 = this.createEntity("ccccc", "bbbbb");
-		entity2.persist();
+		entityService.saveEntity(entity2);
 
 		entity2.setName("aaaaa");
+		entityService.saveEntity(entity2);
 	}
 
 	@Test
 	public void updateNameAndNamespaceWithSpaces() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 		entity.setName("n a m e");
 		entity.setNamespace("n a m e s p a c e");
 
@@ -215,27 +245,29 @@ public class EntityIntegrationTest {
 	@Test(expected = ValidationException.class)
 	public void updateRemoveName() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 		entity.setName("");
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenameCausingNameWithInvalidChar() {
 		entity = this.createEntity("entity", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 		entity.setName("@#$%");
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenameCausingNamespaceWithInvalidChar() {
 		entity = this.createEntity("aaaaa", "@#$%^&*");
-		entity.persist();
+		entityService.saveEntity(entity);
 	}
 
 	@Test(expected = EntityNotFoundException.class)
 	public void testRemove() {
 		Entity entity = this.createEntity("entity", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 		Long id = entity.getId();
 		entity.remove();
 		Entity found = Entity.findEntity(id);
@@ -245,7 +277,7 @@ public class EntityIntegrationTest {
 	@Test(expected = EntityNotFoundException.class)
 	public void deleteEntityDeletedByIdYet() {
 		entity = this.createEntity("aaaaa", "bbbbb");
-		entity.persist();
+		entityService.saveEntity(entity);
 		Entity found = Entity.findEntity(entity.getId());
 		found.remove();
 		entity.remove();
@@ -262,12 +294,12 @@ public class EntityIntegrationTest {
 		Entity entity_1 = new Entity();
 		entity_1.setName("entity_1");
 		entity_1.setNamespace("namespace_entity_1");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = new Entity();
 		entity_2.setName("entity_2");
 		entity_2.setNamespace("namespace_entity_2");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> allEntitiesList = Entity.findAllEntitys();
 
@@ -284,13 +316,13 @@ public class EntityIntegrationTest {
 		String fragmentOfName = "Ca";
 
 		Entity entity_1 = this.createEntity("Carro", "namespace_entity_1");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Car", "namespace_entity_2");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		Entity entity_3 = this.createEntity("Bike", "namespace_entity_3");
-		entity_3.persist();
+		entityService.saveEntity(entity_3);
 
 		TypedQuery<Entity> allEntities = Entity
 				.findEntitysByNameLike(fragmentOfName);
@@ -307,13 +339,13 @@ public class EntityIntegrationTest {
 		String fragmentOfNamespace = "pack";
 
 		Entity entity_1 = this.createEntity("Carro", "packet");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Car", "packet");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		Entity entity_3 = this.createEntity("Bike", "namespace");
-		entity_3.persist();
+		entityService.saveEntity(entity_3);
 
 		TypedQuery<Entity> allEntities = Entity
 				.findEntitysByNamespaceLike(fragmentOfNamespace);
@@ -328,10 +360,10 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesByEmptyName() {
 		Entity entity_1 = this.createEntity(" ", "namespace_entity_1");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "namespace_entity_2");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = Entity.findEntitiesByEmptyName();
 
@@ -342,10 +374,10 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesByEmptyNamespace() {
 		Entity entity_1 = this.createEntity("name", " ");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "namespace_entity_2");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = Entity.findEntitiesByEmptyNamespace();
 
@@ -356,10 +388,10 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesByNameWithSpace() {
 		Entity entity_1 = this.createEntity("Name with spaces", "");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = Entity.findEntitiesByNameWithSpace();
 
@@ -370,10 +402,10 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesByNamespaceWithSpace() {
 		Entity entity_1 = this.createEntity("Name", "Namespace with spaces");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = Entity.findEntitiesByNamespaceWithSpace();
 
@@ -384,10 +416,10 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesForcingCaseInsensitiveName() {
 		Entity entity_1 = this.createEntity("NAME", "Namespace");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "Namespace");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entitiesList = Entity.findEntitysByNameLike("name")
 				.getResultList();
@@ -398,7 +430,7 @@ public class EntityIntegrationTest {
 	@Test
 	public void getEntityByID() {
 		entity = this.createEntity("name", "namespace");
-		entity.persist();
+		entityService.saveEntity(entity);
 		long id = entity.getId();
 		Assert.assertEquals(entity, Entity.findEntity(id));
 	}
@@ -408,10 +440,10 @@ public class EntityIntegrationTest {
 		String fragmentOfName = "INVALID_FRAGMENT";
 
 		Entity entity_1 = this.createEntity("Bus", "namespace");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Car", "namespace");
-		entity_2.persist();
+		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = Entity.findEntitysByNameLike(fragmentOfName)
 				.getResultList();
@@ -424,7 +456,7 @@ public class EntityIntegrationTest {
 	@Test(expected = EntityNotFoundException.class)
 	public void getEntityWithAnUnknowId() {
 		Entity entity_1 = this.createEntity("Bus", "Namespace");
-		entity_1.persist();
+		entityService.saveEntity(entity_1);
 		long id = 10;
 		Assert.assertNull(Entity.findEntity(id));
 	}
