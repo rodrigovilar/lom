@@ -5,8 +5,6 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.model.EntityIntegrationTest;
-import com.nanuvem.lom.service.EntityService;
-
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +24,6 @@ privileged aspect EntityIntegrationTest_Roo_IntegrationTest {
     
     @Autowired
     private EntityDataOnDemand EntityIntegrationTest.dod;
-   
     
     @Test
     public void EntityIntegrationTest.testCountAllEntitys() {

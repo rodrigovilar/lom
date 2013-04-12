@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
 import com.nanuvem.lom.service.EntityService;
-import com.nanuvem.lom.service.EntityServiceImpl;
 
 @RooIntegrationTest(entity = Entity.class)
 public class EntityIntegrationTest {
@@ -359,27 +358,27 @@ public class EntityIntegrationTest {
 
 	@Test
 	public void listEntitiesByEmptyName() {
-		Entity entity_1 = this.createEntity(" ", "namespace_entity_1");
+		Entity entity_1 = this.createEntity("Entity1", "namespace_entity_1");
 		entityService.saveEntity(entity_1);
 
-		Entity entity_2 = this.createEntity("Entity", "namespace_entity_2");
+		Entity entity_2 = this.createEntity("Entity2", "namespace_entity_2");
 		entityService.saveEntity(entity_2);
 
-		List<Entity> entities = Entity.findEntitiesByEmptyName();
+		List<Entity> entities = entityService.findEntitysByNameLike(""); 
 
 		Assert.assertTrue(entities.contains(entity_1));
-		Assert.assertFalse(entities.contains(entity_2));
+		Assert.assertTrue(entities.contains(entity_2));
 	}
 
 	@Test
 	public void listEntitiesByEmptyNamespace() {
-		Entity entity_1 = this.createEntity("name", " ");
+		Entity entity_1 = this.createEntity("name", null);
 		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = this.createEntity("Entity", "namespace_entity_2");
 		entityService.saveEntity(entity_2);
 
-		List<Entity> entities = Entity.findEntitiesByEmptyNamespace();
+		List<Entity> entities = entityService.findEntitysByNamespaceEquals(null);
 
 		Assert.assertTrue(entities.contains(entity_1));
 		Assert.assertFalse(entities.contains(entity_2));
@@ -393,7 +392,7 @@ public class EntityIntegrationTest {
 		Entity entity_2 = this.createEntity("Entity", "");
 		entityService.saveEntity(entity_2);
 
-		List<Entity> entities = Entity.findEntitiesByNameWithSpace();
+		List<Entity> entities = entityService.findEntitysByNameLike(" with");
 
 		Assert.assertTrue(entities.contains(entity_1));
 		Assert.assertFalse(entities.contains(entity_2));
@@ -407,7 +406,10 @@ public class EntityIntegrationTest {
 		Entity entity_2 = this.createEntity("Entity", "");
 		entityService.saveEntity(entity_2);
 
-		List<Entity> entities = Entity.findEntitiesByNamespaceWithSpace();
+		Entity entity_3 = this.createEntity("Entity2", "namespace");
+		entityService.saveEntity(entity_3);
+
+		List<Entity> entities = entityService.findEntitysByNamespaceLike(" with");
 
 		Assert.assertTrue(entities.contains(entity_1));
 		Assert.assertFalse(entities.contains(entity_2));

@@ -3,22 +3,20 @@ package com.nanuvem.lom.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.persistence.CascadeType;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 import javax.persistence.UniqueConstraint;
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
-
-import com.nanuvem.lom.service.EntityServiceImpl;
 
 @RooJson(deepSerialize = true)
 @RooJavaBean
@@ -31,9 +29,9 @@ import com.nanuvem.lom.service.EntityServiceImpl;
 public class Entity {
 
 	@NotNull
-	private String name = "";
+	private String name;
 
-	private String namespace = "";
+	private String namespace;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "entity")
 	private Set<Property> properties = new HashSet<Property>();
@@ -50,27 +48,27 @@ public class Entity {
 		return found;
 	}
 
-	public static List<Entity> findEntitiesByEmptyName() {
-		return Entity.findEntitysByNameEquals(" ").getResultList();
-	}
-
-	public static List<Entity> findEntitiesByEmptyNamespace() {
-		return Entity.findEntitysByNamespaceEquals(" ").getResultList();
-	}
-
-	public static List<Entity> findEntitiesByNameWithSpace() {
-		return Entity.findEntitysByNameLike(" ").getResultList();
-	}
-
-	public static List<Entity> findEntitiesByNamespaceWithSpace() {
-		return Entity.findEntitysByNamespaceLike(" ").getResultList();
-	}
-
 	public List<Property> findPropertiesByName(String fragmentOfName) {
-		if (fragmentOfName.length() == 0) {
+		if (fragmentOfName == null || fragmentOfName.equals("")) {
 			return Property.findPropertysByEntity(this).getResultList();
 		}
 		return Property.findPropertysByEntityAndNameLike(this, fragmentOfName)
 				.getResultList();
 	}
+	
+    public static TypedQuery<Entity> findEntitysByNamespaceEquals(String namespace) {
+    	EntityManager em = Entity.entityManager();
+    	TypedQuery<Entity> q;
+    	
+    	if (namespace==null) {
+    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace IS NULL", Entity.class);
+    		
+    	} else {
+    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace = :namespace", Entity.class);
+            q.setParameter("namespace", namespace);
+    	}
+    	
+        return q;
+    }
+
 }

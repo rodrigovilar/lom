@@ -32,14 +32,6 @@ privileged aspect Entity_Roo_Finder {
         return q;
     }
     
-    public static TypedQuery<Entity> Entity.findEntitysByNamespaceEquals(String namespace) {
-        if (namespace == null || namespace.length() == 0) throw new IllegalArgumentException("The namespace argument is required");
-        EntityManager em = Entity.entityManager();
-        TypedQuery<Entity> q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace = :namespace", Entity.class);
-        q.setParameter("namespace", namespace);
-        return q;
-    }
-    
     public static TypedQuery<Entity> Entity.findEntitysByNamespaceLike(String namespace) {
         if (namespace == null || namespace.length() == 0) throw new IllegalArgumentException("The namespace argument is required");
         namespace = namespace.replace('*', '%');
