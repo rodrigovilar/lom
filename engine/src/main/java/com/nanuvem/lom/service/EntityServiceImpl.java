@@ -13,10 +13,12 @@ public class EntityServiceImpl implements EntityService {
 
 	public void saveEntity(Entity entity) {
 		try {
-			isNameValid(entity);
-			isNamespaceValid(entity);
+			validateName(entity);
+			validateNamespace(entity);
 			entity.persist();
 		} catch (JpaSystemException e) {
+			throw new ValidationException(e.getMessage());
+		} catch (Exception e){
 			throw new ValidationException(e.getMessage());
 		}
 	}
@@ -29,21 +31,23 @@ public class EntityServiceImpl implements EntityService {
 
 		List<Entity> entitiesByName = Entity.findEntitysByNameLike(
 				entity.getName()).getResultList();
-		if (entitiesByName.size() > 0) {
-			for (Entity e : entitiesByName) {
-				if (e.getName().equalsIgnoreCase(entity.getName())
-						&& e.getNamespace().equalsIgnoreCase(
-								entity.getNamespace())
-						&& e.getId() != entity.getId()) {
-					throw new ValidationException(
-							"Entity with same name already exists in this namespace!");
-				}
+
+		for (Entity e : entitiesByName) {
+			boolean nameIsEqualsIgnoreCase = e.getName().equalsIgnoreCase(
+					entity.getName());
+			boolean namespaceIsEqualsIgnoreCase = e.getNamespace()
+					.equalsIgnoreCase(entity.getNamespace());
+			boolean idIsEquals = e.getId() != entity.getId();
+			if (nameIsEqualsIgnoreCase && namespaceIsEqualsIgnoreCase
+					&& idIsEquals) {
+				throw new ValidationException(
+						"Entity with same name already exists in this namespace!");
 			}
 		}
 
 	}
 
-	public void isNameValid(Entity entity) {
+	public void validateName(Entity entity) {
 		if (Pattern.matches("[a-zA-Z0-9 _]+", entity.getName())) {
 			validateNameWithinNamespace(entity);
 		} else {
@@ -51,12 +55,12 @@ public class EntityServiceImpl implements EntityService {
 		}
 	}
 
-	public void isNamespaceValid(Entity entity) {
+	public void validateNamespace(Entity entity) {
 		if (Pattern.matches("[a-zA-Z0-9 _]+", entity.getNamespace())
 				|| entity.getNamespace().equals("")) {
 			validateNameWithinNamespace(entity);
 		} else {
-			throw new ValidationException("Invalid characters in name");
+			throw new ValidationException("Invalid characters in namespace");
 		}
 
 	}

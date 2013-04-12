@@ -21,8 +21,8 @@ public class EntityIntegrationTest {
 	private Entity entity;
 	
 	@Autowired
-	private EntityService entityService;
-
+   	private EntityService entityService;
+	
 	private Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);

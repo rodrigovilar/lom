@@ -20,7 +20,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 import com.nanuvem.lom.service.EntityServiceImpl;
 
-@RooJson(deepSerialize=true)
+@RooJson(deepSerialize = true)
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findEntitysByNameEquals",
@@ -41,28 +41,6 @@ public class Entity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "entity")
 	private Set<Instance> instances = new HashSet<Instance>();
 
-	//ASPECT
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
-	
-	//ASPECT
-	public void persist() {
-		if (this.entityManager == null)
-			this.entityManager = entityManager();
-		
-		//JOGAR O TRY PRA CLASSE SERVICE
-		try {
-			this.entityManager.persist(this);
-		} catch (Exception e) {
-			throw new ValidationException(e.getMessage());
-		}
-	}
-	
 	public static Entity findEntity(Long id) {
 		if (id == null)
 			return null;
@@ -71,7 +49,7 @@ public class Entity {
 			throw new EntityNotFoundException("Entity not found!");
 		return found;
 	}
-	
+
 	public static List<Entity> findEntitiesByEmptyName() {
 		return Entity.findEntitysByNameEquals(" ").getResultList();
 	}

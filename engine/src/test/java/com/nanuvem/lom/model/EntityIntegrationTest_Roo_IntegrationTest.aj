@@ -26,6 +26,7 @@ privileged aspect EntityIntegrationTest_Roo_IntegrationTest {
     
     @Autowired
     private EntityDataOnDemand EntityIntegrationTest.dod;
+   
     
     @Test
     public void EntityIntegrationTest.testCountAllEntitys() {
