@@ -35,10 +35,6 @@ privileged aspect EntityServiceImpl_Roo_Service {
         return Entity.findEntityEntries(firstResult, maxResults);
     }
     
-    public void EntityServiceImpl.saveEntity(Entity entity) {
-        entity.persist();
-    }
-    
     public Entity EntityServiceImpl.updateEntity(Entity entity) {
         return entity.merge();
     }

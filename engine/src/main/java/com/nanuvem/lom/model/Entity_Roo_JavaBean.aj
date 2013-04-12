@@ -9,29 +9,37 @@ import com.nanuvem.lom.model.Property;
 import java.util.Set;
 
 privileged aspect Entity_Roo_JavaBean {
-    
-    public String Entity.getName() {
-        return this.name;
-    }
-    
-    public String Entity.getNamespace() {
-        return this.namespace;
-    }
-    
-    public Set<Property> Entity.getProperties() {
-        return this.properties;
-    }
-    
-    public void Entity.setProperties(Set<Property> properties) {
-        this.properties = properties;
-    }
-    
-    public Set<Instance> Entity.getInstances() {
-        return this.instances;
-    }
-    
-    public void Entity.setInstances(Set<Instance> instances) {
-        this.instances = instances;
-    }
-    
+
+	public String Entity.getName() {
+		return this.name;
+	}
+
+	public String Entity.getNamespace() {
+		return this.namespace;
+	}
+
+	public void Entity.setName(String name) {
+		this.name = name;
+	}
+
+	public void Entity.setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
+	public Set<Property> Entity.getProperties() {
+		return this.properties;
+	}
+
+	public void Entity.setProperties(Set<Property> properties) {
+		this.properties = properties;
+	}
+
+	public Set<Instance> Entity.getInstances() {
+		return this.instances;
+	}
+
+	public void Entity.setInstances(Set<Instance> instances) {
+		this.instances = instances;
+	}
+
 }
