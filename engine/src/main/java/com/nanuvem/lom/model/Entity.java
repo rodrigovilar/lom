@@ -41,6 +41,7 @@ public class Entity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "entity")
 	private Set<Instance> instances = new HashSet<Instance>();
 
+	//ASPECT
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -48,11 +49,13 @@ public class Entity {
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
 	}
-
+	
+	//ASPECT
 	public void persist() {
 		if (this.entityManager == null)
 			this.entityManager = entityManager();
-
+		
+		//JOGAR O TRY PRA CLASSE SERVICE
 		try {
 			this.entityManager.persist(this);
 		} catch (Exception e) {
