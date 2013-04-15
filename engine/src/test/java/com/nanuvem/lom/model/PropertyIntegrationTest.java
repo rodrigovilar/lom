@@ -304,11 +304,6 @@ public class PropertyIntegrationTest {
 		propertyService.saveProperty(property_2);
 	}
 
-	/*
-	 * @Test//(expected = ValidationException.class) public void
-	 * invalidConfigurationForEveryPropertyType(){ //TODO }
-	 */
-
 	/* READ PROPERTIES */
 
 	@Test
@@ -412,12 +407,6 @@ public class PropertyIntegrationTest {
 		Assert.assertEquals(properties.size(), 0);
 	}
 
-	/*
-	 * @Test public void listPropertiesForcingCaseInsensitiveNames(){
-	 * 
-	 * }
-	 */
-
 	@Test
 	public void getPropertyByID() {
 		entity = createEntity("Entity_1", "EntityNamespace");
@@ -438,6 +427,6 @@ public class PropertyIntegrationTest {
 		Property.findPropertysByEntity(entity);
 	}
 
-	/* REMOVE PROPERTIES */
+	/* DELETE PROPERTIES */
 
 }
