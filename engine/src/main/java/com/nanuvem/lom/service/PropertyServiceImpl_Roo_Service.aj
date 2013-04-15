@@ -35,10 +35,6 @@ privileged aspect PropertyServiceImpl_Roo_Service {
         return Property.findPropertyEntries(firstResult, maxResults);
     }
     
-    public void PropertyServiceImpl.saveProperty(Property property) {
-        property.persist();
-    }
-    
     public Property PropertyServiceImpl.updateProperty(Property property) {
         return property.merge();
     }
