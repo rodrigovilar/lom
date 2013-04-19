@@ -1,9 +1,21 @@
 class UlRootWidget
+ 
+  itemClicked:(entity) ->
+  	$.getScript 'widgets/entity/'+ entity.id, (data, textStatus, jqxhr) ->   
+  	
   draw: (jsonObj) ->
+
     ul = $("<ul>");
     $("div").append ul
-    $.each jsonObj, (i, entity) ->
-      ul.append $("<li>" + entity.name + "</li>")
+    $.each jsonObj, (i, entity) =>
+      li = $("<li>" + entity.name + "</li>")
+      
+      ul.append li
+      
+      li.bind 'click', (event) => 
+      	
+      	this.itemClicked (entity)
+
 
   constructor: ->
     $.getJSON 'entities', (jsonObj) =>

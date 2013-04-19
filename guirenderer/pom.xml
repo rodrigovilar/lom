@@ -458,7 +458,7 @@
 				<version>1.1.2</version>
 				<configuration>
 					<srcDir>${basedir}/src/main/resources/coffee</srcDir>
-					<outputDir>${basedir}/src/main/webapp/js</outputDir>
+					<outputDir>${basedir}/src/main/webapp/WEB-INF/scripts</outputDir>
 				</configuration>
 			</plugin>
 		</plugins>

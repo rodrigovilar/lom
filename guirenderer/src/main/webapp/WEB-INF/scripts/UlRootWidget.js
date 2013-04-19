@@ -3,12 +3,22 @@
 
   UlRootWidget = (function() {
 
+    UlRootWidget.prototype.itemClicked = function(entity) {
+      return $.getScript('widgets/entity/' + entity.id, function(data, textStatus, jqxhr) {});
+    };
+
     UlRootWidget.prototype.draw = function(jsonObj) {
-      var ul;
+      var ul,
+        _this = this;
       ul = $("<ul>");
       $("div").append(ul);
       return $.each(jsonObj, function(i, entity) {
-        return ul.append($("<li>" + entity.name + "</li>"));
+        var li;
+        li = $("<li>" + entity.name + "</li>");
+        ul.append(li);
+        return li.bind('click', function(event) {
+          return _this.itemClicked(entity);
+        });
       });
     };
 
