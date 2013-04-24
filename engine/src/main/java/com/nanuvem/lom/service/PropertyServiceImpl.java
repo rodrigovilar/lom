@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.validation.ValidationException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.nanuvem.lom.model.Entity;
@@ -16,15 +17,65 @@ public class PropertyServiceImpl implements PropertyService {
 		try {
 			this.validateName(property);
 			this.validateConfiguration(property);
+
+			this.validateRegexConfiguration(property);
+			this.validateMaxConfiguration(property);
+			this.validateMinConfiguration(property);
+			this.validateMandatoryConfiguration(property);
+
 			this.validatePropertyInEntityProperties(property);
 			property.persist();
-		} catch (ValidationException e) {
-			throw e;
+		} catch (JSONException je){
+			throw new ValidationException(je.getMessage());
 		}
 	}
 
-	public void validatePropertyInEntityProperties(Property property){
+	public void validateRegexConfiguration(Property property) {
+		JSONObject jsonObject = new JSONObject(property.getConfiguration());
+
+		if (jsonObject.has("regex")) {
+			jsonObject.getString("regex");
+
+		}
+	}
+
+	public void validateMinConfiguration(Property property) {
+		JSONObject jsonObject = new JSONObject(property.getConfiguration());
+		if (jsonObject.has("minsize")) {
+			jsonObject.getInt("minsize");
+
+		}
+	}
+
+	public void validateMaxConfiguration(Property property) {
+		JSONObject jsonObject = new JSONObject(property.getConfiguration());
+		if (jsonObject.has("maxsize")) {
+			jsonObject.getInt("maxsize");
+
+		}
+	}
+
+	public void validateMandatoryConfiguration(Property property) {
+		JSONObject jsonObject = new JSONObject(property.getConfiguration());
+		if (jsonObject.has("mandatory")) {
+			jsonObject.getBoolean("mandatory");
+		}
+	}
+
+	public void validateConfigurationAndPropertyType(Property property) {
+		JSONObject jsonObject = new JSONObject(property.getConfiguration());
+		if (jsonObject.has("configuration")) {
+			jsonObject.getString("configuration");
+
+		}
+
+	}
+
+	public void validatePropertyInEntityProperties(Property property) {
 		Entity entity = Entity.findEntity(property.getEntity().getId());
+		if (entity == null) {
+			throw new ValidationException("Property with a null entity!");
+		}
 		Set<Property> properties = entity.getProperties();
 		for (Property p : properties) {
 			if (p.getName().equalsIgnoreCase(property.getName())) {
@@ -34,12 +85,12 @@ public class PropertyServiceImpl implements PropertyService {
 		}
 		properties.add(property);
 	}
-	
+
 	public void validateConfiguration(Property property) {
 		if (property.getConfiguration() == null
 				|| property.getConfiguration().equals("")) {
-			
-			property.setConfiguration("{\"default\":default}");
+
+			property.setConfiguration("{}");
 		}
 
 		JSONObject jsonObject = new JSONObject(property.getConfiguration());
@@ -47,9 +98,7 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	public void validateName(Property property) {
-		if (Pattern.matches("[a-zA-Z0-9 _]+", property.getName())) {
-
-		} else {
+		if (!Pattern.matches("[a-zA-Z0-9 _]+", property.getName())) {
 			throw new ValidationException(
 					"Property name contains invalid characters!");
 		}

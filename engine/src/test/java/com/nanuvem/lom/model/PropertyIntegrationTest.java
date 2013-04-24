@@ -196,6 +196,34 @@ public class PropertyIntegrationTest {
 		Property.findProperty(id);
 	}
 
+	@Test
+	public void testUpdatePropertyUpdate() {
+		entity = createEntity("EntityName", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("PropertyName", null, PropertyType.TEXT,
+				entity);
+		this.propertyService.saveProperty(property);
+		Assert.assertNotNull(
+				"Data on demand for 'Property' failed to initialize correctly",
+				property);
+		Long id = property.getId();
+		Assert.assertNotNull(
+				"Data on demand for 'Property' failed to provide an identifier",
+				id);
+		property = propertyService.findProperty(id);
+		boolean modified = dod.modifyProperty(property);
+		Integer currentVersion = property.getVersion();
+		Property merged = propertyService.updateProperty(property);
+		property.flush();
+		Assert.assertEquals(
+				"Identifier of merged object not the same as identifier of original object",
+				merged.getId(), id);
+		Assert.assertTrue(
+				"Version for 'Property' failed to increment on merge and flush directive",
+				(currentVersion != null && property.getVersion() > currentVersion)
+						|| !modified);
+	}
+
 	/* CREATE PROPERTY */
 
 	@Test
@@ -294,6 +322,14 @@ public class PropertyIntegrationTest {
 	}
 
 	@Test(expected = ValidationException.class)
+	public void nameWithInvalidChars() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("@#$%", null, PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+	}
+
+	@Test(expected = ValidationException.class)
 	public void caseInsensitiveNames() {
 		entity = createEntity("Entity_1", "EntityNamespace");
 		this.entityService.saveEntity(entity);
@@ -302,6 +338,34 @@ public class PropertyIntegrationTest {
 		Property property_2 = createProperty("samename", null,
 				PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
+	}
+
+	@Test
+	public void textPropertyConfigurationRegexValidation() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\"}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+
+	}
+
+	@Test
+	public void textPropertyConfigurationMaxValidation() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"maxsize\":100}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+	}
+
+	@Test
+	public void textPropertyConfigurationMinValidation() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"minsize\":1}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
 	}
 
 	/* READ PROPERTIES */

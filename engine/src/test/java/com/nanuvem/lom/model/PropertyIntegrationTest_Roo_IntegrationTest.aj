@@ -24,28 +24,6 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
 	@Autowired
 	PropertyService PropertyIntegrationTest.propertyService;
 
-	@Test
-	public void PropertyIntegrationTest.testUpdatePropertyUpdate() {
-		Property obj = dod.getRandomProperty();
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to initialize correctly",
-				obj);
-		Long id = obj.getId();
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to provide an identifier",
-				id);
-		obj = propertyService.findProperty(id);
-		boolean modified = dod.modifyProperty(obj);
-		Integer currentVersion = obj.getVersion();
-		Property merged = propertyService.updateProperty(obj);
-		obj.flush();
-		Assert.assertEquals(
-				"Identifier of merged object not the same as identifier of original object",
-				merged.getId(), id);
-		Assert.assertTrue(
-				"Version for 'Property' failed to increment on merge and flush directive",
-				(currentVersion != null && obj.getVersion() > currentVersion)
-						|| !modified);
-	}
+	
 
 }
