@@ -368,6 +368,19 @@ public class PropertyIntegrationTest {
 		propertyService.saveProperty(property);
 	}
 
+	@Test(expected = ValidationException.class)
+	public void forceAwrongConfiguration() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty(
+				"SameName",
+				"{\"regex\":15, "
+						+ "\"minsize\": \"abc\", \"maxsize\": \"abc\", \"mandatory\":10}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+
+	}
+
 	/* READ PROPERTIES */
 
 	@Test

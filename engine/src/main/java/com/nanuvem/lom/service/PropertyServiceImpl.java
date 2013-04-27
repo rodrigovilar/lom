@@ -18,14 +18,9 @@ public class PropertyServiceImpl implements PropertyService {
 			this.validateName(property);
 			this.validateConfiguration(property);
 
-			this.validateRegexConfiguration(property);
-			this.validateMaxConfiguration(property);
-			this.validateMinConfiguration(property);
-			this.validateMandatoryConfiguration(property);
-
 			this.validatePropertyInEntityProperties(property);
 			property.persist();
-		} catch (JSONException je){
+		} catch (JSONException je) {
 			throw new ValidationException(je.getMessage());
 		}
 	}
@@ -87,6 +82,7 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	public void validateConfiguration(Property property) {
+
 		if (property.getConfiguration() == null
 				|| property.getConfiguration().equals("")) {
 
@@ -95,6 +91,11 @@ public class PropertyServiceImpl implements PropertyService {
 
 		JSONObject jsonObject = new JSONObject(property.getConfiguration());
 		JSONObject.testValidity(jsonObject);
+
+		this.validateRegexConfiguration(property);
+		this.validateMaxConfiguration(property);
+		this.validateMinConfiguration(property);
+		this.validateMandatoryConfiguration(property);
 	}
 
 	public void validateName(Property property) {
