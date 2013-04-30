@@ -3,6 +3,7 @@
 
 package com.nanuvem.lom.web;
 
+import com.nanuvem.lom.model.Entity;
 import com.nanuvem.lom.model.Instance;
 import com.nanuvem.lom.service.InstanceService;
 import com.nanuvem.lom.web.InstanceController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect InstanceController_Roo_Controller_Json {
@@ -95,6 +97,14 @@ privileged aspect InstanceController_Roo_Controller_Json {
         }
         instanceService.deleteInstance(instance);
         return new ResponseEntity<String>(headers, HttpStatus.OK);
+    }
+    
+    @RequestMapping(params = "find=ByEntity", headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<String> InstanceController.jsonFindInstancesByEntity(@RequestParam("entity") Entity entity) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        return new ResponseEntity<String>(Instance.toJsonArray(Instance.findInstancesByEntity(entity).getResultList()), headers, HttpStatus.OK);
     }
     
 }

@@ -10,68 +10,78 @@ import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Instance_Roo_Jpa_ActiveRecord {
-    
-    @PersistenceContext
-    transient EntityManager Instance.entityManager;
-    
-    public static final EntityManager Instance.entityManager() {
-        EntityManager em = new Instance().entityManager;
-        if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
-        return em;
-    }
-    
-    public static long Instance.countInstances() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM Instance o", Long.class).getSingleResult();
-    }
-    
-    public static List<Instance> Instance.findAllInstances() {
-        return entityManager().createQuery("SELECT o FROM Instance o", Instance.class).getResultList();
-    }
-    
-    public static Instance Instance.findInstance(Long id) {
-        if (id == null) return null;
-        return entityManager().find(Instance.class, id);
-    }
-    
-    public static List<Instance> Instance.findInstanceEntries(int firstResult, int maxResults) {
-        return entityManager().createQuery("SELECT o FROM Instance o", Instance.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
-    }
-    
-    @Transactional
-    public void Instance.persist() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.persist(this);
-    }
-    
-    @Transactional
-    public void Instance.remove() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        if (this.entityManager.contains(this)) {
-            this.entityManager.remove(this);
-        } else {
-            Instance attached = Instance.findInstance(this.id);
-            this.entityManager.remove(attached);
-        }
-    }
-    
-    @Transactional
-    public void Instance.flush() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.flush();
-    }
-    
-    @Transactional
-    public void Instance.clear() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        this.entityManager.clear();
-    }
-    
-    @Transactional
-    public Instance Instance.merge() {
-        if (this.entityManager == null) this.entityManager = entityManager();
-        Instance merged = this.entityManager.merge(this);
-        this.entityManager.flush();
-        return merged;
-    }
-    
+
+	@PersistenceContext
+	transient EntityManager Instance.entityManager;
+
+	public static final EntityManager Instance.entityManager() {
+		EntityManager em = new Instance().entityManager;
+		if (em == null)
+			throw new IllegalStateException(
+					"Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
+		return em;
+	}
+
+	public static long Instance.countInstances() {
+		return entityManager().createQuery("SELECT COUNT(o) FROM Instance o",
+				Long.class).getSingleResult();
+	}
+
+	public static List<Instance> Instance.findAllInstances() {
+		return entityManager().createQuery("SELECT o FROM Instance o",
+				Instance.class).getResultList();
+	}
+
+	
+
+	public static List<Instance> Instance.findInstanceEntries(int firstResult,
+			int maxResults) {
+		return entityManager()
+				.createQuery("SELECT o FROM Instance o", Instance.class)
+				.setFirstResult(firstResult).setMaxResults(maxResults)
+				.getResultList();
+	}
+
+	@Transactional
+	public void Instance.persist() {
+		if (this.entityManager == null)
+			this.entityManager = entityManager();
+		this.entityManager.persist(this);
+	}
+
+	@Transactional
+	public void Instance.remove() {
+		if (this.entityManager == null)
+			this.entityManager = entityManager();
+		if (this.entityManager.contains(this)) {
+			this.entityManager.remove(this);
+		} else {
+			Instance attached = Instance.findInstance(this.id);
+			this.entityManager.remove(attached);
+		}
+	}
+
+	@Transactional
+	public void Instance.flush() {
+		if (this.entityManager == null)
+			this.entityManager = entityManager();
+		this.entityManager.flush();
+	}
+
+	@Transactional
+	public void Instance.clear() {
+		if (this.entityManager == null)
+			this.entityManager = entityManager();
+		this.entityManager.clear();
+	}
+
+	@Transactional
+	public Instance Instance.merge() {
+		if (this.entityManager == null)
+			this.entityManager = entityManager();
+		Instance merged = this.entityManager.merge(this);
+		this.entityManager.flush();
+		return merged;
+	}
+
 }

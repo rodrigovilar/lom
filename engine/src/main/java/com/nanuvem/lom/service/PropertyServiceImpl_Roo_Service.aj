@@ -19,10 +19,6 @@ privileged aspect PropertyServiceImpl_Roo_Service {
         return Property.countPropertys();
     }
     
-    public void PropertyServiceImpl.deleteProperty(Property property) {
-        property.remove();
-    }
-    
     public Property PropertyServiceImpl.findProperty(Long id) {
         return Property.findProperty(id);
     }

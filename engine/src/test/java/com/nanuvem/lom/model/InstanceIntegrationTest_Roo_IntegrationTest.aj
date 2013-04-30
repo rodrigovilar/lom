@@ -25,10 +25,7 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
     
     @Autowired
     private InstanceDataOnDemand InstanceIntegrationTest.dod;
-    
-    @Autowired
-    InstanceService InstanceIntegrationTest.instanceService;
-    
+        
     @Test
     public void InstanceIntegrationTest.testCountAllInstances() {
         Assert.assertNotNull("Data on demand for 'Instance' failed to initialize correctly", dod.getRandomInstance());
@@ -108,17 +105,5 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
         obj.flush();
         Assert.assertNotNull("Expected 'Instance' identifier to no longer be null", obj.getId());
     }
-    
-    @Test
-    public void InstanceIntegrationTest.testDeleteInstance() {
-        Instance obj = dod.getRandomInstance();
-        Assert.assertNotNull("Data on demand for 'Instance' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'Instance' failed to provide an identifier", id);
-        obj = instanceService.findInstance(id);
-        instanceService.deleteInstance(obj);
-        obj.flush();
-        Assert.assertNull("Failed to remove 'Instance' with identifier '" + id + "'", instanceService.findInstance(id));
-    }
-    
+        
 }

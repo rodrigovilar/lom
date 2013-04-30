@@ -5,8 +5,10 @@ import java.util.regex.Pattern;
 
 import javax.validation.ValidationException;
 
+import org.hibernate.PropertyNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import com.nanuvem.lom.model.Entity;
 import com.nanuvem.lom.model.Property;
@@ -105,4 +107,11 @@ public class PropertyServiceImpl implements PropertyService {
 		}
 	}
 
+	public void deleteProperty(Property property) {
+		try {
+			property.remove();
+		} catch (InvalidDataAccessApiUsageException ex) {
+			throw new PropertyNotFoundException(ex.getMessage());
+		}
+	}
 }

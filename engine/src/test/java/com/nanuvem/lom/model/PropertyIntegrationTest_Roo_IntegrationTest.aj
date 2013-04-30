@@ -4,26 +4,18 @@
 package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.PropertyIntegrationTest;
-import com.nanuvem.lom.service.PropertyService;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
-
-	declare @type: PropertyIntegrationTest: @RunWith(SpringJUnit4ClassRunner.class);
-
-	declare @type: PropertyIntegrationTest: @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext*.xml");
-
-	declare @type: PropertyIntegrationTest: @Transactional;
-
-	@Autowired
-	PropertyService PropertyIntegrationTest.propertyService;
-
-	
-
+    
+    declare @type: PropertyIntegrationTest: @RunWith(SpringJUnit4ClassRunner.class);
+    
+    declare @type: PropertyIntegrationTest: @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext*.xml");
+    
+    declare @type: PropertyIntegrationTest: @Transactional;
+    
 }

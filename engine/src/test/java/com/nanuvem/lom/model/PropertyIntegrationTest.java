@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
 import com.nanuvem.lom.service.EntityServiceImpl;
+import com.nanuvem.lom.service.PropertyServiceImpl;
 
 @RooIntegrationTest(entity = Property.class)
 public class PropertyIntegrationTest {
@@ -26,6 +27,9 @@ public class PropertyIntegrationTest {
 	@Autowired
 	private EntityServiceImpl entityService;
 
+	@Autowired
+	private PropertyServiceImpl propertyService;
+	
 	private Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);
@@ -505,5 +509,13 @@ public class PropertyIntegrationTest {
 	}
 
 	/* DELETE PROPERTIES */
+
+	@Test(expected = PropertyNotFoundException.class)
+	public void deletePropretyWithAnUnknowId() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
+		propertyService.deleteProperty(property);
+	}
 
 }
