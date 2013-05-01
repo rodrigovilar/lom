@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
@@ -17,6 +16,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
+
+import com.nanuvem.lom.service.EntityNotFoundException;
 
 @RooJson(deepSerialize = true)
 @RooJavaBean

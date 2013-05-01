@@ -2,18 +2,18 @@ package com.nanuvem.lom.model;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.ValidationException;
 
 import junit.framework.Assert;
 
-import org.hibernate.PropertyNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
+import com.nanuvem.lom.service.EntityNotFoundException;
 import com.nanuvem.lom.service.EntityServiceImpl;
+import com.nanuvem.lom.service.PropertyNotFoundException;
 import com.nanuvem.lom.service.PropertyServiceImpl;
 
 @RooIntegrationTest(entity = Property.class)
@@ -92,7 +92,7 @@ public class PropertyIntegrationTest {
 				entity);
 		propertyService.saveProperty(property);
 
-		Property found = Property.findProperty(property.getId());
+		Property found = propertyService.findProperty(property.getId());
 		Assert.assertEquals(entity.getId(), found.getId());
 	}
 
@@ -108,7 +108,7 @@ public class PropertyIntegrationTest {
 		Assert.assertNotNull(
 				"Data on demand for 'Property' failed to provide an identifier",
 				id);
-		property = Property.findProperty(id);
+		property = propertyService.findProperty(id);
 		Assert.assertNotNull(
 				"Find method for 'Property' illegally returned null for id '"
 						+ id + "'", property);
@@ -137,7 +137,7 @@ public class PropertyIntegrationTest {
 			count = 20;
 		int firstResult = 0;
 		int maxResults = (int) count;
-		List<Property> result = Property.findPropertyEntries(firstResult,
+		List<Property> result = propertyService.findPropertyEntries(firstResult,
 				maxResults);
 		Assert.assertNotNull(
 				"Find entries method for 'Property' illegally returned null",
@@ -160,7 +160,7 @@ public class PropertyIntegrationTest {
 		Assert.assertNotNull(
 				"Data on demand for 'Property' failed to provide an identifier",
 				id);
-		property = Property.findProperty(id);
+		property = propertyService.findProperty(id);
 		boolean modified = dod.modifyProperty(property);
 		Integer currentVersion = property.getVersion();
 		Property merged = property.merge();
@@ -197,7 +197,7 @@ public class PropertyIntegrationTest {
 		long id = property.getId();
 		propertyService.deleteProperty(property);
 		property.flush();
-		Property.findProperty(id);
+		propertyService.findProperty(id);
 	}
 
 	@Test
@@ -237,7 +237,7 @@ public class PropertyIntegrationTest {
 		property = createProperty("PropertyName", null, PropertyType.TEXT,
 				entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(Property.findProperty(property.getId()), property);
+		Assert.assertEquals(propertyService.findProperty(property.getId()), property);
 	}
 
 	@Test
@@ -252,7 +252,7 @@ public class PropertyIntegrationTest {
 				PropertyType.TEXT, entity_2);
 		propertyService.saveProperty(property_2);
 
-		Assert.assertEquals(Property.findProperty(property_2.getId()),
+		Assert.assertEquals(propertyService.findProperty(property_2.getId()),
 				property_2);
 		Assert.assertEquals(entity_2, property_2.getEntity());
 	}
@@ -264,7 +264,7 @@ public class PropertyIntegrationTest {
 		property = createProperty("Name with spaces", null, PropertyType.TEXT,
 				entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(Property.findProperty(property.getId()), property);
+		Assert.assertEquals(propertyService.findProperty(property.getId()), property);
 	}
 
 	@Test
@@ -398,7 +398,7 @@ public class PropertyIntegrationTest {
 				PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 		long count = Property.countPropertys();
-		List<Property> result = Property.findAllPropertys();
+		List<Property> result = propertyService.findAllPropertys();
 		Assert.assertNotNull(
 				"Find all method for 'Property' illegally returned null",
 				result);
@@ -484,7 +484,7 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void listPropertiesWhenThereIsNoProperties() {
-		List<Property> properties = Property.findAllPropertys();
+		List<Property> properties = propertyService.findAllPropertys();
 		Assert.assertEquals(properties.size(), 0);
 	}
 
@@ -494,13 +494,12 @@ public class PropertyIntegrationTest {
 		this.entityService.saveEntity(entity);
 		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(property, Property.findProperty(property.getId()));
+		Assert.assertEquals(property, propertyService.findProperty(property.getId()));
 	}
 
 	@Test(expected = PropertyNotFoundException.class)
 	public void getPropertyWithUnknownId() {
-		long id = 10;
-		Assert.assertNull(Property.findProperty(id));
+		Assert.assertNull(propertyService.findProperty((long) 10));
 	}
 
 	@Test(expected = EntityNotFoundException.class)

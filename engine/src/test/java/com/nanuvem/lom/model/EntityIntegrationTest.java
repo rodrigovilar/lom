@@ -2,7 +2,6 @@ package com.nanuvem.lom.model;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import javax.validation.ValidationException;
 
@@ -13,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
+import com.nanuvem.lom.service.EntityNotFoundException;
 import com.nanuvem.lom.service.EntityService;
 
 @RooIntegrationTest(entity = Entity.class)

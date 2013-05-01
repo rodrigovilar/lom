@@ -8,12 +8,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.PropertyNotFoundException;
-import org.hibernate.HibernateException;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
+
+import com.nanuvem.lom.service.InstanceNotFoundException;
 
 @RooJson(deepSerialize = true)
 @RooJavaBean
@@ -32,7 +32,7 @@ public class Instance {
 			return null;
 		Instance instance = entityManager().find(Instance.class, id);
 		if (instance == null) {
-			throw new HibernateException(
+			throw new InstanceNotFoundException(
 					"Instance not found with this id!");
 		}
 		return instance;

@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import javax.validation.ValidationException;
 
-import org.hibernate.PropertyNotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.dao.InvalidDataAccessApiUsageException;

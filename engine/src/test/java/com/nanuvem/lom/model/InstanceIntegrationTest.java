@@ -2,20 +2,16 @@ package com.nanuvem.lom.model;
 
 import java.util.List;
 
-import javax.management.InstanceNotFoundException;
-
 import junit.framework.Assert;
 
-import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
 import com.nanuvem.lom.service.EntityServiceImpl;
+import com.nanuvem.lom.service.InstanceNotFoundException;
 import com.nanuvem.lom.service.InstanceService;
-import com.nanuvem.lom.service.InstanceServiceImpl;
-import com.nanuvem.lom.service.PropertyService;
 import com.nanuvem.lom.service.PropertyServiceImpl;
 
 @RooIntegrationTest(entity = Instance.class)
@@ -32,10 +28,10 @@ public class InstanceIntegrationTest {
 
 	@Autowired
 	private PropertyServiceImpl propertyService;
-	
+
 	@Autowired
-    InstanceService instanceService;
-		
+	InstanceService instanceService;
+
 	@Before
 	public void init() {
 		entity = new Entity();
@@ -47,23 +43,21 @@ public class InstanceIntegrationTest {
 	public void testMarkerMethod() {
 	}
 
-	 @Test
-	 public void testDeleteInstance() {
-		 this.entity = common.createEntity("entity", "namespace");
-		 this.instance = common.createInstance(entity);
-		 entityService.saveEntity(entity);
-		 instanceService.saveInstance(instance);
-		 Long id = instance.getId();
-		 Assert.assertNotNull("Data on demand for 'Instance' failed to provide an identifier", id);
-		 instanceService.deleteInstance(instance);
-		 instance.flush();
-		 try{
-			 instanceService.findInstance(id);
-		 }catch(HibernateException e){
-			 Assert.assertEquals("Instance not found with this id!", e.getMessage());
-		 }
-	 }
-	
+	@Test(expected = InstanceNotFoundException.class)
+	public void testDeleteInstance() {
+		this.entity = common.createEntity("entity", "namespace");
+		this.instance = common.createInstance(entity);
+		entityService.saveEntity(entity);
+		instanceService.saveInstance(instance);
+		Long id = instance.getId();
+		Assert.assertNotNull(
+				"Data on demand for 'Instance' failed to provide an identifier",
+				id);
+		instanceService.deleteInstance(instance);
+		instance.flush();
+		instanceService.findInstance(id);
+	}
+
 	@Test
 	public void entityWithoutProperties() throws Exception {
 		this.entity = common.createEntity("entity", "namespace");
@@ -143,12 +137,9 @@ public class InstanceIntegrationTest {
 				instanceService.findInstance(instance2.getId()));
 	}
 
-	@Test(expected = HibernateException.class) //TODO 
+	@Test(expected = InstanceNotFoundException.class)
 	public void getInstanceWithAnUnknownId() throws Exception {
-		Instance instance = this.instanceService.findInstance((long) 10);
-		Assert.assertNull(instance.getId());
+		instanceService.findInstance((long) 10);
 	}
-	
-	
-	
+
 }
