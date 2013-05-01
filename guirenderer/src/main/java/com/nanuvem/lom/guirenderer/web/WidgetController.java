@@ -38,11 +38,45 @@ public class WidgetController {
 
 	}
 
+	@RequestMapping(value = "entity/{id}/", headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> getEntityInstances(@PathVariable("id") Long id,
+			HttpServletRequest servletRequest) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "text/javascript; charset=utf-8");
+		return new ResponseEntity<String>(getEntityWidget(servletRequest, id,
+				"TableInstanceListing"), headers, HttpStatus.OK);
+
+	}
+
+
+
 	private String getEntityWidget(HttpServletRequest servletRequest, Long id,
 			String filename) {
-		String result = getWidgetScript(servletRequest, filename);
+			String result = getWidgetScript(servletRequest, filename);
 		return result.replace("'##ENTITY_ID##'", id.toString());
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private String getWidgetScript(HttpServletRequest servletRequest,
 			String filename) {
