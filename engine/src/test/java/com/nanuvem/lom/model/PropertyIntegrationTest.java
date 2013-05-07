@@ -29,7 +29,7 @@ public class PropertyIntegrationTest {
 
 	@Autowired
 	private PropertyServiceImpl propertyService;
-	
+
 	private Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);
@@ -137,8 +137,8 @@ public class PropertyIntegrationTest {
 			count = 20;
 		int firstResult = 0;
 		int maxResults = (int) count;
-		List<Property> result = propertyService.findPropertyEntries(firstResult,
-				maxResults);
+		List<Property> result = propertyService.findPropertyEntries(
+				firstResult, maxResults);
 		Assert.assertNotNull(
 				"Find entries method for 'Property' illegally returned null",
 				result);
@@ -237,7 +237,8 @@ public class PropertyIntegrationTest {
 		property = createProperty("PropertyName", null, PropertyType.TEXT,
 				entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(propertyService.findProperty(property.getId()), property);
+		Assert.assertEquals(propertyService.findProperty(property.getId()),
+				property);
 	}
 
 	@Test
@@ -264,7 +265,8 @@ public class PropertyIntegrationTest {
 		property = createProperty("Name with spaces", null, PropertyType.TEXT,
 				entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(propertyService.findProperty(property.getId()), property);
+		Assert.assertEquals(propertyService.findProperty(property.getId()),
+				property);
 	}
 
 	@Test
@@ -373,13 +375,44 @@ public class PropertyIntegrationTest {
 	}
 
 	@Test(expected = ValidationException.class)
-	public void forceAwrongConfiguration() {
+	public void forceAwrongConfigurationInRegexValue() {
 		entity = createEntity("Entity_1", "EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty(
-				"SameName",
-				"{\"regex\":15, "
-						+ "\"minsize\": \"abc\", \"maxsize\": \"abc\", \"mandatory\":10}",
+		property = createProperty("SameName", "{\"regex\":10, "
+				+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":true}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+
+	}
+
+	@Test(expected = ValidationException.class)
+	public void forceAwrongConfigurationInMinsizeValue() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
+				+ "\"minsize\": notInt, \"maxsize\": 30, \"mandatory\":true}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+
+	}
+
+	@Test(expected = ValidationException.class)
+	public void forceAwrongConfigurationInMaxsizeValue() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
+				+ "\"minsize\": 0, \"maxsize\": notInt, \"mandatory\":true}",
+				PropertyType.TEXT, entity);
+		propertyService.saveProperty(property);
+
+	}
+
+	@Test(expected = ValidationException.class)
+	public void forceAwrongConfigurationInMandatoryValue() {
+		entity = createEntity("Entity_1", "EntityNamespace");
+		this.entityService.saveEntity(entity);
+		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
+				+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":notBoolean}",
 				PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
@@ -494,7 +527,8 @@ public class PropertyIntegrationTest {
 		this.entityService.saveEntity(entity);
 		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
-		Assert.assertEquals(property, propertyService.findProperty(property.getId()));
+		Assert.assertEquals(property,
+				propertyService.findProperty(property.getId()));
 	}
 
 	@Test(expected = PropertyNotFoundException.class)

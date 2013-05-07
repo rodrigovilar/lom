@@ -112,3 +112,5 @@ finder add findInstancesByEntity
 focus --class ~.service.InstanceService
 // [failed] finder list
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-04-27 02:34:31
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-05-05 19:23:16
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-05-05 19:28:18

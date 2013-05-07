@@ -27,10 +27,10 @@ privileged aspect PropertyValueDataOnDemand_Roo_DataOnDemand {
     private List<PropertyValue> PropertyValueDataOnDemand.data;
     
     @Autowired
-    private InstanceDataOnDemand PropertyValueDataOnDemand.instanceDataOnDemand;
+    InstanceDataOnDemand PropertyValueDataOnDemand.instanceDataOnDemand;
     
     @Autowired
-    private PropertyDataOnDemand PropertyValueDataOnDemand.propertyDataOnDemand;
+    PropertyDataOnDemand PropertyValueDataOnDemand.propertyDataOnDemand;
     
     @Autowired
     PropertyValueService PropertyValueDataOnDemand.propertyValueService;

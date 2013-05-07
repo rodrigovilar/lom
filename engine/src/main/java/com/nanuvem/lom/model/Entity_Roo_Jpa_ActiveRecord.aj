@@ -3,11 +3,10 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.model.Entity;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Entity_Roo_Jpa_ActiveRecord {

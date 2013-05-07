@@ -5,7 +5,6 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.InstanceDataOnDemand;
 import com.nanuvem.lom.model.InstanceIntegrationTest;
-import com.nanuvem.lom.service.InstanceService;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,8 +23,8 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
     declare @type: InstanceIntegrationTest: @Transactional;
     
     @Autowired
-    private InstanceDataOnDemand InstanceIntegrationTest.dod;
-        
+    InstanceDataOnDemand InstanceIntegrationTest.dod;
+    
     @Test
     public void InstanceIntegrationTest.testCountAllInstances() {
         Assert.assertNotNull("Data on demand for 'Instance' failed to initialize correctly", dod.getRandomInstance());
@@ -105,5 +104,5 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
         obj.flush();
         Assert.assertNotNull("Expected 'Instance' identifier to no longer be null", obj.getId());
     }
-        
+    
 }

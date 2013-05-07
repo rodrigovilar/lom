@@ -142,4 +142,16 @@ public class InstanceIntegrationTest {
 		instanceService.findInstance((long) 10);
 	}
 
+	@Test(expected = InstanceNotFoundException.class)
+	public void listInstancesIfAnUnknownEntity() {
+		Entity unknownEntity = new Entity();
+		instanceService.findInstancesByEntity(unknownEntity);
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void deleteInstanceWithAnUnknownId() {
+		Instance unknownInstance = new Instance();
+		instanceService.deleteInstance(unknownInstance);
+	}
+
 }
