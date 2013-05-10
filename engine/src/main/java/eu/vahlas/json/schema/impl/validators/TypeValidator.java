@@ -31,49 +31,52 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class TypeValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -637068450453946655L;
-	private static final Logger LOG = LoggerFactory.getLogger(TypeValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(TypeValidator.class);
+
 	public static final String PROPERTY = "type";
-	
+
 	private TYPE schemaType;
 	private UnionTypeValidator unionTypeValidator;
-	
+
 	public TypeValidator(JsonNode schemaNode) {
 		schemaType = TYPEFactory.getType(schemaNode);
-		
-		if ( schemaType == TYPE.UNION ) {
-			unionTypeValidator = new UnionTypeValidator(schemaNode.get(PROPERTY));
+
+		if (schemaType == TYPE.UNION) {
+			unionTypeValidator = new UnionTypeValidator(
+					schemaNode.get(PROPERTY));
 		}
-			
+
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
-		return validate(node, null ,at);
+		return validate(node, null, at);
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
-		if ( schemaType == TYPE.UNION) {
+
+		if (schemaType == TYPE.UNION) {
 			errors.addAll(unionTypeValidator.validate(node, parent, at));
 			return errors;
 		}
-		
+
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		if ( nodeType != schemaType ) {
-			if ( schemaType == TYPE.ANY )
+		if (nodeType != schemaType) {
+			if (schemaType == TYPE.ANY)
 				return errors;
-			
-			if ( schemaType == TYPE.NUMBER && nodeType == TYPE.INTEGER )
+
+			if (schemaType == TYPE.NUMBER && nodeType == TYPE.INTEGER)
 				return errors;
-			
-			errors.add(at + ": " + nodeType + " found, " + schemaType + " expected");
+
+			errors.add(at + ": " + nodeType + " found, " + schemaType
+					+ " expected");
 		}
-		
+
 		return errors;
 	}
 

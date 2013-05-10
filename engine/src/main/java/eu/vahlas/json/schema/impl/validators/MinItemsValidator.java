@@ -27,24 +27,25 @@ import org.slf4j.LoggerFactory;
 import eu.vahlas.json.schema.impl.JSONValidator;
 
 /**
- * Implements "minItems" validation on array nodes as described in 
- * the paragraph 5.11 of the JSON Schema specification.
+ * Implements "minItems" validation on array nodes as described in the paragraph
+ * 5.11 of the JSON Schema specification.
  */
 public class MinItemsValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = 5843869888459032277L;
-	private static final Logger LOG = LoggerFactory.getLogger(MinItemsValidator.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MinItemsValidator.class);
 
 	public static final String PROPERTY = "minItems";
-	
+
 	private int min = 0;
-	
+
 	public MinItemsValidator(JsonNode minItemsNode) {
-		if ( minItemsNode.isIntegralNumber() ) {
+		if (minItemsNode.isIntegralNumber()) {
 			min = minItemsNode.getIntValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -54,15 +55,16 @@ public class MinItemsValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
-		
-		List<String> errors = new ArrayList<String>(); 
-		
-		if ( node.isArray() ) {
-			if ( node.size() < min ) {
-				errors.add(at + ": there must be a minimum of " + min + " items in the array");
+
+		List<String> errors = new ArrayList<String>();
+
+		if (node.isArray()) {
+			if (node.size() < min) {
+				errors.add(at + ": there must be a minimum of " + min
+						+ " items in the array");
 			}
 		}
-		
+
 		return errors;
 	}
 

@@ -10,35 +10,35 @@ import org.springframework.orm.jpa.JpaSystemException;
 import com.nanuvem.lom.model.Entity;
 
 public class EntityServiceImpl implements EntityService {
-	
-    public List<Entity> findEntitysByNameLike(String name) {
-    	if (name == null || name.equals("")) {
-    		return Entity.findAllEntitys();
-    	}
-        return Entity.findEntitysByNameLike(name).getResultList();
-    }
 
-    public List<Entity> findEntitysByNamespaceEquals(String namespace) {
-        return Entity.findEntitysByNamespaceEquals(namespace).getResultList();
-    }
+	public List<Entity> findEntitysByNameLike(String name) {
+		if (name == null || name.equals("")) {
+			return Entity.findAllEntitys();
+		}
+		return Entity.findEntitysByNameLike(name).getResultList();
+	}
 
-    public List<Entity> findEntitysByNamespaceLike(String namespace) {
-    	if (namespace == null) {
-    		return Entity.findEntitysByNamespaceEquals(null).getResultList();
-    	}
+	public List<Entity> findEntitysByNamespaceEquals(String namespace) {
+		return Entity.findEntitysByNamespaceEquals(namespace).getResultList();
+	}
 
-    	if (namespace.equals("")) {
-    		return Entity.findAllEntitys();
-    	}
-        return Entity.findEntitysByNamespaceLike(namespace).getResultList();
-    }
+	public List<Entity> findEntitysByNamespaceLike(String namespace) {
+		if (namespace == null) {
+			return Entity.findEntitysByNamespaceEquals(null).getResultList();
+		}
+
+		if (namespace.equals("")) {
+			return Entity.findAllEntitys();
+		}
+		return Entity.findEntitysByNamespaceLike(namespace).getResultList();
+	}
 
 	public void saveEntity(Entity entity) {
 		try {
 			validateName(entity);
 			validateNamespace(entity);
 			entity.persist();
-		} catch (Exception e){
+		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());
 		}
 	}
@@ -82,7 +82,8 @@ public class EntityServiceImpl implements EntityService {
 			return;
 		}
 
-		if (namespace.equals("") ||  Pattern.matches("[a-zA-Z0-9 _]+", namespace)) {
+		if (namespace.equals("")
+				|| Pattern.matches("[a-zA-Z0-9 _]+", namespace)) {
 			validateNameWithinNamespace(entity);
 		} else {
 			throw new ValidationException("Invalid characters in namespace");

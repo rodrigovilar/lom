@@ -56,20 +56,25 @@ public class Entity {
 		return Property.findPropertysByEntityAndNameLike(this, fragmentOfName)
 				.getResultList();
 	}
-	
-    public static TypedQuery<Entity> findEntitysByNamespaceEquals(String namespace) {
-    	EntityManager em = Entity.entityManager();
-    	TypedQuery<Entity> q;
-    	
-    	if (namespace==null) {
-    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace IS NULL", Entity.class);
-    		
-    	} else {
-    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace = :namespace", Entity.class);
-            q.setParameter("namespace", namespace);
-    	}
-    	
-        return q;
-    }
+
+	public static TypedQuery<Entity> findEntitysByNamespaceEquals(
+			String namespace) {
+		EntityManager em = Entity.entityManager();
+		TypedQuery<Entity> q;
+
+		if (namespace == null) {
+			q = em.createQuery(
+					"SELECT o FROM Entity AS o WHERE o.namespace IS NULL",
+					Entity.class);
+
+		} else {
+			q = em.createQuery(
+					"SELECT o FROM Entity AS o WHERE o.namespace = :namespace",
+					Entity.class);
+			q.setParameter("namespace", namespace);
+		}
+
+		return q;
+	}
 
 }

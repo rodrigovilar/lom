@@ -34,19 +34,20 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class PatternValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = 4460940200749213244L;
-	private static final Logger LOG = LoggerFactory.getLogger(PatternValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(PatternValidator.class);
+
 	public static final String PROPERTY = "pattern";
-	
+
 	protected String pattern;
-	
+
 	public PatternValidator(JsonNode patternNode) {
 		pattern = "";
-		if ( patternNode != null && patternNode.isTextual() ) {
+		if (patternNode != null && patternNode.isTextual()) {
 			pattern = patternNode.getTextValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -56,24 +57,26 @@ public class PatternValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
-		
+
 		List<String> errors = new ArrayList<String>();
-		
+
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		if ( nodeType != TYPE.STRING ) {
-			errors.add(at + ": cannot match a " + nodeType + " against a regex pattern (" + pattern + ")");
+		if (nodeType != TYPE.STRING) {
+			errors.add(at + ": cannot match a " + nodeType
+					+ " against a regex pattern (" + pattern + ")");
 			return errors;
 		}
-		
+
 		try {
 			Pattern p = Pattern.compile(pattern);
 			Matcher m = p.matcher(node.getTextValue());
-			if ( !m.matches() ) {
+			if (!m.matches()) {
 				errors.add(at + ": does not match the regex pattern " + pattern);
 			}
 		} catch (PatternSyntaxException pse) {
 			// String is considered valid if pattern is invalid
-			LOG.error("Failed to apply pattern on " + at + ": Invalid RE syntax [" + pattern + "]", pse);
+			LOG.error("Failed to apply pattern on " + at
+					+ ": Invalid RE syntax [" + pattern + "]", pse);
 		}
 
 		return errors;

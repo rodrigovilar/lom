@@ -10,34 +10,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect InstanceServiceImpl_Roo_Service {
-
-	declare @type: InstanceServiceImpl: @Service;
-
-	declare @type: InstanceServiceImpl: @Transactional;
-
-	public long InstanceServiceImpl.countAllInstances() {
-		return Instance.countInstances();
-	}
-
-	public Instance InstanceServiceImpl.findInstance(Long id) {
-		return Instance.findInstance(id);
-	}
-
-	public List<Instance> InstanceServiceImpl.findAllInstances() {
-		return Instance.findAllInstances();
-	}
-
-	public List<Instance> InstanceServiceImpl.findInstanceEntries(
-			int firstResult, int maxResults) {
-		return Instance.findInstanceEntries(firstResult, maxResults);
-	}
-
-	public void InstanceServiceImpl.saveInstance(Instance instance) {
-		instance.persist();
-	}
-
-	public Instance InstanceServiceImpl.updateInstance(Instance instance) {
-		return instance.merge();
-	}
-
+    
+    declare @type: InstanceServiceImpl: @Service;
+    
+    declare @type: InstanceServiceImpl: @Transactional;
+    
+    public long InstanceServiceImpl.countAllInstances() {
+        return Instance.countInstances();
+    }
+    
+    public Instance InstanceServiceImpl.findInstance(Long id) {
+        return Instance.findInstance(id);
+    }
+    
+    public List<Instance> InstanceServiceImpl.findAllInstances() {
+        return Instance.findAllInstances();
+    }
+    
+    public List<Instance> InstanceServiceImpl.findInstanceEntries(int firstResult, int maxResults) {
+        return Instance.findInstanceEntries(firstResult, maxResults);
+    }
+    
+    public void InstanceServiceImpl.saveInstance(Instance instance) {
+        instance.persist();
+    }
+    
+    public Instance InstanceServiceImpl.updateInstance(Instance instance) {
+        return instance.merge();
+    }
+    
 }

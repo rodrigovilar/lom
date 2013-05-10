@@ -4,15 +4,15 @@ import java.util.Set;
 
 public class CommonCreateMethodsForTesting {
 
-	public Entity createEntity(String name, String namespace) {
+	public static Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);
 		entity.setNamespace(namespace);
-		
+
 		return entity;
 	}
-	
-	public Property createProperty(String name, String configuration,
+
+	public static Property createProperty(String name, String configuration,
 			PropertyType type, Entity entity) {
 		Property property = new Property();
 		property.setName(name);
@@ -21,12 +21,11 @@ public class CommonCreateMethodsForTesting {
 		property.setEntity(entity);
 		return property;
 	}
-	
-	
-	public Instance createInstance(Entity entity){
+
+	public static Instance createInstance(Entity entity) {
 		Instance instance = new Instance();
 		instance.setEntity(entity);
-		return instance;		
+		return instance;
 	}
-	
+
 }

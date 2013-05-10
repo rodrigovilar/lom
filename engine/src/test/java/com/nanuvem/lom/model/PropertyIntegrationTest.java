@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
+import com.nanuvem.lom.model.CommonCreateMethodsForTesting;
 import com.nanuvem.lom.service.EntityNotFoundException;
 import com.nanuvem.lom.service.EntityServiceImpl;
 import com.nanuvem.lom.service.PropertyNotFoundException;
@@ -30,23 +31,6 @@ public class PropertyIntegrationTest {
 	@Autowired
 	private PropertyServiceImpl propertyService;
 
-	private Entity createEntity(String name, String namespace) {
-		Entity entity = new Entity();
-		entity.setName(name);
-		entity.setNamespace(namespace);
-		return entity;
-	}
-
-	private Property createProperty(String name, String configuration,
-			PropertyType type, Entity entity) {
-		Property property = new Property();
-		property.setName(name);
-		property.setConfiguration(configuration);
-		property.setType(type);
-		property.setEntity(entity);
-		return property;
-	}
-
 	@Before
 	public void init() {
 		entity = new Entity();
@@ -56,12 +40,13 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testCountAllPropertys() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		Assert.assertNotNull(entity);
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 		long count = propertyService.countAllPropertys();
 		Assert.assertTrue(
@@ -71,12 +56,13 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testCountPropertys() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		Assert.assertNotNull(entity);
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 		long count = Property.countPropertys();
 		Assert.assertTrue(count == 1);
@@ -84,25 +70,27 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testFindProperty() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		Assert.assertNotNull(entity);
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 
 		Property found = propertyService.findProperty(property.getId());
-		Assert.assertEquals(entity.getId(), found.getId());
+		Assert.assertEquals(property.getId(), found.getId());
 	}
 
 	@Test
 	public void testFlush() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 		Long id = property.getId();
 		Assert.assertNotNull(
@@ -125,11 +113,12 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testFindPropertyEntries() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 
 		long count = Property.countPropertys();
@@ -149,11 +138,12 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testMergeUpdate() {
-		entity = createEntity("entity", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		this.entityService.saveEntity(entity);
 
-		property = createProperty("property", null, PropertyType._BINARY,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("property",
+				null, PropertyType._BINARY, entity);
 		propertyService.saveProperty(property);
 
 		Long id = property.getId();
@@ -176,10 +166,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testSaveProperty() {
-		entity = createEntity("EntityName", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("EntityName",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("PropertyName", null, PropertyType.TEXT,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("PropertyName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 		property.flush();
 		Assert.assertNotNull(
@@ -189,10 +180,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testDeleteProperty() {
-		entity = createEntity("EntityName", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("EntityName",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("PropertyName", null, PropertyType.TEXT,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("PropertyName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 		long id = property.getId();
 		propertyService.deleteProperty(property);
@@ -202,10 +194,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testUpdatePropertyUpdate() {
-		entity = createEntity("EntityName", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("EntityName",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("PropertyName", null, PropertyType.TEXT,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("PropertyName",
+				null, PropertyType.TEXT, entity);
 		this.propertyService.saveProperty(property);
 		Assert.assertNotNull(
 				"Data on demand for 'Property' failed to initialize correctly",
@@ -232,10 +225,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void validEntityPropertyTypeAndName() {
-		entity = createEntity("EntityName", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("EntityName",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("PropertyName", null, PropertyType.TEXT,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty("PropertyName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 		Assert.assertEquals(propertyService.findProperty(property.getId()),
 				property);
@@ -243,14 +237,17 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void twoPropertiesWithSameNameInDiferentEntities() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
-		Entity entity_2 = createEntity("Entity_2", "EntityNamespace");
+		Entity entity_2 = CommonCreateMethodsForTesting.createEntity(
+				"Entity_2", "EntityNamespace");
 		entity_2.persist();
-		Property property_2 = createProperty("SameName", null,
-				PropertyType.TEXT, entity_2);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"SameName", null, PropertyType.TEXT, entity_2);
 		propertyService.saveProperty(property_2);
 
 		Assert.assertEquals(propertyService.findProperty(property_2.getId()),
@@ -260,10 +257,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void propertyNameWithSpaces() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Name with spaces", null, PropertyType.TEXT,
-				entity);
+		property = CommonCreateMethodsForTesting.createProperty(
+				"Name with spaces", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 		Assert.assertEquals(propertyService.findProperty(property.getId()),
 				property);
@@ -271,149 +269,183 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void configureMandatoryProperty() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Name with spaces", "{\"mandatory\":true}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty(
+				"Name with spaces", "{\"mandatory\":true}", PropertyType.TEXT,
+				entity);
 		propertyService.saveProperty(property);
 
 	}
 
 	@Test
 	public void configurePropertyWithDefaultValue() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Name with spaces", "{\"default\":\"abc\"}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty(
+				"Name with spaces", "{\"default\":\"abc\"}", PropertyType.TEXT,
+				entity);
 
 		propertyService.saveProperty(property);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void propertyWithoutName() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("", null,
+				PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void propertyWithoutEntity() {
 		Entity nullEntity = null;
-		property = createProperty("", null, PropertyType.TEXT, nullEntity);
+		property = CommonCreateMethodsForTesting.createProperty("", null,
+				PropertyType.TEXT, nullEntity);
 		propertyService.saveProperty(property);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void twoDifferentTypePropertiesWithSameNameInSameEntity() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("SameName", null,
-				PropertyType.PASSWORD, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"SameName", null, PropertyType.PASSWORD, entity);
 		propertyService.saveProperty(property_2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void twoSameTypePropertiesWithSameNameInSameEntity() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
-		Property property_2 = createProperty("SameName", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"SameName", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void nameWithInvalidChars() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("@#$%", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("@#$%", null,
+				PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void caseInsensitiveNames() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
-		Property property_2 = createProperty("samename", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"samename", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 	}
 
 	@Test
 	public void textPropertyConfigurationRegexValidation() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\"}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				"{\"regex\":\"a-zA-Z\"}", PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
 	}
 
 	@Test
 	public void textPropertyConfigurationMaxValidation() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"maxsize\":100}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				"{\"maxsize\":100}", PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 	}
 
 	@Test
 	public void textPropertyConfigurationMinValidation() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"minsize\":1}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("SameName",
+				"{\"minsize\":1}", PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void forceAwrongConfigurationInRegexValue() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"regex\":10, "
-				+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":true}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting
+				.createProperty(
+						"SameName",
+						"{\"regex\":10, "
+								+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":true}",
+						PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
 	}
 
 	@Test(expected = ValidationException.class)
 	public void forceAwrongConfigurationInMinsizeValue() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
-				+ "\"minsize\": notInt, \"maxsize\": 30, \"mandatory\":true}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting
+				.createProperty(
+						"SameName",
+						"{\"regex\":\"a-zA-Z\", "
+								+ "\"minsize\": notInt, \"maxsize\": 30, \"mandatory\":true}",
+						PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
 	}
 
 	@Test(expected = ValidationException.class)
 	public void forceAwrongConfigurationInMaxsizeValue() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
-				+ "\"minsize\": 0, \"maxsize\": notInt, \"mandatory\":true}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting
+				.createProperty(
+						"SameName",
+						"{\"regex\":\"a-zA-Z\", "
+								+ "\"minsize\": 0, \"maxsize\": notInt, \"mandatory\":true}",
+						PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
 	}
 
 	@Test(expected = ValidationException.class)
 	public void forceAwrongConfigurationInMandatoryValue() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("SameName", "{\"regex\":\"a-zA-Z\", "
-				+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":notBoolean}",
-				PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting
+				.createProperty(
+						"SameName",
+						"{\"regex\":\"a-zA-Z\", "
+								+ "\"minsize\": 0, \"maxsize\": 30, \"mandatory\":\"notBoolean\"}",
+						PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
 	}
@@ -422,13 +454,15 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void testFindAllPropertys() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property_1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property_1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("Property_2", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"Property_2", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 		long count = Property.countPropertys();
 		List<Property> result = propertyService.findAllPropertys();
@@ -442,13 +476,15 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void listAllPropertiesOfAnEntity() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property_1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property_1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("Property_2", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"Property_2", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 
 		List<Property> properties = Property.findPropertysByEntity(entity)
@@ -461,13 +497,15 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void listAllPropertiesOfAnEntityByValidFragmentOfName() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property_1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property_1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("Property_2", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"Property_2", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 
 		List<Property> propertiesByFragment = entity.findPropertiesByName("_2");
@@ -479,14 +517,15 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void listAllPropertiesOfAnEntityByEmptyName() {
-		// TODO
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property 1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("Property_2", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"Property_2", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 
 		List<Property> propertiesByFragment = entity.findPropertiesByName("");
@@ -499,13 +538,15 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void listAllPropertiesOfAnEntityByFragmentOfNameWithSpaces() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property 1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		Property property_2 = createProperty("Property_2", null,
-				PropertyType.TEXT, entity);
+		Property property_2 = CommonCreateMethodsForTesting.createProperty(
+				"Property_2", null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property_2);
 
 		List<Property> propertiesByFragment = entity
@@ -523,9 +564,11 @@ public class PropertyIntegrationTest {
 
 	@Test
 	public void getPropertyByID() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property 1",
+				null, PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 		Assert.assertEquals(property,
 				propertyService.findProperty(property.getId()));
@@ -545,9 +588,11 @@ public class PropertyIntegrationTest {
 
 	@Test(expected = PropertyNotFoundException.class)
 	public void deletePropretyWithAnUnknowId() {
-		entity = createEntity("Entity_1", "EntityNamespace");
+		entity = CommonCreateMethodsForTesting.createEntity("Entity_1",
+				"EntityNamespace");
 		this.entityService.saveEntity(entity);
-		property = createProperty("Property 1", null, PropertyType.TEXT, entity);
+		property = CommonCreateMethodsForTesting.createProperty("Property 1",
+				null, PropertyType.TEXT, entity);
 		propertyService.deleteProperty(property);
 	}
 

@@ -41,105 +41,107 @@ import eu.vahlas.json.schema.impl.validators.PropertiesValidator;
 import eu.vahlas.json.schema.impl.validators.TypeValidator;
 
 public class JacksonSchema implements JSONSchema, JSONValidator, Serializable {
-	
+
 	private static final long serialVersionUID = -3585793275135068320L;
-	
-	private static final Logger LOG = LoggerFactory.getLogger(JacksonSchema.class);
-	
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(JacksonSchema.class);
+
 	protected ObjectMapper mapper;
 	protected List<JSONValidator> validators;
 	protected boolean optional = false;
-	
+
 	public JacksonSchema(ObjectMapper mapper, JsonNode schemaNode) {
 		this.mapper = mapper;
 		validators = new ArrayList<JSONValidator>();
 		read(schemaNode);
 	}
-	
+
 	public JacksonSchema(JsonNode schemaNode) {
 		validators = new ArrayList<JSONValidator>();
 		read(schemaNode);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void read(JsonNode schemaNode) {
 		Iterator<String> pnames = schemaNode.getFieldNames();
-		while ( pnames.hasNext() ) {
-			String pname = pnames.next();			
+		while (pnames.hasNext()) {
+			String pname = pnames.next();
 			JsonNode n = schemaNode.get(pname);
-			
-			// If a $ref node is contained in the node, then we replace the node with the target of the ref
-			// This is an experimental implementation based on the assumption that the $ref property
+
+			// If a $ref node is contained in the node, then we replace the node
+			// with the target of the ref
+			// This is an experimental implementation based on the assumption
+			// that the $ref property
 			// contains a valid URL
 			JsonNode refNode = n.get("$ref");
-			if ( refNode != null ) {
+			if (refNode != null) {
 				try {
-					n = mapper.readTree( new URL( refNode.getTextValue() ).openStream() );
+					n = mapper.readTree(new URL(refNode.getTextValue())
+							.openStream());
 				} catch (Exception e) {
-					LOG.error("$ref resolution failed: " + refNode.getTextValue(), e);
+					LOG.error(
+							"$ref resolution failed: " + refNode.getTextValue(),
+							e);
 				}
 			}
-			
+
 			// Optional must be defined a priori
-			if ( "optional".equals(pname) ) {
-				if ( n.isBoolean() && n.getBooleanValue() ) 
+			if ("optional".equals(pname)) {
+				if (n.isBoolean() && n.getBooleanValue())
 					optional = true;
-				
+
 				continue;
 			}
-			
-			// Additional Properties validator need the list of allowed properties
-			if ( AdditionalPropertiesValidator.PROPERTY.equals(pname) ) {
-				validators.add( 
-						new AdditionalPropertiesValidator(
-								schemaNode.get(PropertiesValidator.PROPERTY),
-								schemaNode.get(AdditionalPropertiesValidator.PROPERTY)
-								)
-						);
+
+			// Additional Properties validator need the list of allowed
+			// properties
+			if (AdditionalPropertiesValidator.PROPERTY.equals(pname)) {
+				validators.add(new AdditionalPropertiesValidator(schemaNode
+						.get(PropertiesValidator.PROPERTY), schemaNode
+						.get(AdditionalPropertiesValidator.PROPERTY)));
 				continue;
 			}
-			
+
 			// Minimum needs MinimumCanEqual (if present) ...
-			if ( MinimumValidator.PROPERTY.equals(pname)) {
-				validators.add(
-						new MinimumValidator(
-								schemaNode.get(MinimumValidator.PROPERTY),
-								schemaNode.get(MinimumValidator.PROPERTY_CANEQUAL)
-								)
-						);
+			if (MinimumValidator.PROPERTY.equals(pname)) {
+				validators.add(new MinimumValidator(schemaNode
+						.get(MinimumValidator.PROPERTY), schemaNode
+						.get(MinimumValidator.PROPERTY_CANEQUAL)));
 				continue;
 			}
 			// ... and MinimumCanEqual alone is a nonsense
-			if ( MinimumValidator.PROPERTY_CANEQUAL.equals(pname)) {
+			if (MinimumValidator.PROPERTY_CANEQUAL.equals(pname)) {
 				continue;
 			}
 
 			// Maximum needs MaximumCanEqual (if present) ...
-			if ( MaximumValidator.PROPERTY.equals(pname)) {
-				validators.add(
-						new MaximumValidator(
-								schemaNode.get(MaximumValidator.PROPERTY),
-								schemaNode.get(MaximumValidator.PROPERTY_CANEQUAL)
-								)
-						);
+			if (MaximumValidator.PROPERTY.equals(pname)) {
+				validators.add(new MaximumValidator(schemaNode
+						.get(MaximumValidator.PROPERTY), schemaNode
+						.get(MaximumValidator.PROPERTY_CANEQUAL)));
 				continue;
 			}
 			// ... and MaximumCanEqual alone is a nonsense
-			if ( MaximumValidator.PROPERTY_CANEQUAL.equals(pname)) {
+			if (MaximumValidator.PROPERTY_CANEQUAL.equals(pname)) {
 				continue;
 			}
-			
+
 			// General case
-			String className = Character.toUpperCase( pname.charAt(0) ) + pname.substring(1) + "Validator";
-			if ( n != null ) {
+			String className = Character.toUpperCase(pname.charAt(0))
+					+ pname.substring(1) + "Validator";
+			if (n != null) {
 				try {
-					Class<JSONValidator> clazz = (Class<JSONValidator>) Class.forName("eu.vahlas.json.schema.impl.validators." + className);
+					Class<JSONValidator> clazz = (Class<JSONValidator>) Class
+							.forName("eu.vahlas.json.schema.impl.validators."
+									+ className);
 					Constructor<JSONValidator> c = null;
 					try {
 						c = clazz.getConstructor(JsonNode.class);
 						validators.add(c.newInstance(n));
 					} catch (NoSuchMethodException nsme) {
-						c = clazz.getConstructor( new Class[] {JsonNode.class, ObjectMapper.class} );
+						c = clazz.getConstructor(new Class[] { JsonNode.class,
+								ObjectMapper.class });
 						validators.add(c.newInstance(n, mapper));
 					}
 				} catch (Exception e) {
@@ -147,26 +149,29 @@ public class JacksonSchema implements JSONSchema, JSONValidator, Serializable {
 					validators.add(new NoOpValidator(n));
 				}
 			} else {
-				if ( TypeValidator.PROPERTY.equals( pname ) )
-					throw new JSONSchemaException("Invalid JSON Schema: \"type\" property not found!");
+				if (TypeValidator.PROPERTY.equals(pname))
+					throw new JSONSchemaException(
+							"Invalid JSON Schema: \"type\" property not found!");
 			}
 		}
 	}
-	
-	// --------------------------------------------------- Implement JSONValidator
+
+	// --------------------------------------------------- Implement
+	// JSONValidator
 	public List<String> validate(JsonNode jsonNode, String at) {
 		return validate(jsonNode, null, at);
 	}
-	
+
 	public List<String> validate(JsonNode jsonNode, JsonNode parent, String at) {
 		List<String> errors = new ArrayList<String>();
-		for ( JSONValidator v : validators ) {
+		for (JSONValidator v : validators) {
 			errors.addAll(v.validate(jsonNode, parent, at));
 		}
 		return errors;
 	}
-	
-	// ----------------------------------------------------- Implement JSONSchema
+
+	// ----------------------------------------------------- Implement
+	// JSONSchema
 	@Override
 	public List<String> validate(String json) {
 		try {
@@ -210,6 +215,8 @@ public class JacksonSchema implements JSONSchema, JSONValidator, Serializable {
 			throw new JSONSchemaException(ioe);
 		}
 	}
-	
-	public boolean isOptional() { return optional; }
+
+	public boolean isOptional() {
+		return optional;
+	}
 }

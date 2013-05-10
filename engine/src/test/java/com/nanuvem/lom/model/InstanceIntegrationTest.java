@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
+import com.nanuvem.lom.model.CommonCreateMethodsForTesting;
 import com.nanuvem.lom.service.EntityServiceImpl;
 import com.nanuvem.lom.service.InstanceNotFoundException;
 import com.nanuvem.lom.service.InstanceService;
@@ -16,8 +17,6 @@ import com.nanuvem.lom.service.PropertyServiceImpl;
 
 @RooIntegrationTest(entity = Instance.class)
 public class InstanceIntegrationTest {
-
-	private CommonCreateMethodsForTesting common = new CommonCreateMethodsForTesting();
 
 	private Entity entity;
 	private Property property;
@@ -45,8 +44,9 @@ public class InstanceIntegrationTest {
 
 	@Test(expected = InstanceNotFoundException.class)
 	public void testDeleteInstance() {
-		this.entity = common.createEntity("entity", "namespace");
-		this.instance = common.createInstance(entity);
+		this.entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
+		this.instance = CommonCreateMethodsForTesting.createInstance(entity);
 		entityService.saveEntity(entity);
 		instanceService.saveInstance(instance);
 		Long id = instance.getId();
@@ -60,8 +60,9 @@ public class InstanceIntegrationTest {
 
 	@Test
 	public void entityWithoutProperties() throws Exception {
-		this.entity = common.createEntity("entity", "namespace");
-		this.instance = common.createInstance(entity);
+		this.entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
+		this.instance = CommonCreateMethodsForTesting.createInstance(entity);
 		entityService.saveEntity(entity);
 		instanceService.saveInstance(instance);
 		Assert.assertEquals(instance,
@@ -70,19 +71,23 @@ public class InstanceIntegrationTest {
 
 	@Test
 	public void entityWithNonMandatoryProperties() throws Exception {
-		this.entity = common.createEntity("entity", "namespace");
+		this.entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		entityService.saveEntity(entity);
 
-		this.property = common.createProperty("property",
-				"{\"mandatory\":false}", PropertyType.TEXT, entity);
+		this.property = CommonCreateMethodsForTesting.createProperty(
+				"property", "{\"mandatory\":false}", PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		this.instance = common.createInstance(entity);
+		Property property2 = CommonCreateMethodsForTesting.createProperty(
+				"property2", "{}", PropertyType.TEXT, entity);
+		propertyService.saveProperty(property2);
+
+		this.instance = CommonCreateMethodsForTesting.createInstance(entity);
 		instanceService.saveInstance(instance);
 
 		Assert.assertEquals(instance,
 				instanceService.findInstance(instance.getId()));
-
 	}
 
 	@Test
@@ -91,6 +96,7 @@ public class InstanceIntegrationTest {
 
 	}
 
+	// TODO
 	@Test(expected = Exception.class)
 	public void validEntityWithMandatoryPropertiesWithoutDefaultValue()
 			throws Exception {
@@ -99,14 +105,15 @@ public class InstanceIntegrationTest {
 
 	@Test
 	public void listAllInstancesOfAnEntity() {
-		this.entity = common.createEntity("entity", "namespace");
+		this.entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		entityService.saveEntity(entity);
 
-		this.property = common.createProperty("property",
-				"{\"mandatory\":false}", PropertyType.TEXT, entity);
+		this.property = CommonCreateMethodsForTesting.createProperty(
+				"property", "{\"mandatory\":false}", PropertyType.TEXT, entity);
 		propertyService.saveProperty(property);
 
-		this.instance = common.createInstance(entity);
+		this.instance = CommonCreateMethodsForTesting.createInstance(entity);
 		instanceService.saveInstance(instance);
 
 		List<Instance> allInstancesByEntity = instanceService
@@ -124,13 +131,17 @@ public class InstanceIntegrationTest {
 
 	@Test
 	public void getInstanceById() throws Exception {
-		this.instance = common.createInstance(entity);
+		this.entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
+		entityService.saveEntity(entity);
+		this.instance = CommonCreateMethodsForTesting.createInstance(entity);
 		instanceService.saveInstance(instance);
 
 		Assert.assertEquals(instance,
 				instanceService.findInstance(instance.getId()));
 
-		Instance instance2 = common.createInstance(entity);
+		Instance instance2 = CommonCreateMethodsForTesting
+				.createInstance(entity);
 		instanceService.saveInstance(instance2);
 
 		Assert.assertEquals(instance2,
@@ -144,8 +155,10 @@ public class InstanceIntegrationTest {
 
 	@Test(expected = InstanceNotFoundException.class)
 	public void listInstancesIfAnUnknownEntity() {
-		Entity unknownEntity = new Entity();
-		instanceService.findInstancesByEntity(unknownEntity);
+		Entity entityWithUnknowId = CommonCreateMethodsForTesting.createEntity(
+				"entity", "namespace");
+		entityService.saveEntity(entityWithUnknowId);
+		instanceService.findInstancesByEntity(entityWithUnknowId);
 	}
 
 	@Test(expected = InstanceNotFoundException.class)

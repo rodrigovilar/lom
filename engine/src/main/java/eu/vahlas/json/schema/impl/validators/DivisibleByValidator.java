@@ -29,17 +29,18 @@ import eu.vahlas.json.schema.impl.JSONValidator;
 public class DivisibleByValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = 8255703049783662141L;
-	private static final Logger LOG = LoggerFactory.getLogger(DivisibleByValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(DivisibleByValidator.class);
+
 	public static final String PROPERTY = "divisibleBy";
 
 	public long divisor = 0;
-	
+
 	public DivisibleByValidator(JsonNode divisibleByNode) {
-		if ( divisibleByNode.isIntegralNumber() )
+		if (divisibleByNode.isIntegralNumber())
 			divisor = divisibleByNode.getLongValue();
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -50,14 +51,14 @@ public class DivisibleByValidator implements JSONValidator, Serializable {
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
-		if ( node.isIntegralNumber() ) {
+
+		if (node.isIntegralNumber()) {
 			long nodeValue = node.getLongValue();
-			if ( divisor != 0 && nodeValue % divisor != 0 ) {
+			if (divisor != 0 && nodeValue % divisor != 0) {
 				errors.add(at + ": must be divisible by " + divisor);
 			}
 		}
-		
+
 		return errors;
 	}
 
