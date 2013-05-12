@@ -88,6 +88,7 @@ public class InstanceIntegrationTest {
 
 		Assert.assertEquals(instance,
 				instanceService.findInstance(instance.getId()));
+		Assert.assertEquals(2, Property.countPropertys());
 	}
 
 	@Test
