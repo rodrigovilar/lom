@@ -1,12 +1,17 @@
 class UlRootWidget
  
+      
+  
+
   itemClicked:(entity) ->
   	$.getScript 'widgets/entity/'+ entity.id, (data, textStatus, jqxhr) ->   
-  	
+  	 
   draw: (jsonObj) ->
 
-    ul = $("<ul>");
-    $("div").append ul
+
+           
+    ul = $("<ul class='alt'>");
+    $("#rootdiv").append ul
     $.each jsonObj, (i, entity) =>
       li = $("<li>" + entity.name + "</li>")
       
@@ -19,7 +24,11 @@ class UlRootWidget
 
   constructor: ->
     $.getJSON 'entities', (jsonObj) =>
-      this.draw(jsonObj)
-
+      @draw(jsonObj)
+      
+       
+       
 $ ->
   new UlRootWidget
+
+

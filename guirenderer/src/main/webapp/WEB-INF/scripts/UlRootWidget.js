@@ -10,8 +10,8 @@
     UlRootWidget.prototype.draw = function(jsonObj) {
       var ul,
         _this = this;
-      ul = $("<ul>");
-      $("div").append(ul);
+      ul = $("<ul class='alt'>");
+      $("#rootdiv").append(ul);
       return $.each(jsonObj, function(i, entity) {
         var li;
         li = $("<li>" + entity.name + "</li>");
