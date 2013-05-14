@@ -18,23 +18,23 @@ package eu.vahlas.json.schema;
 
 import java.io.Serializable;
 
-public class JSONSchemaException extends RuntimeException 
-								 implements Serializable {
-	
+public class JSONSchemaException extends RuntimeException implements
+		Serializable {
+
 	private static final long serialVersionUID = -6253311365554811087L;
 
 	public JSONSchemaException() {
 		super();
 	}
-	
+
 	public JSONSchemaException(String message) {
 		super(message);
 	}
-	
+
 	public JSONSchemaException(Throwable throwable) {
 		super(throwable);
 	}
-	
+
 	public JSONSchemaException(String message, Throwable throwable) {
 		super(message, throwable);
 	}

@@ -30,26 +30,27 @@ import eu.vahlas.json.schema.impl.JSONValidator;
 public class ItemsValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -5023382376825229965L;
-	private static final Logger LOG = LoggerFactory.getLogger(ItemsValidator.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(ItemsValidator.class);
 
 	public static final String PROPERTY = "items";
-	
+
 	protected JacksonSchema schema;
 	protected List<JacksonSchema> tupleSchema;
-	
+
 	public ItemsValidator(JsonNode itemSchema) {
-		if ( itemSchema.isObject() ) {
+		if (itemSchema.isObject()) {
 			schema = new JacksonSchema(itemSchema);
 		}
-		
-		if ( itemSchema.isArray() ) {
+
+		if (itemSchema.isArray()) {
 			tupleSchema = new ArrayList<JacksonSchema>();
-			for ( JsonNode s : itemSchema ) {
-				tupleSchema.add( new JacksonSchema(s) );
+			for (JsonNode s : itemSchema) {
+				tupleSchema.add(new JacksonSchema(s));
 			}
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -60,21 +61,23 @@ public class ItemsValidator implements JSONValidator, Serializable {
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
+
 		int i = 0;
-		for ( JsonNode n : node ) {
-			if ( schema != null ) {
-				errors.addAll( schema.validate(n, node, at + "[" + i + "]") );
+		for (JsonNode n : node) {
+			if (schema != null) {
+				errors.addAll(schema.validate(n, node, at + "[" + i + "]"));
 			}
-			
-			if ( tupleSchema != null ) {
-				if ( i >= tupleSchema.size() ) {
-					errors.add(at + "[" + i + "]: no validator found at this index");
+
+			if (tupleSchema != null) {
+				if (i >= tupleSchema.size()) {
+					errors.add(at + "[" + i
+							+ "]: no validator found at this index");
 				} else {
-					errors.addAll( tupleSchema.get(i).validate(n, node, at + "[" + i + "]") );
+					errors.addAll(tupleSchema.get(i).validate(n, node,
+							at + "[" + i + "]"));
 				}
 			}
-			
+
 			i++;
 		}
 		return errors;

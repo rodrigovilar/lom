@@ -5,7 +5,6 @@ package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.InstanceDataOnDemand;
 import com.nanuvem.lom.model.InstanceIntegrationTest;
-import com.nanuvem.lom.service.InstanceService;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,10 +23,7 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
     declare @type: InstanceIntegrationTest: @Transactional;
     
     @Autowired
-    private InstanceDataOnDemand InstanceIntegrationTest.dod;
-    
-    @Autowired
-    InstanceService InstanceIntegrationTest.instanceService;
+    InstanceDataOnDemand InstanceIntegrationTest.dod;
     
     @Test
     public void InstanceIntegrationTest.testCountAllInstances() {
@@ -107,18 +103,6 @@ privileged aspect InstanceIntegrationTest_Roo_IntegrationTest {
         instanceService.saveInstance(obj);
         obj.flush();
         Assert.assertNotNull("Expected 'Instance' identifier to no longer be null", obj.getId());
-    }
-    
-    @Test
-    public void InstanceIntegrationTest.testDeleteInstance() {
-        Instance obj = dod.getRandomInstance();
-        Assert.assertNotNull("Data on demand for 'Instance' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'Instance' failed to provide an identifier", id);
-        obj = instanceService.findInstance(id);
-        instanceService.deleteInstance(obj);
-        obj.flush();
-        Assert.assertNull("Failed to remove 'Instance' with identifier '" + id + "'", instanceService.findInstance(id));
     }
     
 }

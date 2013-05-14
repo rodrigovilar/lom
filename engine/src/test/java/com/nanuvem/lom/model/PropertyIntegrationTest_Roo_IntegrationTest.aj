@@ -4,11 +4,8 @@
 package com.nanuvem.lom.model;
 
 import com.nanuvem.lom.model.PropertyIntegrationTest;
-import com.nanuvem.lom.service.PropertyService;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,53 +17,5 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
     declare @type: PropertyIntegrationTest: @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext*.xml");
     
     declare @type: PropertyIntegrationTest: @Transactional;
-    
-    @Autowired
-    PropertyService PropertyIntegrationTest.propertyService;
-    
-    @Test
-    public void PropertyIntegrationTest.testCountAllPropertys() {
-        Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
-        long count = propertyService.countAllPropertys();
-        Assert.assertTrue("Counter for 'Property' incorrectly reported there were no entries", count > 0);
-    }
-    
-    @Test
-    public void PropertyIntegrationTest.testUpdatePropertyUpdate() {
-        Property obj = dod.getRandomProperty();
-        Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
-        boolean modified =  dod.modifyProperty(obj);
-        Integer currentVersion = obj.getVersion();
-        Property merged = propertyService.updateProperty(obj);
-        obj.flush();
-        Assert.assertEquals("Identifier of merged object not the same as identifier of original object", merged.getId(), id);
-        Assert.assertTrue("Version for 'Property' failed to increment on merge and flush directive", (currentVersion != null && obj.getVersion() > currentVersion) || !modified);
-    }
-    
-    @Test
-    public void PropertyIntegrationTest.testSaveProperty() {
-        Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", dod.getRandomProperty());
-        Property obj = dod.getNewTransientProperty(Integer.MAX_VALUE);
-        Assert.assertNotNull("Data on demand for 'Property' failed to provide a new transient entity", obj);
-        Assert.assertNull("Expected 'Property' identifier to be null", obj.getId());
-        propertyService.saveProperty(obj);
-        obj.flush();
-        Assert.assertNotNull("Expected 'Property' identifier to no longer be null", obj.getId());
-    }
-    
-    @Test
-    public void PropertyIntegrationTest.testDeleteProperty() {
-        Property obj = dod.getRandomProperty();
-        Assert.assertNotNull("Data on demand for 'Property' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'Property' failed to provide an identifier", id);
-        obj = propertyService.findProperty(id);
-        propertyService.deleteProperty(obj);
-        obj.flush();
-        Assert.assertNull("Failed to remove 'Property' with identifier '" + id + "'", propertyService.findProperty(id));
-    }
     
 }

@@ -19,10 +19,6 @@ privileged aspect PropertyServiceImpl_Roo_Service {
         return Property.countPropertys();
     }
     
-    public void PropertyServiceImpl.deleteProperty(Property property) {
-        property.remove();
-    }
-    
     public Property PropertyServiceImpl.findProperty(Long id) {
         return Property.findProperty(id);
     }
@@ -33,10 +29,6 @@ privileged aspect PropertyServiceImpl_Roo_Service {
     
     public List<Property> PropertyServiceImpl.findPropertyEntries(int firstResult, int maxResults) {
         return Property.findPropertyEntries(firstResult, maxResults);
-    }
-    
-    public void PropertyServiceImpl.saveProperty(Property property) {
-        property.persist();
     }
     
     public Property PropertyServiceImpl.updateProperty(Property property) {

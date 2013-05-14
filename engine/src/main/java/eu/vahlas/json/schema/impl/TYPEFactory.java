@@ -26,91 +26,98 @@ import eu.vahlas.json.schema.TYPE;
 
 public class TYPEFactory {
 	/**
-	 * Translates the "type" property of the <code>org.codehaus.jackson.JsonNode<code> 
+	 * Translates the "type" property of the
+	 * <code>org.codehaus.jackson.JsonNode<code> 
 	 * passed into one of the types defined in the paragraph 5.1 of the JSON schema specification.
 	 * 
-	 * @param the node containing the "type" property to translate.
+	 * @param the
+	 *            node containing the "type" property to translate.
 	 * @return the type as defined by the JSON Schema specification
 	 */
 	public static TYPE getType(JsonNode node) {
 		JsonNode typeNode = node.get("type");
-		if ( node.isTextual() )
+		if (node.isTextual())
 			typeNode = node;
-		if ( typeNode == null ) {
-			throw new JSONSchemaException("Invalid schema provided: property type is not defined!");
+		if (typeNode == null) {
+			throw new JSONSchemaException(
+					"Invalid schema provided: property type is not defined!");
 		}
-		
-		//Single Type Definition
-		if ( typeNode.isTextual() ) {
+
+		// Single Type Definition
+		if (typeNode.isTextual()) {
 			String type = typeNode.getTextValue();
-			if ( "object".equals(type) ) {
+			if ("object".equals(type)) {
 				return TYPE.OBJECT;
 			}
-			if ( "array".equals(type) ) {
+			if ("array".equals(type)) {
 				return TYPE.ARRAY;
 			}
-			if ( "string".equals(type) ) {
+			if ("string".equals(type)) {
 				return TYPE.STRING;
 			}
-			if ( "number".equals(type) ) {
+			if ("number".equals(type)) {
 				return TYPE.NUMBER;
 			}
-			if ( "integer".equals(type) ) {
+			if ("integer".equals(type)) {
 				return TYPE.INTEGER;
 			}
-			if ( "boolean".equals(type) ) {
+			if ("boolean".equals(type)) {
 				return TYPE.BOOLEAN;
 			}
-			if ( "any".equals(type) ) {
+			if ("any".equals(type)) {
 				return TYPE.ANY;
 			}
-			if ( "null".equals(type) ) {
+			if ("null".equals(type)) {
 				return TYPE.NULL;
 			}
 		}
-		
-		//Union Type Definition
-		if ( typeNode.isArray() ) {
+
+		// Union Type Definition
+		if (typeNode.isArray()) {
 			return TYPE.UNION;
-		}			
-		
+		}
+
 		return TYPE.UNKNOWN;
 	}
 
 	/**
-	 * Translates the "type" property of the <code>org.codehaus.jackson.JsonNode<code> 
+	 * Translates the "type" property of the
+	 * <code>org.codehaus.jackson.JsonNode<code> 
 	 * passed into an array of types as defined in the paragraph 5.1 of the JSON schema specification.<br/>
 	 * <br/>
-	 * This is supposed to be used when the <code>getType(JsonNode node)</code> method
-	 * returns TYPE.UNION.<br/>
+	 * This is supposed to be used when the <code>getType(JsonNode node)</code>
+	 * method returns TYPE.UNION.<br/>
 	 * 
-	 * @param the node containing the "type" property to translate.
+	 * @param the
+	 *            node containing the "type" property to translate.
 	 * @return the type as defined by the JSON Schema specification
 	 */
 	public static TYPE[] getUnionType(JsonNode node) {
 		JsonNode typeNode = node.get("type");
-		if ( typeNode == null )
-			return new TYPE[] {TYPE.UNKNOWN};
-		
-		if ( typeNode.isTextual() )
+		if (typeNode == null)
+			return new TYPE[] { TYPE.UNKNOWN };
+
+		if (typeNode.isTextual())
 			return new TYPE[] { getType(node) };
-		
-		if ( typeNode.isArray() ) {
+
+		if (typeNode.isArray()) {
 			List<TYPE> unionTypes = new ArrayList<TYPE>();
-			for (JsonNode n : typeNode ) {
+			for (JsonNode n : typeNode) {
 				TYPE t = getType(n);
-				if ( t == TYPE.UNION )
-					throw new RuntimeException("Recursive union types are not allowed in JSON Schema.");
+				if (t == TYPE.UNION)
+					throw new RuntimeException(
+							"Recursive union types are not allowed in JSON Schema.");
 				unionTypes.add(t);
 			}
 			return unionTypes.toArray(new TYPE[] {});
 		}
-		return new TYPE[] {TYPE.UNKNOWN};
+		return new TYPE[] { TYPE.UNKNOWN };
 	}
-	
+
 	/**
-	 * Translates the type of a <code>org.codehaus.jackson.JsonNode</code> passed
-	 * into a type as defined in the paragraph 5.1 of the JSON Schema specification.<br/>
+	 * Translates the type of a <code>org.codehaus.jackson.JsonNode</code>
+	 * passed into a type as defined in the paragraph 5.1 of the JSON Schema
+	 * specification.<br/>
 	 * <br/>
 	 * This method returns the "real" type of the node passed.
 	 * 
@@ -119,31 +126,31 @@ public class TYPEFactory {
 	 */
 	public static TYPE getNodeType(JsonNode node) {
 		// object or array
-	    if ( node.isContainerNode() ) {
-	    	if ( node.isObject() )
-	    		return TYPE.OBJECT;
-	    	if ( node.isArray() )
-	    		return TYPE.ARRAY;
-	    	return TYPE.UNKNOWN;
-	    }
-	    
-	    // string, number, integer, boolean, null
-	    if ( node.isValueNode() ) {
-	    	if ( node.isTextual() )
-	    		return TYPE.STRING;
-	    	if ( node.isIntegralNumber() )
-	    		return TYPE.INTEGER;
-	    	if ( node.isNumber() )
-	    		return TYPE.NUMBER;
-	    	if ( node.isBoolean() )
-	    		return TYPE.BOOLEAN;
-	    	if ( node.isNull() )
-	    		return TYPE.NULL;
-	    	return TYPE.UNKNOWN;
-	    } 
-	    
-	    // Unknown  
+		if (node.isContainerNode()) {
+			if (node.isObject())
+				return TYPE.OBJECT;
+			if (node.isArray())
+				return TYPE.ARRAY;
+			return TYPE.UNKNOWN;
+		}
+
+		// string, number, integer, boolean, null
+		if (node.isValueNode()) {
+			if (node.isTextual())
+				return TYPE.STRING;
+			if (node.isIntegralNumber())
+				return TYPE.INTEGER;
+			if (node.isNumber())
+				return TYPE.NUMBER;
+			if (node.isBoolean())
+				return TYPE.BOOLEAN;
+			if (node.isNull())
+				return TYPE.NULL;
+			return TYPE.UNKNOWN;
+		}
+
+		// Unknown
 		return TYPE.UNKNOWN;
 	}
-	
+
 }

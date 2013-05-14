@@ -6,7 +6,7 @@ import org.springframework.roo.addon.test.RooIntegrationTest;
 @RooIntegrationTest(entity = PropertyValue.class)
 public class PropertyValueIntegrationTest {
 
-    @Test
-    public void testMarkerMethod() {
-    }
+	@Test
+	public void testMarkerMethod() {
+	}
 }

@@ -32,26 +32,27 @@ import eu.vahlas.json.schema.impl.JSONValidator;
 public class MaximumValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -6065577788738619222L;
-	private static final Logger LOG = LoggerFactory.getLogger(MaximumValidator.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MaximumValidator.class);
 
 	public static final String PROPERTY = "maximum";
 	public static final String PROPERTY_CANEQUAL = "maximumCanEqual";
-	
+
 	protected Number maximum;
 	protected JsonParser.NumberType numberType;
 	protected boolean canEqual = true;
-	
+
 	public MaximumValidator(JsonNode maximumNode, JsonNode maximumCanEqualNode) {
 		if (maximumNode != null && maximumNode.isNumber()) {
 			maximum = maximumNode.getNumberValue();
 			numberType = maximumNode.getNumberType();
 		}
-		
+
 		if (maximumCanEqualNode != null && maximumCanEqualNode.isBoolean()) {
 			canEqual = maximumCanEqualNode.getBooleanValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -62,54 +63,50 @@ public class MaximumValidator implements JSONValidator, Serializable {
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
-		if ( maximum == null ) // should not happen in a well-written JSON Schema
+
+		if (maximum == null) // should not happen in a well-written JSON Schema
 			return errors;
-		
+
 		JsonParser.NumberType numberType = node.getNumberType();
 		boolean greaterThanMax = false;
-		switch(numberType) {
-			case BIG_DECIMAL:
-				if ( node.getDecimalValue()
-		           .compareTo( (BigDecimal) maximum) > 0 ) {
-					greaterThanMax = true;
-				}
-				break;
-			case BIG_INTEGER:
-				if ( node.getBigIntegerValue()
-				   .compareTo( (BigInteger) maximum) > 0 ) {
-					greaterThanMax = true;
-				}
-				break;
-			case DOUBLE:
-				if ( node.getDoubleValue() > maximum.doubleValue() ) {
-					greaterThanMax = true;
-				}
-				break;
-			case FLOAT:
-				if ( node.getDoubleValue() > maximum.doubleValue() ) {
-					greaterThanMax = true;
-				}
-				break;
-			case INT:
-				if ( node.getIntValue() > maximum.intValue() ) {
-					greaterThanMax = true;
-				}
-				break;
-			case LONG:
-				if ( node.getLongValue() > maximum.longValue() ) {
-					greaterThanMax = true;
-				}
-				break;
+		switch (numberType) {
+		case BIG_DECIMAL:
+			if (node.getDecimalValue().compareTo((BigDecimal) maximum) > 0) {
+				greaterThanMax = true;
+			}
+			break;
+		case BIG_INTEGER:
+			if (node.getBigIntegerValue().compareTo((BigInteger) maximum) > 0) {
+				greaterThanMax = true;
+			}
+			break;
+		case DOUBLE:
+			if (node.getDoubleValue() > maximum.doubleValue()) {
+				greaterThanMax = true;
+			}
+			break;
+		case FLOAT:
+			if (node.getDoubleValue() > maximum.doubleValue()) {
+				greaterThanMax = true;
+			}
+			break;
+		case INT:
+			if (node.getIntValue() > maximum.intValue()) {
+				greaterThanMax = true;
+			}
+			break;
+		case LONG:
+			if (node.getLongValue() > maximum.longValue()) {
+				greaterThanMax = true;
+			}
+			break;
 		}
-		
-		if ( greaterThanMax || (
-				!canEqual 
-				&& node.getNumberValue().equals(maximum)) ) {
+
+		if (greaterThanMax
+				|| (!canEqual && node.getNumberValue().equals(maximum))) {
 			errors.add(at + ": must have a maximum value of " + maximum);
 		}
 		return errors;
 	}
-
 
 }

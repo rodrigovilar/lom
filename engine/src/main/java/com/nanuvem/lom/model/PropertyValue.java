@@ -6,17 +6,17 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 
-@RooJson(deepSerialize=true)
+@RooJson(deepSerialize = true)
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord
 public class PropertyValue {
 
-    private String _value;
+	private String _value;
 
-    @ManyToOne
-    private Instance instance;
+	@ManyToOne
+	private Instance instance;
 
-    @ManyToOne
-    private Property property;
+	@ManyToOne
+	private Property property;
 }
