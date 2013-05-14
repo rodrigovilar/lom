@@ -33,61 +33,64 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class UnionTypeValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -7954619972059351060L;
-	private static final Logger LOG = LoggerFactory.getLogger(UnionTypeValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(UnionTypeValidator.class);
+
 	public static final String PROPERTY = "type";
-	
+
 	protected List<JSONValidator> schemas;
 	private String error;
-	
+
 	public UnionTypeValidator(JsonNode typeNode) {
 		schemas = new ArrayList<JSONValidator>();
 		String sep = "";
 		error = "[";
-		
-		if ( !typeNode.isArray() )
-			throw new  JSONSchemaException("Expected array for type property on Union Type Definition.");
-		
-		for ( JsonNode n : typeNode ) {
+
+		if (!typeNode.isArray())
+			throw new JSONSchemaException(
+					"Expected array for type property on Union Type Definition.");
+
+		for (JsonNode n : typeNode) {
 			TYPE t = TYPEFactory.getType(n);
 			error += sep + t;
 			sep = ", ";
-			
-			if ( n.isObject() )
-				schemas.add( new JacksonSchema(n) );
+
+			if (n.isObject())
+				schemas.add(new JacksonSchema(n));
 			else
-				schemas.add( new TypeValidator(n) );
+				schemas.add(new TypeValidator(n));
 		}
-		
+
 		error += "]";
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
 		return validate(node, null, at);
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		
+
 		List<String> _return = new ArrayList<String>();
 		boolean valid = false;
-		
-		for ( JSONValidator schema : schemas ) {
+
+		for (JSONValidator schema : schemas) {
 			List<String> errors = schema.validate(node, at);
-			if ( errors == null || errors.size() == 0 ) {
+			if (errors == null || errors.size() == 0) {
 				valid = true;
 				break;
 			}
 		}
-		
-		if ( !valid ) {
-			_return.add( at + ": " + nodeType + " found, but " + error + " is required" );
+
+		if (!valid) {
+			_return.add(at + ": " + nodeType + " found, but " + error
+					+ " is required");
 		}
-		
+
 		return _return;
 	}
 

@@ -27,7 +27,7 @@ privileged aspect PropertyDataOnDemand_Roo_DataOnDemand {
     private List<Property> PropertyDataOnDemand.data;
     
     @Autowired
-    private EntityDataOnDemand PropertyDataOnDemand.entityDataOnDemand;
+    EntityDataOnDemand PropertyDataOnDemand.entityDataOnDemand;
     
     @Autowired
     PropertyService PropertyDataOnDemand.propertyService;

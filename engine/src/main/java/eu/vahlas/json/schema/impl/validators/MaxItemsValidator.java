@@ -27,24 +27,25 @@ import org.slf4j.LoggerFactory;
 import eu.vahlas.json.schema.impl.JSONValidator;
 
 /**
- * Implements "maxItems" validation on array nodes as described in 
- * the paragraph 5.12 of the JSON Schema specification.
+ * Implements "maxItems" validation on array nodes as described in the paragraph
+ * 5.12 of the JSON Schema specification.
  */
 public class MaxItemsValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -2811868595159447028L;
-	private static final Logger LOG = LoggerFactory.getLogger(MinItemsValidator.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MinItemsValidator.class);
 
 	public static final String PROPERTY = "maxItems";
-	
+
 	private int max = 0;
-	
+
 	public MaxItemsValidator(JsonNode maxItemsNode) {
-		if ( maxItemsNode.isIntegralNumber() ) {
+		if (maxItemsNode.isIntegralNumber()) {
 			max = maxItemsNode.getIntValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -54,15 +55,16 @@ public class MaxItemsValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
-		
-		List<String> errors = new ArrayList<String>(); 
-		
-		if ( node.isArray() ) {
-			if ( node.size() > max ) {
-				errors.add(at + ": there must be a maximum of " + max + " items in the array");
+
+		List<String> errors = new ArrayList<String>();
+
+		if (node.isArray()) {
+			if (node.size() > max) {
+				errors.add(at + ": there must be a maximum of " + max
+						+ " items in the array");
 			}
 		}
-		
+
 		return errors;
 	}
 

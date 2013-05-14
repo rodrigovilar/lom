@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
@@ -17,6 +16,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
+
+import com.nanuvem.lom.service.EntityNotFoundException;
 
 @RooJson(deepSerialize = true)
 @RooJavaBean
@@ -55,20 +56,25 @@ public class Entity {
 		return Property.findPropertysByEntityAndNameLike(this, fragmentOfName)
 				.getResultList();
 	}
-	
-    public static TypedQuery<Entity> findEntitysByNamespaceEquals(String namespace) {
-    	EntityManager em = Entity.entityManager();
-    	TypedQuery<Entity> q;
-    	
-    	if (namespace==null) {
-    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace IS NULL", Entity.class);
-    		
-    	} else {
-    		q = em.createQuery("SELECT o FROM Entity AS o WHERE o.namespace = :namespace", Entity.class);
-            q.setParameter("namespace", namespace);
-    	}
-    	
-        return q;
-    }
+
+	public static TypedQuery<Entity> findEntitysByNamespaceEquals(
+			String namespace) {
+		EntityManager em = Entity.entityManager();
+		TypedQuery<Entity> q;
+
+		if (namespace == null) {
+			q = em.createQuery(
+					"SELECT o FROM Entity AS o WHERE o.namespace IS NULL",
+					Entity.class);
+
+		} else {
+			q = em.createQuery(
+					"SELECT o FROM Entity AS o WHERE o.namespace = :namespace",
+					Entity.class);
+			q.setParameter("namespace", namespace);
+		}
+
+		return q;
+	}
 
 }

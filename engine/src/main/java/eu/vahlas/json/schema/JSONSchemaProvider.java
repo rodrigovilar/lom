@@ -22,7 +22,10 @@ import java.net.URL;
 
 public interface JSONSchemaProvider {
 	JSONSchema getSchema(String schema);
+
 	JSONSchema getSchema(InputStream schemaStream);
+
 	JSONSchema getSchema(Reader schemaReader);
+
 	JSONSchema getSchema(URL schemaURL);
 }

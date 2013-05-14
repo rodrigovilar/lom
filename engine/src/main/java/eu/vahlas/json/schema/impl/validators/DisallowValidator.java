@@ -31,26 +31,27 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class DisallowValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -7563984149808796291L;
-	private static final Logger LOG = LoggerFactory.getLogger(DisallowValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(DisallowValidator.class);
+
 	public static final String PROPERTY = "disallow";
-	
+
 	protected TYPE[] disallowedTypes;
-	
+
 	public DisallowValidator(JsonNode disallowNode) {
-		if ( disallowNode.isObject() || disallowNode.isTextual() ) {
-			disallowedTypes = new TYPE[] {TYPEFactory.getType(disallowNode)};
+		if (disallowNode.isObject() || disallowNode.isTextual()) {
+			disallowedTypes = new TYPE[] { TYPEFactory.getType(disallowNode) };
 		}
-		
-		if ( disallowNode.isArray() ) {
+
+		if (disallowNode.isArray()) {
 			int nb = disallowNode.size();
 			disallowedTypes = new TYPE[nb];
-			for ( int i=0; i<nb; i++ ) {
+			for (int i = 0; i < nb; i++) {
 				disallowedTypes[i] = TYPEFactory.getType(disallowNode.get(i));
 			}
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -61,21 +62,23 @@ public class DisallowValidator implements JSONValidator, Serializable {
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
+
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		for ( TYPE t : disallowedTypes ) {
-			if ( t == nodeType ) {
-				errors.add(at + ": " + t + " is not a type allowed on this property");
+		for (TYPE t : disallowedTypes) {
+			if (t == nodeType) {
+				errors.add(at + ": " + t
+						+ " is not a type allowed on this property");
 				break;
 			}
-			
-			// integer is a number ... 
-			if ( t == TYPE.NUMBER && nodeType == TYPE.INTEGER ) {
-				errors.add(at + ": " + t + " is not an allowed type for this property");
+
+			// integer is a number ...
+			if (t == TYPE.NUMBER && nodeType == TYPE.INTEGER) {
+				errors.add(at + ": " + t
+						+ " is not an allowed type for this property");
 				break;
 			}
 		}
-		
+
 		return errors;
 	}
 

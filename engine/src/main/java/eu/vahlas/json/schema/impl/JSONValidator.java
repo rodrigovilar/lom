@@ -22,8 +22,8 @@ import org.codehaus.jackson.JsonNode;
 
 public interface JSONValidator {
 	String AT_ROOT = "$";
-	
+
 	List<String> validate(JsonNode node, String at);
-	
+
 	List<String> validate(JsonNode node, JsonNode parent, String at);
 }

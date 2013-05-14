@@ -34,43 +34,47 @@ import eu.vahlas.json.schema.impl.JacksonSchema;
 public class PropertiesValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -7054176202856839164L;
-	private static final Logger LOG = LoggerFactory.getLogger(PropertiesValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(PropertiesValidator.class);
+
 	public static final String PROPERTY = "properties";
-	
+
 	protected Map<String, JacksonSchema> schemas;
-	
+
 	public PropertiesValidator(JsonNode propertiesNode, ObjectMapper mapper) {
-		schemas = new HashMap<String, JacksonSchema>();	
-		for ( Iterator<String> it = propertiesNode.getFieldNames(); it.hasNext(); ) {
+		schemas = new HashMap<String, JacksonSchema>();
+		for (Iterator<String> it = propertiesNode.getFieldNames(); it.hasNext();) {
 			String pname = it.next();
-			schemas.put(pname, new JacksonSchema( mapper, propertiesNode.get( pname ) ));
+			schemas.put(pname,
+					new JacksonSchema(mapper, propertiesNode.get(pname)));
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
-		return validate(node, null ,at);
+		return validate(node, null, at);
 	}
 
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
-		for ( String key : schemas.keySet() ) {
+
+		for (String key : schemas.keySet()) {
 			JacksonSchema propertySchema = schemas.get(key);
 			JsonNode propertyNode = node.get(key);
-			
-			if ( propertyNode != null ) {
-				errors.addAll( propertySchema.validate(propertyNode, node, at + "." + key) );
+
+			if (propertyNode != null) {
+				errors.addAll(propertySchema.validate(propertyNode, node, at
+						+ "." + key));
 			} else {
-				if ( ! propertySchema.isOptional() )
-					errors.add( at + "." + key + ": is missing and it is not optional" );
+				if (!propertySchema.isOptional())
+					errors.add(at + "." + key
+							+ ": is missing and it is not optional");
 			}
 		}
-		
+
 		return errors;
 	}
 

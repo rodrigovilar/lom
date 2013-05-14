@@ -32,19 +32,20 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class MaxLengthValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = 9072697073301436779L;
-	private static final Logger LOG = LoggerFactory.getLogger(MaxLengthValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MaxLengthValidator.class);
+
 	public static final String PROPERTY = "maxLength";
-	
+
 	protected int maxLength;
-	
+
 	public MaxLengthValidator(JsonNode maxLengthNode) {
 		maxLength = Integer.MAX_VALUE;
-		if ( maxLengthNode != null && maxLengthNode.isIntegralNumber() ) {
+		if (maxLengthNode != null && maxLengthNode.isIntegralNumber()) {
 			maxLength = maxLengthNode.getIntValue();
 		}
 	}
-		
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -54,16 +55,17 @@ public class MaxLengthValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
-		
+
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		if ( nodeType != TYPE.STRING )
-			throw new JSONSchemaException("maxLength validation can only be executed on string!");
-		
+		if (nodeType != TYPE.STRING)
+			throw new JSONSchemaException(
+					"maxLength validation can only be executed on string!");
+
 		List<String> errors = new ArrayList<String>();
-		if ( node.getTextValue().length() > maxLength ) {
+		if (node.getTextValue().length() > maxLength) {
 			errors.add(at + ": may only be " + maxLength + " characters long");
 		}
-		
+
 		return errors;
 	}
 

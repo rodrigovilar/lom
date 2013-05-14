@@ -19,10 +19,6 @@ privileged aspect InstanceServiceImpl_Roo_Service {
         return Instance.countInstances();
     }
     
-    public void InstanceServiceImpl.deleteInstance(Instance instance) {
-        instance.remove();
-    }
-    
     public Instance InstanceServiceImpl.findInstance(Long id) {
         return Instance.findInstance(id);
     }

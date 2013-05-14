@@ -23,7 +23,10 @@ import java.util.List;
 
 public interface JSONSchema {
 	List<String> validate(String json);
+
 	List<String> validate(InputStream jsonStream);
+
 	List<String> validate(Reader jsonReader);
+
 	List<String> validate(URL jsonURL);
 }

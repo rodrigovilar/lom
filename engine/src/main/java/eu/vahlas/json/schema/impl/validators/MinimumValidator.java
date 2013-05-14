@@ -32,26 +32,27 @@ import eu.vahlas.json.schema.impl.JSONValidator;
 public class MinimumValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -3480112301401177525L;
-	private static final Logger LOG = LoggerFactory.getLogger(MinimumValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MinimumValidator.class);
+
 	public static final String PROPERTY = "minimum";
 	public static final String PROPERTY_CANEQUAL = "minimumCanEqual";
-	
+
 	protected Number minimum;
 	protected JsonParser.NumberType numberType;
 	protected boolean canEqual = true;
-	
+
 	public MinimumValidator(JsonNode minimumNode, JsonNode minimumCanEqualNode) {
 		if (minimumNode != null && minimumNode.isNumber()) {
 			minimum = minimumNode.getNumberValue();
 			numberType = minimumNode.getNumberType();
 		}
-		
+
 		if (minimumCanEqualNode != null && minimumCanEqualNode.isBoolean()) {
 			canEqual = minimumCanEqualNode.getBooleanValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -62,50 +63,47 @@ public class MinimumValidator implements JSONValidator, Serializable {
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		List<String> errors = new ArrayList<String>();
-		
-		if ( minimum == null ) // should not happen in a well-written JSON Schema
+
+		if (minimum == null) // should not happen in a well-written JSON Schema
 			return errors;
-		
+
 		JsonParser.NumberType numberType = node.getNumberType();
 		boolean smallerThanMin = false;
-		switch(numberType) {
-			case BIG_DECIMAL:
-				if ( node.getDecimalValue()
-		           .compareTo( (BigDecimal) minimum) < 0 ) {
-					smallerThanMin = true;
-				}
-				break;
-			case BIG_INTEGER:
-				if ( node.getBigIntegerValue()
-				   .compareTo( (BigInteger) minimum) < 0 ) {
-					smallerThanMin = true;
-				}
-				break;
-			case DOUBLE:
-				if ( node.getDoubleValue() < minimum.doubleValue() ) {
-					smallerThanMin = true;
-				}
-				break;
-			case FLOAT:
-				if ( node.getDoubleValue() < minimum.doubleValue() ) {
-					smallerThanMin = true;
-				}
-				break;
-			case INT:
-				if ( node.getIntValue() < minimum.intValue() ) {
-					smallerThanMin = true;
-				}
-				break;
-			case LONG:
-				if ( node.getLongValue() < minimum.longValue() ) {
-					smallerThanMin = true;
-				}
-				break;
+		switch (numberType) {
+		case BIG_DECIMAL:
+			if (node.getDecimalValue().compareTo((BigDecimal) minimum) < 0) {
+				smallerThanMin = true;
+			}
+			break;
+		case BIG_INTEGER:
+			if (node.getBigIntegerValue().compareTo((BigInteger) minimum) < 0) {
+				smallerThanMin = true;
+			}
+			break;
+		case DOUBLE:
+			if (node.getDoubleValue() < minimum.doubleValue()) {
+				smallerThanMin = true;
+			}
+			break;
+		case FLOAT:
+			if (node.getDoubleValue() < minimum.doubleValue()) {
+				smallerThanMin = true;
+			}
+			break;
+		case INT:
+			if (node.getIntValue() < minimum.intValue()) {
+				smallerThanMin = true;
+			}
+			break;
+		case LONG:
+			if (node.getLongValue() < minimum.longValue()) {
+				smallerThanMin = true;
+			}
+			break;
 		}
-		
-		if ( smallerThanMin || (
-				!canEqual 
-				&& node.getNumberValue().equals(minimum)) ) {
+
+		if (smallerThanMin
+				|| (!canEqual && node.getNumberValue().equals(minimum))) {
 			errors.add(at + ": must have a minimum value of " + minimum);
 		}
 		return errors;

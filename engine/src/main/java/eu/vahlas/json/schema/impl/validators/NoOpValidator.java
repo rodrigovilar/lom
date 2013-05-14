@@ -29,22 +29,22 @@ import eu.vahlas.json.schema.impl.JSONValidator;
 public class NoOpValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -6910538365412936683L;
-	private static final Logger LOG = LoggerFactory.getLogger(NoOpValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(NoOpValidator.class);
+
 	public NoOpValidator(JsonNode schemaNode) {
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
 		return validate(node, null, at);
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
 		return new ArrayList<String>();
 	}
-
 
 }

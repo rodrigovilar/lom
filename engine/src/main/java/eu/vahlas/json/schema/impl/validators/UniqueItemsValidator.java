@@ -29,27 +29,28 @@ import org.slf4j.LoggerFactory;
 import eu.vahlas.json.schema.impl.JSONValidator;
 
 /**
- * Implements "uniqueItems" validation on array nodes as described in 
- * the paragraph 5.13 of the JSON Schema specification.<br/>
+ * Implements "uniqueItems" validation on array nodes as described in the
+ * paragraph 5.13 of the JSON Schema specification.<br/>
  * <br/>
- * This implementation relies on the <code>equals</code> method implemented
- * on the <code>JsonNode</code> object.
+ * This implementation relies on the <code>equals</code> method implemented on
+ * the <code>JsonNode</code> object.
  */
 public class UniqueItemsValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = -2453061999914008143L;
-	private static final Logger LOG = LoggerFactory.getLogger(UniqueItemsValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(UniqueItemsValidator.class);
+
 	public static final String PROPERTY = "uniqueItems";
-	
+
 	protected boolean unique = false;
-	
+
 	public UniqueItemsValidator(JsonNode uniqueItemsNode) {
-		if ( uniqueItemsNode.isBoolean() ) {
+		if (uniqueItemsNode.isBoolean()) {
 			unique = uniqueItemsNode.getBooleanValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -59,18 +60,18 @@ public class UniqueItemsValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		List<String> errors = new ArrayList<String>();
-		
-		if ( unique ) {
+
+		if (unique) {
 			Set<JsonNode> set = new HashSet<JsonNode>();
-			for ( JsonNode n : node ) {
+			for (JsonNode n : node) {
 				set.add(n);
 			}
-			
-			if ( set.size() < node.size()) {
-				errors.add( at + ": the items in the array must be unique");
+
+			if (set.size() < node.size()) {
+				errors.add(at + ": the items in the array must be unique");
 			}
 		}
-		
+
 		return errors;
 	}
 

@@ -32,19 +32,20 @@ import eu.vahlas.json.schema.impl.TYPEFactory;
 public class MinLengthValidator implements JSONValidator, Serializable {
 
 	private static final long serialVersionUID = 6179450020823983981L;
-	private static final Logger LOG = LoggerFactory.getLogger(MinLengthValidator.class);
-	
+	private static final Logger LOG = LoggerFactory
+			.getLogger(MinLengthValidator.class);
+
 	public static final String PROPERTY = "minLength";
-	
+
 	protected int minLength;
-	
+
 	public MinLengthValidator(JsonNode minLengthNode) {
 		minLength = -1;
-		if ( minLengthNode != null && minLengthNode.isIntegralNumber() ) {
+		if (minLengthNode != null && minLengthNode.isIntegralNumber()) {
 			minLength = minLengthNode.getIntValue();
 		}
 	}
-	
+
 	@Override
 	public List<String> validate(JsonNode node, String at) {
 		LOG.debug("validate( " + node + ", " + at + ")");
@@ -54,14 +55,16 @@ public class MinLengthValidator implements JSONValidator, Serializable {
 	@Override
 	public List<String> validate(JsonNode node, JsonNode parent, String at) {
 		LOG.debug("validate( " + node + ", " + parent + ", " + at + ")");
-		
+
 		TYPE nodeType = TYPEFactory.getNodeType(node);
-		if ( nodeType != TYPE.STRING )
-			throw new JSONSchemaException("minLength validation can only be executed on a string!");
-		
+		if (nodeType != TYPE.STRING)
+			throw new JSONSchemaException(
+					"minLength validation can only be executed on a string!");
+
 		List<String> errors = new ArrayList<String>();
-		if ( node.getTextValue().length() < minLength ) {
-			errors.add(at + ": must be at least " + minLength + " characters long");
+		if (node.getTextValue().length() < minLength) {
+			errors.add(at + ": must be at least " + minLength
+					+ " characters long");
 		}
 		return errors;
 	}

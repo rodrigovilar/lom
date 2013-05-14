@@ -35,14 +35,15 @@ public class JacksonSchemaProvider implements JSONSchemaProvider, Serializable {
 
 	private static final long serialVersionUID = 7600020194154713323L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(JacksonSchemaProvider.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(JacksonSchemaProvider.class);
 
 	protected ObjectMapper mapper;
-	
+
 	public JacksonSchemaProvider(ObjectMapper mapper) {
 		this.mapper = mapper;
 	}
-	
+
 	@Override
 	public JSONSchema getSchema(String schema) {
 		try {
@@ -51,7 +52,7 @@ public class JacksonSchemaProvider implements JSONSchemaProvider, Serializable {
 		} catch (IOException ioe) {
 			LOG.error("Failed to load json schema!", ioe);
 			throw new JSONSchemaException(ioe);
-		} 
+		}
 	}
 
 	@Override
