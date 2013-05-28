@@ -28,4 +28,13 @@ public class CommonCreateMethodsForTesting {
 		return instance;
 	}
 
+	public static PropertyValue createPropertyValue(String _value,
+			Instance instance, Property property) {
+		PropertyValue propertyValue = new PropertyValue();
+		propertyValue.set_value(_value);
+		propertyValue.setInstance(instance);
+		propertyValue.setProperty(property);
+		return propertyValue;
+	}
+
 }
