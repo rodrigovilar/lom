@@ -2,6 +2,8 @@ package com.nanuvem.lom.model;
 
 import java.util.Set;
 
+import junit.framework.Assert;
+
 public class CommonCreateMethodsForTesting {
 
 	public static Entity createEntity(String name, String namespace) {
@@ -36,5 +38,8 @@ public class CommonCreateMethodsForTesting {
 		propertyValue.setProperty(property);
 		return propertyValue;
 	}
+	
+	
+	
 
 }

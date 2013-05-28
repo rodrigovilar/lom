@@ -35,185 +35,191 @@ public class PropertyValueIntegrationTest {
 		propertyValue = new PropertyValue();
 	}
 
-	@Test
-	public void testMarkerMethod() {
+	private PropertyValue createPropertyValueAndDependecies(String entityName,
+			String namespace, String configuration, String defaultValue,
+			PropertyType propertyType, String value) {
+
+		Entity entity = CommonCreateMethodsForTesting.createEntity(entityName,
+				namespace);
+		this.entityService.saveEntity(entity);
+
+		Property property = CommonCreateMethodsForTesting.createProperty(
+				configuration, defaultValue, propertyType, entity);
+		this.propertyService.saveProperty(property);
+
+		Instance instance = CommonCreateMethodsForTesting
+				.createInstance(entity);
+		this.instanceService.saveInstance(instance);
+
+		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
+				value, instance, property);
+		this.propertyValueService.savePropertyValue(propertyValue);
+
+		return propertyValue;
+	}
+
+	private void verifyPropertyValue(PropertyValue pv) {
+		Assert.assertEquals(pv,
+				this.propertyValueService.findPropertyValue(pv.getId()));
 	}
 
 	@Test
-	public void validInstancePropertyAndValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType.TEXT, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(null,
-				instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
+	public void validInstancePropertyAndNullValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.TEXT, null);
 
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
-
 	}
 
 	@Test
 	public void validTextPropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType.TEXT, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"TEXT", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.TEXT, "TEXT");
 
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
+
 	}
 
 	public void validLongTextPropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType.LONG_TEXT, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"LOOOOOOOOOOOOOOOOOONG TEXT", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.LONG_TEXT,
+				"LOOOOOOOOOOOOOOOOOONG TEXT");
 
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
 	}
 
 	@Test
 	public void validPasswordPropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType.PASSWORD, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"*******", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.PASSWORD, "******");
 
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
+
 	}
 
 	@Test
 	public void validIntegerPropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType._INTEGER, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"12345", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
-
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._INTEGER, "12345");
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
 	}
-	
+
 	@Test
 	public void validRealPropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType._REAL, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"1.012355876", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
-
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._REAL, "1.0123456");
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
 	}
-	
+
 	@Test
 	public void validDatePropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType._DATE, entity);
-		propertyService.saveProperty(property);
-
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"31/12/2013", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
-
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._DATE,
+				"31/12/2013 TEXT");
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
 	}
-	
+
 	@Test
 	public void validTimePropertyValue() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
-				"namespace");
-		this.entityService.saveEntity(entity);
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._TIME, "00:00");
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+	}
 
-		property = CommonCreateMethodsForTesting.createProperty("property",
-				null, PropertyType._TIME, entity);
-		propertyService.saveProperty(property);
+	@Test
+	public void updateValidTextPropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.TEXT, "TEXT");
 
-		instance = CommonCreateMethodsForTesting.createInstance(entity);
-		this.instanceService.saveInstance(instance);
-
-		propertyValue = CommonCreateMethodsForTesting.createPropertyValue(
-				"00:00", instance, property);
-		this.propertyValueService.savePropertyValue(propertyValue);
+		propertyValue.set_value("NEW TEXT VALUE");
 
 		Assert.assertEquals(propertyValue, this.propertyValueService
 				.findPropertyValue(propertyValue.getId()));
-		Assert.assertEquals(1, this.propertyService.countAllPropertys());
+
 	}
-	
-	
+
+	@Test
+	public void updateValidLongTextPropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.LONG_TEXT,
+				"LOOOOOOOOOOOOOOOOOONG TEXT");
+
+		propertyValue.set_value("NEW LONG TEXT");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+	}
+
+	@Test
+	public void updateValidPasswordPropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType.PASSWORD, "******");
+
+		propertyValue.set_value("newpassword***");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+	}
+
+	@Test
+	public void updateValidIntegerPropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._INTEGER, "12345");
+
+		propertyValue.set_value("100000");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+
+	}
+
+	@Test
+	public void updateValidRealPropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._REAL, "1.0123456");
+
+		propertyValue.set_value("1000.1826634949");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+
+	}
+
+	@Test
+	public void updateValidDatePropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._DATE, "31/12/2013");
+
+		propertyValue.set_value("01/01/2014");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+
+	}
+
+	@Test
+	public void updateValidTimePropertyValue() {
+		propertyValue = createPropertyValueAndDependecies("entity",
+				"namespace", "property", null, PropertyType._TIME, "00:00");
+
+		propertyValue.set_value("11:11");
+
+		Assert.assertEquals(propertyValue, this.propertyValueService
+				.findPropertyValue(propertyValue.getId()));
+
+	}
+
+	@Test
+	public void read() {
+
+	}
+
 }
