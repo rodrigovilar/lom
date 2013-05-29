@@ -117,3 +117,12 @@ focus --class ~.service.InstanceService
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-05-08 19:42:51
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-05-08 19:53:06
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-05-28 18:41:53
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-05-28 20:52:56
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-05-29 16:14:27
+focus --class ~.model.Instance
+finder list 
+finder list --depth 2
+focus --class ~.model.PropertyValue
+finder list
+finder add --finderName findPropertyValuesByInstance 
+finder add --finderName findPropertyValuesByInstance --class ~.service.PropertyValueServiceImpl

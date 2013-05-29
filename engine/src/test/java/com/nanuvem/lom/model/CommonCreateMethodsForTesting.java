@@ -35,6 +35,9 @@ public class CommonCreateMethodsForTesting {
 		PropertyValue propertyValue = new PropertyValue();
 		propertyValue.set_value(_value);
 		propertyValue.setInstance(instance);
+		Set<PropertyValue> propertyValues = instance.get_values();
+		propertyValues.add(propertyValue);
+		instance.set_values(propertyValues);
 		propertyValue.setProperty(property);
 		return propertyValue;
 	}

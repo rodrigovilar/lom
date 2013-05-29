@@ -109,16 +109,4 @@ privileged aspect PropertyValueIntegrationTest_Roo_IntegrationTest {
         Assert.assertNotNull("Expected 'PropertyValue' identifier to no longer be null", obj.getId());
     }
     
-    @Test
-    public void PropertyValueIntegrationTest.testDeletePropertyValue() {
-        PropertyValue obj = dod.getRandomPropertyValue();
-        Assert.assertNotNull("Data on demand for 'PropertyValue' failed to initialize correctly", obj);
-        Long id = obj.getId();
-        Assert.assertNotNull("Data on demand for 'PropertyValue' failed to provide an identifier", id);
-        obj = propertyValueService.findPropertyValue(id);
-        propertyValueService.deletePropertyValue(obj);
-        obj.flush();
-        Assert.assertNull("Failed to remove 'PropertyValue' with identifier '" + id + "'", propertyValueService.findPropertyValue(id));
-    }
-    
 }
