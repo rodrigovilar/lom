@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.model;
 
-import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.service.EntityService;
 import java.security.SecureRandom;

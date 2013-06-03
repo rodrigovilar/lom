@@ -3,8 +3,8 @@
 
 package com.nanuvem.lom.web;
 
-import com.nanuvem.lom.model.Entity;
-import com.nanuvem.lom.model.Instance;
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.service.InstanceService;
 import com.nanuvem.lom.web.InstanceController;
 import java.util.List;

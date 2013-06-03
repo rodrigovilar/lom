@@ -3,6 +3,7 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.model.EntityDataOnDemand;
 import com.nanuvem.lom.model.EntityIntegrationTest;
 import java.util.List;

@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.model.Instance;
+import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.service.InstanceService;
 import java.util.List;
 

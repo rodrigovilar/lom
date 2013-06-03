@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.model.Instance;
+import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.service.InstanceServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,28 +15,6 @@ privileged aspect InstanceServiceImpl_Roo_Service {
     
     declare @type: InstanceServiceImpl: @Transactional;
     
-    public long InstanceServiceImpl.countAllInstances() {
-        return Instance.countInstances();
-    }
     
-    public Instance InstanceServiceImpl.findInstance(Long id) {
-        return Instance.findInstance(id);
-    }
-    
-    public List<Instance> InstanceServiceImpl.findAllInstances() {
-        return Instance.findAllInstances();
-    }
-    
-    public List<Instance> InstanceServiceImpl.findInstanceEntries(int firstResult, int maxResults) {
-        return Instance.findInstanceEntries(firstResult, maxResults);
-    }
-    
-    public void InstanceServiceImpl.saveInstance(Instance instance) {
-        instance.persist();
-    }
-    
-    public Instance InstanceServiceImpl.updateInstance(Instance instance) {
-        return instance.merge();
-    }
     
 }

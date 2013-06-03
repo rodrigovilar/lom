@@ -2,6 +2,12 @@ package com.nanuvem.lom.model;
 
 import java.util.Set;
 
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.Instance;
+import com.nanuvem.lom.dao.typesquare.Property;
+import com.nanuvem.lom.dao.typesquare.PropertyType;
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
+
 import junit.framework.Assert;
 
 public class CommonCreateMethodsForTesting {

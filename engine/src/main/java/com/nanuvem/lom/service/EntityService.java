@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.roo.addon.layers.service.RooService;
 
-import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.dao.typesquare.Entity;
 
-@RooService(domainTypes = { com.nanuvem.lom.model.Entity.class })
+@RooService(domainTypes = { com.nanuvem.lom.dao.typesquare.Entity.class })
 public interface EntityService {
 
 	List<Entity> findEntitysByNameLike(String name);

@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.roo.addon.layers.service.RooService;
 
-import com.nanuvem.lom.model.Instance;
-import com.nanuvem.lom.model.PropertyValue;
+import com.nanuvem.lom.dao.typesquare.Instance;
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
 
-@RooService(domainTypes = { com.nanuvem.lom.model.PropertyValue.class })
+@RooService(domainTypes = { com.nanuvem.lom.dao.typesquare.PropertyValue.class })
 public interface PropertyValueService {
 
 	List<PropertyValue> findPropertyValuesByInstance(Instance instance);

@@ -11,6 +11,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.Instance;
+import com.nanuvem.lom.dao.typesquare.Property;
+import com.nanuvem.lom.dao.typesquare.PropertyType;
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
 import com.nanuvem.lom.service.EntityServiceImpl;
 import com.nanuvem.lom.service.InstanceNotFoundException;
 import com.nanuvem.lom.service.InstanceServiceImpl;

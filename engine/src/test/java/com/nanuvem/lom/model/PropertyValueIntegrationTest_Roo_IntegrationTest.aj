@@ -3,6 +3,7 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
 import com.nanuvem.lom.model.PropertyValueDataOnDemand;
 import com.nanuvem.lom.model.PropertyValueIntegrationTest;
 import com.nanuvem.lom.service.PropertyValueService;

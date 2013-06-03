@@ -1,5 +1,6 @@
 package com.nanuvem.lom.service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -9,18 +10,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 
-import com.nanuvem.lom.model.Entity;
-import com.nanuvem.lom.model.Property;
+import com.nanuvem.lom.dao.PropertyDAO;
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.Property;
+import com.nanuvem.lom.dao.typesquare.TypeSquarePropertyDAO;
 
 public class PropertyServiceImpl implements PropertyService {
 
+	private PropertyDAO dao = new TypeSquarePropertyDAO();
+	
 	public void saveProperty(Property property) {
 		try {
 			this.validateName(property);
 			this.validateConfiguration(property);
 
 			this.validatePropertyInEntityProperties(property);
-			property.persist();
+			dao.saveProperty(property);
 		} catch (JSONException je) {
 			throw new ValidationException(je.getMessage());
 		}
@@ -68,7 +73,7 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	public void validatePropertyInEntityProperties(Property property) {
-		Entity entity = Entity.findEntity(property.getEntity().getId());
+		Entity entity = dao.findEntity(property.getEntity().getId());
 		if (entity == null) {
 			throw new ValidationException("Property with a null entity!");
 		}
@@ -108,9 +113,30 @@ public class PropertyServiceImpl implements PropertyService {
 
 	public void deleteProperty(Property property) {
 		try {
-			property.remove();
+			dao.removeProperty(property);
 		} catch (InvalidDataAccessApiUsageException ex) {
 			throw new PropertyNotFoundException(ex.getMessage());
 		}
 	}
+	
+	public long countAllPropertys() {
+        return dao.countProperties();
+    }
+    
+    public Property findProperty(Long id) {
+        return dao.findProperty(id);
+    }
+    
+    public List<Property> findAllPropertys() {
+        return dao.findAllProperties();
+    }
+    
+    public List<Property> findPropertyEntries(int firstResult, int maxResults) {
+        return dao.findPropertyEntries(firstResult, maxResults);
+    }
+    
+    public Property updateProperty(Property property) {
+        return dao.updateProperty(property);
+    }
+	
 }

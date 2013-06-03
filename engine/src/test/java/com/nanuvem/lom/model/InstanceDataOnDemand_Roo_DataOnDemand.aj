@@ -3,8 +3,8 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.model.EntityDataOnDemand;
-import com.nanuvem.lom.model.Instance;
 import com.nanuvem.lom.model.InstanceDataOnDemand;
 import com.nanuvem.lom.service.InstanceService;
 import java.security.SecureRandom;
