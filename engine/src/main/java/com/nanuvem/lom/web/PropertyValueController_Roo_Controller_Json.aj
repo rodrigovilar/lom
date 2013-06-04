@@ -3,6 +3,7 @@
 
 package com.nanuvem.lom.web;
 
+import com.nanuvem.lom.model.Instance;
 import com.nanuvem.lom.model.PropertyValue;
 import com.nanuvem.lom.service.PropertyValueService;
 import com.nanuvem.lom.web.PropertyValueController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect PropertyValueController_Roo_Controller_Json {
@@ -95,6 +97,14 @@ privileged aspect PropertyValueController_Roo_Controller_Json {
         }
         propertyValueService.deletePropertyValue(propertyValue);
         return new ResponseEntity<String>(headers, HttpStatus.OK);
+    }
+    
+    @RequestMapping(params = "find=ByInstance", headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<String> PropertyValueController.jsonFindPropertyValuesByInstance(@RequestParam("instance") Instance instance) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        return new ResponseEntity<String>(PropertyValue.toJsonArray(PropertyValue.findPropertyValuesByInstance(instance).getResultList()), headers, HttpStatus.OK);
     }
     
 }
