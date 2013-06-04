@@ -28,11 +28,6 @@ privileged aspect PropertyValue_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM PropertyValue o", PropertyValue.class).getResultList();
     }
     
-    public static PropertyValue PropertyValue.findPropertyValue(Long id) {
-        if (id == null) return null;
-        return entityManager().find(PropertyValue.class, id);
-    }
-    
     public static List<PropertyValue> PropertyValue.findPropertyValueEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM PropertyValue o", PropertyValue.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }

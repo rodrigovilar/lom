@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
@@ -18,6 +19,7 @@ import com.nanuvem.lom.service.InstanceNotFoundException;
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(finders = { "findInstancesByEntity" })
+@RooEquals
 public class Instance {
 
 	@ManyToOne
