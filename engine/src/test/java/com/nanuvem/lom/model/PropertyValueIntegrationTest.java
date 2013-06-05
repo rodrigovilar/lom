@@ -295,10 +295,10 @@ public class PropertyValueIntegrationTest {
 	public void getPropertyValueWithAnUnknownInstance() {
 		this.propertyValueService.findPropertyValuesByInstance(instance);
 	}
-	
+
 	@Test(expected = PropertyValueNotFoundException.class)
 	public void deletePropertyValueWithAnUnknownId() {
 		propertyValue = new PropertyValue();
-		this.propertyValueService.deletePropertyValue(propertyValue);	
+		this.propertyValueService.deletePropertyValue(propertyValue);
 	}
 }

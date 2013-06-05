@@ -8,13 +8,15 @@ import javax.validation.ValidationException;
 import org.springframework.orm.jpa.JpaSystemException;
 
 import com.nanuvem.lom.dao.EntityDAO;
+import com.nanuvem.lom.dao.relational.RelationalEntityDAO;
 import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.dao.typesquare.TypeSquareEntityDAO;
 
 public class EntityServiceImpl implements EntityService {
 
 	private EntityDAO dao = new TypeSquareEntityDAO();
-	
+	private RelationalEntityDAO relationalDao = new RelationalEntityDAO();
+
 	public List<Entity> findEntitysByNameLike(String name) {
 		if (name == null || name.equals("")) {
 			return dao.findAllEntities();
@@ -38,13 +40,14 @@ public class EntityServiceImpl implements EntityService {
 	}
 
 	public void saveEntity(Entity entity) {
-		try {
+		//try {
 			validateName(entity);
 			validateNamespace(entity);
-			dao.saveEntity(entity);
-		} catch (Exception e) {
+			// dao.saveEntity(entity);
+			relationalDao.saveEntity(entity);
+		/*} catch (ValidationException e) {
 			throw new ValidationException(e.getMessage());
-		}
+		}*/
 	}
 
 	private void validateNameWithinNamespace(Entity entity)
@@ -53,8 +56,8 @@ public class EntityServiceImpl implements EntityService {
 			throw new ValidationException("Without name!");
 		}
 
-		List<Entity> entitiesByName = dao.findEntitiesByNameLike(
-				entity.getName());
+		List<Entity> entitiesByName = dao.findEntitiesByNameLike(entity
+				.getName());
 
 		for (Entity e : entitiesByName) {
 			boolean nameIsEqualsIgnoreCase = e.getName().equalsIgnoreCase(
@@ -94,30 +97,29 @@ public class EntityServiceImpl implements EntityService {
 		}
 
 	}
-	
+
 	public long countAllEntitys() {
-        return dao.countEntities();
-    }
-    
-    public void deleteEntity(Entity entity) {
-        dao.removeEntity(entity);
-    }
-    
-    public Entity findEntity(Long id) {
-        return dao.findEntity(id);
-    }
-    
-    public List<Entity> findAllEntitys() {
-        return dao.findAllEntities();
-    }
-    
-    public List<Entity> findEntityEntries(int firstResult, int maxResults) {
-        return dao.findEntityEntries(firstResult, maxResults);
-    }
-    
-    public Entity updateEntity(Entity entity) {
-        return dao.update(entity);
-    }
-	
-	
+		return dao.countEntities();
+	}
+
+	public void deleteEntity(Entity entity) {
+		dao.removeEntity(entity);
+	}
+
+	public Entity findEntity(Long id) {
+		return dao.findEntity(id);
+	}
+
+	public List<Entity> findAllEntitys() {
+		return dao.findAllEntities();
+	}
+
+	public List<Entity> findEntityEntries(int firstResult, int maxResults) {
+		return dao.findEntityEntries(firstResult, maxResults);
+	}
+
+	public Entity updateEntity(Entity entity) {
+		return dao.update(entity);
+	}
+
 }
