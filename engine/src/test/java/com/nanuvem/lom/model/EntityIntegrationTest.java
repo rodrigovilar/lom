@@ -569,27 +569,4 @@ public class EntityIntegrationTest {
 
 		entityService.deleteEntity(entity_1);
 	}
-
-	// @Test
-	public void test() {
-		Entity entity_1 = CommonCreateMethodsForTesting.createEntity("Bus",
-				"Namespace");
-		entityService.saveEntity(entity_1);
-		entity_1.setName("novoNome");
-		entityService.updateEntity(entity_1);
-
-		List<Entity> founds = entityService.findEntitysByNameLike("novoNome");
-		Assert.assertEquals(1, founds.size());
-
-		entityService.deleteEntity(entity_1);
-
-		/*
-		 * Entity entity_2 = CommonCreateMethodsForTesting.createEntity("Bus",
-		 * "Namespace"); entityService.saveEntity(entity_2);
-		 * entityService.deleteEntity(entity_2);
-		 */
-
-		// List<Entity> founds = entityService.findEntitysByNameLike("Bus");
-		// Assert.assertEquals(1, founds.size());
-	}
 }
