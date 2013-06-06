@@ -50,7 +50,10 @@ public class RelationalEntityDAO implements EntityDAO {
 	@Override
 	public void saveEntity(Entity entity) {
 		// TODO Auto-generated method stub
-		this.entityManager.createNativeQuery("create table "+entity.getName());
+		String tableName = this.generateTableName(entity);
+		System.err.println("-tableName: "+tableName);
+		System.err.println("-nome da entity: "+entity.getName());
+		this.entityManager.createNativeQuery("create table "+tableName);
 		entity.persist();
 	}
 
@@ -64,7 +67,9 @@ public class RelationalEntityDAO implements EntityDAO {
 	public void removeEntity(Entity entity) {
 		// TODO Auto-generated method stub
 		String tableName = this.generateTableName(entity);
-		this.entityManager.createNativeQuery("drop table "+tableName);
+		System.err.println("tableName: "+tableName);
+		System.err.println("nome da entity: "+entity.getName());
+		this.entityManager.createNativeQuery("drop table " + tableName);
 		entity.remove();
 		
 	}
@@ -85,9 +90,11 @@ public class RelationalEntityDAO implements EntityDAO {
 		this.entityManager.createNativeQuery(sql);
 		return entity.merge();
 	}
+	
 	private String generateTableName(Entity entity){
 		return "LOM_"+entity.getNamespace()+"_"+entity.getName();
 	}
+	
 	@Override
 	public List<Entity> findEntityEntries(int firstResult, int maxResults) {
 		// TODO Auto-generated method stub

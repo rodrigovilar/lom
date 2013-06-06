@@ -14,8 +14,9 @@ import com.nanuvem.lom.dao.typesquare.TypeSquareEntityDAO;
 
 public class EntityServiceImpl implements EntityService {
 
-	private EntityDAO dao = new TypeSquareEntityDAO();
-	private RelationalEntityDAO relationalDao = new RelationalEntityDAO();
+	//private EntityDAO dao = new TypeSquareEntityDAO();
+
+	private RelationalEntityDAO dao = new RelationalEntityDAO();
 
 	public List<Entity> findEntitysByNameLike(String name) {
 		if (name == null || name.equals("")) {
@@ -43,8 +44,8 @@ public class EntityServiceImpl implements EntityService {
 		try {
 			validateName(entity);
 			validateNamespace(entity);
-			// dao.saveEntity(entity);
-			relationalDao.saveEntity(entity);
+			dao.saveEntity(entity);
+			//relationalDao.saveEntity(entity);
 		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());
 		}
