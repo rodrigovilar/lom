@@ -53,7 +53,7 @@ public class RelationalEntityDAO implements EntityDAO {
 		String tableName = this.generateTableName(entity);
 		System.err.println("-tableName: "+tableName);
 		System.err.println("-nome da entity: "+entity.getName());
-		this.entityManager.createNativeQuery("create table "+tableName);
+		this.entityManager.createNativeQuery("create table "+tableName).executeUpdate();
 		entity.persist();
 	}
 
@@ -69,9 +69,8 @@ public class RelationalEntityDAO implements EntityDAO {
 		String tableName = this.generateTableName(entity);
 		System.err.println("tableName: "+tableName);
 		System.err.println("nome da entity: "+entity.getName());
-		this.entityManager.createNativeQuery("drop table " + tableName);
+		this.entityManager.createNativeQuery("drop table " + tableName).executeUpdate();
 		entity.remove();
-		
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class RelationalEntityDAO implements EntityDAO {
 		String oldTableName = this.generateTableName(oldEntity);
 		String newTableName = this.generateTableName(entity);
 		String sql = "alter table " +oldTableName+ "rename to "+ newTableName;
-		this.entityManager.createNativeQuery(sql);
+		this.entityManager.createNativeQuery(sql).executeUpdate();
 		return entity.merge();
 	}
 	
