@@ -2,6 +2,7 @@ package com.nanuvem.lom.dao.relational;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,78 +14,84 @@ import com.nanuvem.lom.dao.typesquare.Entity;
 
 @Repository
 public class RelationalEntityDAO implements EntityDAO {
-	
-	private JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-	public void init(DataSource ds) {
-		this.jdbcTemplate = new JdbcTemplate(ds);
+
+	private EntityManager entityManager;
+
+	public RelationalEntityDAO() {
+		entityManager = Entity.entityManager();
 	}
-	
-	
-	public void setDataSource(DataSource ds) {
-		this.jdbcTemplate = new JdbcTemplate(ds);
-	}
-	
+
 	@Override
 	public List<Entity> findAllEntities() {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findAllEntitys();
 	}
 
 	@Override
 	public List<Entity> findEntitiesByNameLike(String name) {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findEntitysByNameLike(name).getResultList();
+
 	}
 
 	@Override
 	public List<Entity> findEntitiesByNamespaceEquals(String namespace) {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findEntitysByNamespaceEquals(namespace).getResultList();
 
 	}
 
 	@Override
 	public List<Entity> findEntitiesByNamespaceLike(String namespace) {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findEntitysByNamespaceLike(namespace).getResultList();
 	}
 
 	@Override
 	public void saveEntity(Entity entity) {
 		// TODO Auto-generated method stub
-		this.jdbcTemplate.execute("create table " + entity.getName());
+		this.entityManager.createNativeQuery("create table "+entity.getName());
+		entity.persist();
 	}
 
 	@Override
 	public long countEntities() {
 		// TODO Auto-generated method stub
-		return 0;
+		return Entity.countEntitys();
 	}
 
 	@Override
 	public void removeEntity(Entity entity) {
 		// TODO Auto-generated method stub
-
+		String tableName = this.generateTableName(entity);
+		this.entityManager.createNativeQuery("drop table "+tableName);
+		entity.remove();
+		
 	}
 
 	@Override
 	public Entity findEntity(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findEntity(id);
 	}
 
 	@Override
 	public Entity update(Entity entity) {
 		// TODO Auto-generated method stub
-		return null;
+		Entity oldEntity = this.findEntity(entity.getId());
+		String oldTableName = this.generateTableName(oldEntity);
+		String newTableName = this.generateTableName(entity);
+		String sql = "alter table " +oldTableName+ "rename to "+ newTableName;
+		this.entityManager.createNativeQuery(sql);
+		return entity.merge();
 	}
-
+	private String generateTableName(Entity entity){
+		return "LOM_"+entity.getNamespace()+"_"+entity.getName();
+	}
 	@Override
 	public List<Entity> findEntityEntries(int firstResult, int maxResults) {
 		// TODO Auto-generated method stub
-		return null;
+		return Entity.findEntityEntries(firstResult, maxResults);
 	}
 
 }

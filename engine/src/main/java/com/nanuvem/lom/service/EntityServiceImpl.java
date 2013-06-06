@@ -40,14 +40,14 @@ public class EntityServiceImpl implements EntityService {
 	}
 
 	public void saveEntity(Entity entity) {
-		//try {
+		try {
 			validateName(entity);
 			validateNamespace(entity);
 			// dao.saveEntity(entity);
 			relationalDao.saveEntity(entity);
-		/*} catch (ValidationException e) {
+		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());
-		}*/
+		}
 	}
 
 	private void validateNameWithinNamespace(Entity entity)

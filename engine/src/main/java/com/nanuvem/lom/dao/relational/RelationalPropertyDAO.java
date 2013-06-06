@@ -37,6 +37,10 @@ public class RelationalPropertyDAO implements PropertyDAO {
 	@Override
 	public void removeProperty(Property property) {
 		// TODO Auto-generated method stub
+		String entityName = property.getEntity().getName();
+		String sql = "alter table" + entityName + "drop column"
+				+ property.getName();
+		this.jdbcTemplate.execute(sql);
 
 	}
 

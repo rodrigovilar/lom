@@ -14,7 +14,7 @@ import com.nanuvem.lom.dao.typesquare.Instance;
 
 @Repository
 public class RelationalInstanceDAO implements InstanceDAO {
-	
+
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
@@ -31,7 +31,10 @@ public class RelationalInstanceDAO implements InstanceDAO {
 	@Override
 	public void removeInstance(Instance instance) {
 		// TODO Auto-generated method stub
-
+		String entityName = instance.getEntity().getName();
+		String sql = "delete from" + entityName + "where" + "id = "
+				+ instance.getId();
+		this.jdbcTemplate.execute(sql);
 	}
 
 	@Override

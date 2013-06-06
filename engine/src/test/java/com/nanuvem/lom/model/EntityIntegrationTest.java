@@ -56,7 +56,7 @@ public class EntityIntegrationTest {
 
 	/* CREATE ENTITY */
 	@Test
-	public void validNameAndNamespace() {
+	public void validNameAndvalidNameAndNamespaceNamespace() {
 		entity = CommonCreateMethodsForTesting
 				.createEntity("name", "namespace");
 		entityService.saveEntity(entity);
@@ -509,5 +509,11 @@ public class EntityIntegrationTest {
 		long id = 10;
 		Assert.assertNull(Entity.findEntity(id));
 	}
-
+	
+	
+	
+	@Test
+	public void test(){
+		
+	}
 }
