@@ -5,18 +5,20 @@ import java.util.regex.Pattern;
 
 import javax.validation.ValidationException;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
 
 import com.nanuvem.lom.dao.EntityDAO;
 import com.nanuvem.lom.dao.relational.RelationalEntityDAO;
 import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.dao.typesquare.TypeSquareEntityDAO;
+// TODO Auto-generated method stub
 
 public class EntityServiceImpl implements EntityService {
 
-	//private EntityDAO dao = new TypeSquareEntityDAO();
+	private EntityDAO dao = new TypeSquareEntityDAO();
 
-	private RelationalEntityDAO dao = new RelationalEntityDAO();
+	//private RelationalEntityDAO dao = new RelationalEntityDAO();
 
 	public List<Entity> findEntitysByNameLike(String name) {
 		if (name == null || name.equals("")) {
@@ -45,7 +47,6 @@ public class EntityServiceImpl implements EntityService {
 			validateName(entity);
 			validateNamespace(entity);
 			dao.saveEntity(entity);
-			//relationalDao.saveEntity(entity);
 		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());
 		}
@@ -104,9 +105,12 @@ public class EntityServiceImpl implements EntityService {
 	}
 
 	public void deleteEntity(Entity entity) {
-		dao.removeEntity(entity);
+		try{
+			dao.removeEntity(entity);
+		}catch (InvalidDataAccessApiUsageException e){
+			throw new EntityNotFoundException("Cannot remove an unknown entity!");
+		}
 	}
-
 	public Entity findEntity(Long id) {
 		return dao.findEntity(id);
 	}
@@ -120,6 +124,7 @@ public class EntityServiceImpl implements EntityService {
 	}
 
 	public Entity updateEntity(Entity entity) {
+		this.validateName(entity);
 		return dao.update(entity);
 	}
 
