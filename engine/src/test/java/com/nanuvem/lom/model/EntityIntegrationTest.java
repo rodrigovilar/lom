@@ -34,21 +34,6 @@ public class EntityIntegrationTest {
 		return entity;
 	}
 
-	@Before
-	public void init() {
-		entity = new Entity();
-	}
-
-	// @After
-	public void after() {
-		List<Entity> findAllEntitys = entityService.findAllEntitys();
-		List<Entity> copy = new ArrayList<Entity>(findAllEntitys.size());
-		Collections.copy(findAllEntitys, copy);
-		for (Entity e : copy) {
-			entityService.deleteEntity(e);
-		}
-	}
-
 	@Test(expected = EntityNotFoundException.class)
 	public void testDeleteEntity() {
 		entity = CommonCreateMethodsForTesting.createEntity("entity1name",
@@ -73,8 +58,8 @@ public class EntityIntegrationTest {
 	/* CREATE ENTITY */
 	@Test
 	public void validNameAndvalidNameAndNamespaceNamespace() {
-		entity = CommonCreateMethodsForTesting
-				.createEntity("nome", "namespace");
+		entity = CommonCreateMethodsForTesting.createEntity("nameEntity4",
+				"namespace");
 		entityService.saveEntity(entity);
 		Assert.assertNotNull(
 				"Data on demand for 'Entity' failed to provide an identifier",
@@ -85,7 +70,8 @@ public class EntityIntegrationTest {
 
 	@Test
 	public void withoutNamespace() {
-		entity.setName("nomeSimples");
+		entity = new Entity();
+		entity.setName("simpleEntityName");
 		entityService.saveEntity(entity);
 		entityService.deleteEntity(entity);
 	}
@@ -115,6 +101,7 @@ public class EntityIntegrationTest {
 
 	@Test(expected = ValidationException.class)
 	public void withoutName() {
+		entity = new Entity();
 		entity.setNamespace("has only namespace");
 		entityService.saveEntity(entity);
 		entityService.deleteEntity(entity);
@@ -198,18 +185,6 @@ public class EntityIntegrationTest {
 	}
 
 	@Test
-	public void testUpdateEntityUpdate() {
-		entity = CommonCreateMethodsForTesting.createEntity("entityUpdateTest",
-				"namespace");
-		entityService.saveEntity(entity);
-		entity.setName("abc");
-		entity.setNamespace("cde");
-		Entity entityFound = Entity.findEntity(entity.getId());
-		Assert.assertEquals("abc", entityFound.getName());
-		Assert.assertEquals("cde", entityFound.getNamespace());
-	}
-
-	@Test
 	public void updateRemovingPackage() {
 		Entity entity_1 = CommonCreateMethodsForTesting.createEntity("test",
 				"namespaceTest");
@@ -252,7 +227,6 @@ public class EntityIntegrationTest {
 		entity2.setName("AaAaA");
 		entityService.saveEntity(entity2);
 
-		
 	}
 
 	@Test(expected = ValidationException.class)
@@ -267,7 +241,6 @@ public class EntityIntegrationTest {
 		entity2.setNamespace("bbbbb");
 		entityService.saveEntity(entity2);
 
-		
 	}
 
 	@Test(expected = ValidationException.class)
@@ -282,7 +255,6 @@ public class EntityIntegrationTest {
 		entity2.setName("aaaaa");
 		entityService.saveEntity(entity2);
 
-		
 	}
 
 	@Test(expected = ValidationException.class)
@@ -297,7 +269,6 @@ public class EntityIntegrationTest {
 		entity2.setName("aaaaa");
 		entityService.saveEntity(entity2);
 
-		
 	}
 
 	@Test
@@ -319,7 +290,7 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity);
 		entity.setName("");
 		entityService.updateEntity(entity);
-		
+
 	}
 
 	@Test(expected = ValidationException.class)
@@ -360,7 +331,7 @@ public class EntityIntegrationTest {
 
 	@Test(expected = EntityNotFoundException.class)
 	public void deleteEntityByUnknownId() {
-		//Entity.findEntity((long) -123456789);
+		// Entity.findEntity((long) -123456789);
 		entity = CommonCreateMethodsForTesting.createEntity("abcda",
 				"namespace");
 		entityService.deleteEntity(entity);
@@ -459,8 +430,8 @@ public class EntityIntegrationTest {
 				"nameEntity", "");
 		entityService.saveEntity(entity_1);
 
-		Entity entity_2 = CommonCreateMethodsForTesting.createEntity("Entity",
-				"WithNamespace");
+		Entity entity_2 = CommonCreateMethodsForTesting.createEntity(
+				"entityName5", "WithNamespace");
 		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = entityService.findEntitysByNamespaceEquals("");
@@ -477,14 +448,14 @@ public class EntityIntegrationTest {
 		entityService.saveEntity(entity_1);
 
 		Entity entity_2 = CommonCreateMethodsForTesting.createEntity(
-				"nome_entidade_2", "");
+				"name_entity_2", "");
 		entityService.saveEntity(entity_2);
 
 		List<Entity> entities = entityService.findEntitysByNameLike(" with");
 
 		Assert.assertTrue(entities.contains(entity_1));
 		Assert.assertFalse(entities.contains(entity_2));
-	
+
 	}
 
 	@Test
@@ -512,25 +483,24 @@ public class EntityIntegrationTest {
 	@Test
 	public void listEntitiesForcingCaseInsensitiveName() {
 		Entity entity_1 = CommonCreateMethodsForTesting.createEntity(
-				"nome_entity_1", "Namespace");
+				"NAME_entity_1", "Namespace");
 		entityService.saveEntity(entity_1);
 
-		Entity entity_2 = CommonCreateMethodsForTesting.createEntity("nome2",
-				"Namespace");
+		Entity entity_2 = CommonCreateMethodsForTesting.createEntity(
+				"nameEntity_2", "Namespace");
 		entityService.saveEntity(entity_2);
 
-		List<Entity> entitiesList = Entity.findEntitysByNameLike("nome_en")
+		List<Entity> entitiesList = Entity.findEntitysByNameLike("name_en")
 				.getResultList();
 		Assert.assertTrue(entitiesList.contains(entity_1));
 		Assert.assertFalse(entitiesList.contains(entity_2));
-
 
 	}
 
 	@Test
 	public void getEntityByID() {
-		entity = CommonCreateMethodsForTesting.createEntity("nomeDaEntidade",
-				"pacote");
+		entity = CommonCreateMethodsForTesting.createEntity("randomName",
+				"randomNamespace");
 		entityService.saveEntity(entity);
 		long id = entity.getId();
 		Assert.assertEquals(entity, Entity.findEntity(id));
@@ -569,4 +539,5 @@ public class EntityIntegrationTest {
 
 		entityService.deleteEntity(entity_1);
 	}
+
 }

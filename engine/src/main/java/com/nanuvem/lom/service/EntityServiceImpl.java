@@ -12,13 +12,13 @@ import com.nanuvem.lom.dao.EntityDAO;
 import com.nanuvem.lom.dao.relational.RelationalEntityDAO;
 import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.dao.typesquare.TypeSquareEntityDAO;
+
 // TODO Auto-generated method stub
 
 public class EntityServiceImpl implements EntityService {
 
-	private EntityDAO dao = new TypeSquareEntityDAO();
-
-	//private RelationalEntityDAO dao = new RelationalEntityDAO();
+	// private EntityDAO dao = new TypeSquareEntityDAO();
+	private RelationalEntityDAO dao = new RelationalEntityDAO();
 
 	public List<Entity> findEntitysByNameLike(String name) {
 		if (name == null || name.equals("")) {
@@ -105,12 +105,14 @@ public class EntityServiceImpl implements EntityService {
 	}
 
 	public void deleteEntity(Entity entity) {
-		try{
+		try {
 			dao.removeEntity(entity);
-		}catch (InvalidDataAccessApiUsageException e){
-			throw new EntityNotFoundException("Cannot remove an unknown entity!");
+		} catch (InvalidDataAccessApiUsageException e) {
+			throw new EntityNotFoundException(
+					"Cannot remove an unknown entity!");
 		}
 	}
+
 	public Entity findEntity(Long id) {
 		return dao.findEntity(id);
 	}
