@@ -45,7 +45,7 @@ public class RelationalEntityDAO implements EntityDAO {
 
 	@Override
 	public void saveEntity(Entity entity) {
-		String tableName = this.generateTableName(entity);
+		String tableName = DDLHelper.generateTableNameForAnEntity(entity);
 		this.entityManager.createNativeQuery("create table " + tableName)
 				.executeUpdate();
 		entity.persist();
@@ -59,7 +59,7 @@ public class RelationalEntityDAO implements EntityDAO {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		String tableName = this.generateTableName(entity);
+		String tableName = DDLHelper.generateTableNameForAnEntity(entity);
 		this.entityManager.createNativeQuery("drop table " + tableName)
 				.executeUpdate();
 		entity.remove();
@@ -74,23 +74,12 @@ public class RelationalEntityDAO implements EntityDAO {
 	public Entity update(Entity entity) {
 		entityManager.clear();
 		Entity oldEntity = this.findEntity(entity.getId());
-		String oldTableName = this.generateTableName(oldEntity);
-		String newTableName = this.generateTableName(entity);
+		String oldTableName = DDLHelper.generateTableNameForAnEntity(oldEntity);
+		String newTableName = DDLHelper.generateTableNameForAnEntity(entity);
 		String sql = "alter table " + oldTableName + " rename to "
 				+ newTableName;
 		this.entityManager.createNativeQuery(sql).executeUpdate();
 		return entity.merge();
-	}
-
-	private String generateTableName(Entity entity) {
-		String name = entity.getName();
-		name = name.replace(" ", "_");
-		String namespace = entity.getNamespace();
-		if (!(namespace == null))
-			namespace = namespace.replace(" ", "_");
-		else
-			namespace = "DefaultNamespace";
-		return "LOM_" + namespace + "_" + name;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.nanuvem.lom.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -9,8 +7,6 @@ import javax.validation.ValidationException;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;

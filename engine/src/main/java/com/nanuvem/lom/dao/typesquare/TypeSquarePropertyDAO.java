@@ -12,11 +12,6 @@ public class TypeSquarePropertyDAO implements PropertyDAO {
 	}
 
 	@Override
-	public Entity findEntity(Long id) {
-		return Entity.findEntity(id);
-	}
-
-	@Override
 	public void removeProperty(Property property) {
 		property.remove();		
 	}
