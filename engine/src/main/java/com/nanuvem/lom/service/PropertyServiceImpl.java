@@ -20,7 +20,7 @@ import com.nanuvem.lom.dao.typesquare.TypeSquarePropertyDAO;
 public class PropertyServiceImpl implements PropertyService {
 
 	// private PropertyDAO dao = new TypeSquarePropertyDAO();
-	private PropertyDAO dao = new RelationalPropertyDAO();
+	private RelationalPropertyDAO dao = new RelationalPropertyDAO();
 
 	public void saveProperty(Property property) {
 		try {

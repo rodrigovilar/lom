@@ -20,7 +20,7 @@ public class RelationalPropertyDAO implements PropertyDAO {
 	private EntityManager entityManager;
 
 	public RelationalPropertyDAO() {
-		entityManager = Entity.entityManager();
+		entityManager = Property.entityManager();
 	}
 
 	@Override

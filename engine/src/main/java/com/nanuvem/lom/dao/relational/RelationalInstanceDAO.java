@@ -2,6 +2,7 @@ package com.nanuvem.lom.dao.relational;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,10 @@ import com.nanuvem.lom.dao.typesquare.Instance;
 @Repository
 public class RelationalInstanceDAO implements InstanceDAO {
 
-	private JdbcTemplate jdbcTemplate;
+	private EntityManager entityManager;
 
-	@Autowired
-	public void init(DataSource ds) {
-		this.jdbcTemplate = new JdbcTemplate(ds);
+	public RelationalInstanceDAO() {
+		entityManager = Instance.entityManager();
 	}
 
 	@Override
@@ -31,10 +31,6 @@ public class RelationalInstanceDAO implements InstanceDAO {
 	@Override
 	public void removeInstance(Instance instance) {
 		// TODO Auto-generated method stub
-		String entityName = instance.getEntity().getName();
-		String sql = "delete from" + entityName + "where" + "id = "
-				+ instance.getId();
-		this.jdbcTemplate.execute(sql);
 	}
 
 	@Override
