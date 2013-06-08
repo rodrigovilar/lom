@@ -16,7 +16,10 @@ import org.springframework.roo.addon.test.RooIntegrationTest;
 import com.nanuvem.lom.service.EntityNotFoundException;
 import com.nanuvem.lom.service.EntityService;
 
-@RooIntegrationTest(entity = Entity.class)
+@RooIntegrationTest(entity = Entity.class, 
+	count = false, find = false, findAll = false, 
+	findEntries = false, flush = false, merge = false,
+	persist = false, remove = false)
 public class EntityIntegrationTest {
 	private Entity entity;
 
@@ -24,7 +27,7 @@ public class EntityIntegrationTest {
 	private EntityService entityService;
 
 	@After
-	public void cleanDataBase() {
+	public void cleanDatabase() {
 		Entity.entityManager().flush();
 		Entity.entityManager().clear();
 		List<Entity> allEntitys = entityService.findAllEntitys();
@@ -40,27 +43,6 @@ public class EntityIntegrationTest {
 		entity.setNamespace(namespace);
 
 		return entity;
-	}
-
-	@Test(expected = EntityNotFoundException.class)
-	public void testDeleteEntity() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity1name",
-				"pacote");
-		Assert.assertNotNull(
-				"Data on demand for 'Entity' failed to initialize correctly",
-				entity);
-		entityService.saveEntity(entity);
-		Long id = entity.getId();
-		Assert.assertNotNull(
-				"Data on demand for 'Entity' failed to provide an identifier",
-				entity.getId());
-		entity = entityService.findEntity(id);
-		entityService.deleteEntity(entity);
-		entity.flush();
-		Assert.assertNull("Failed to remove 'Entity' with identifier '" + id
-				+ "'", entityService.findEntity(id));
-
-		entityService.deleteEntity(entity);
 	}
 
 	/* CREATE ENTITY */
