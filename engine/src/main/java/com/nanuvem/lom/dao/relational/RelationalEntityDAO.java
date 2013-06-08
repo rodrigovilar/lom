@@ -46,14 +46,14 @@ public class RelationalEntityDAO implements EntityDAO {
 	@Override
 	public void saveEntity(Entity entity) {
 		String tableName = DDLHelper.generateTableNameForAnEntity(entity);
-		this.entityManager.createNativeQuery("create table " + tableName)
-				.executeUpdate();
+		this.entityManager.createNativeQuery(
+				"create table " + tableName + "(\n" + "lom_id INT\n"
+						+ ");        ").executeUpdate();
 		entity.persist();
 	}
 
 	@Override
 	public long countEntities() {
-		// TODO Auto-generated method stub
 		return Entity.countEntitys();
 	}
 

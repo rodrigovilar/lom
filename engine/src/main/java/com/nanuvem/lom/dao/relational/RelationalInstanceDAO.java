@@ -60,6 +60,9 @@ public class RelationalInstanceDAO implements InstanceDAO {
 	@Override
 	public void saveInstance(Instance instance) {
 		// TODO Auto-generated method stub
+		
+		String tableName = DDLHelper.generateTableNameForAnEntity(instance.getEntity());
+		String sql = "insert into "+tableName+" ";
 
 	}
 

@@ -111,8 +111,7 @@ public class EntityIntegrationTest {
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("samename",
 				"");
 		entityService.saveEntity(entity2);
-		entityService.deleteEntity(entity);
-		entityService.deleteEntity(entity2);
+
 	}
 
 	@Test(expected = ValidationException.class)
@@ -124,8 +123,7 @@ public class EntityIntegrationTest {
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("sameName",
 				"sameNamespace");
 		entityService.saveEntity(entity2);
-		entityService.deleteEntity(entity);
-		entityService.deleteEntity(entity2);
+
 	}
 
 	@Test
@@ -321,13 +319,12 @@ public class EntityIntegrationTest {
 				"namespace");
 		entityService.saveEntity(entity);
 		Entity found = Entity.findEntity(entity.getId());
-		found.remove();
-		entity.remove();
+		entityService.deleteEntity(found);
+		entityService.deleteEntity(entity);
 	}
 
 	@Test(expected = EntityNotFoundException.class)
 	public void deleteEntityByUnknownId() {
-		// Entity.findEntity((long) -123456789);
 		entity = CommonCreateMethodsForTesting.createEntity("abcda",
 				"namespace");
 		entityService.deleteEntity(entity);
@@ -520,9 +517,6 @@ public class EntityIntegrationTest {
 		Assert.assertFalse(entities.contains(entity_1));
 		Assert.assertFalse(entities.contains(entity_2));
 		Assert.assertEquals(0, entities.size());
-
-		entityService.deleteEntity(entity_1);
-		entityService.deleteEntity(entity_2);
 	}
 
 	@Test(expected = EntityNotFoundException.class)
@@ -533,7 +527,6 @@ public class EntityIntegrationTest {
 		long id = 100;
 		Assert.assertNull(Entity.findEntity(id));
 
-		entityService.deleteEntity(entity_1);
 	}
 
 }
