@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.PropertyValue;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

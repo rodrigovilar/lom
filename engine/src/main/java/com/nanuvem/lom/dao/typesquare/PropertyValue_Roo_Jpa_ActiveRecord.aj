@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.PropertyValue;
-
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

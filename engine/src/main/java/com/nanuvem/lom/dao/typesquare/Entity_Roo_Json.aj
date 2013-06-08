@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.Entity;
-
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import java.util.ArrayList;

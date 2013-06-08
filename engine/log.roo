@@ -127,3 +127,34 @@ finder list
 finder add --finderName findPropertyValuesByInstance 
 finder add --finderName findPropertyValuesByInstance --class ~.service.PropertyValueServiceImpl
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-05-29 17:27:38
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-06-07 21:12:46
+perform tests 
+perform tests 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-06-07 21:52:17
+perform tests 
+perform tests 
+jpa setup --database MYSQL --provider HIBERNATE 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform tests 

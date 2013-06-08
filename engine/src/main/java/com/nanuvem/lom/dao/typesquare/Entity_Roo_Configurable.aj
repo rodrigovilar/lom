@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.Entity;
-
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect Entity_Roo_Configurable {

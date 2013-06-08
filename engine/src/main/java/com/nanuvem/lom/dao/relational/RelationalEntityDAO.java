@@ -46,9 +46,10 @@ public class RelationalEntityDAO implements EntityDAO {
 	@Override
 	public void saveEntity(Entity entity) {
 		String tableName = DDLHelper.generateTableNameForAnEntity(entity);
-		this.entityManager.createNativeQuery(
-				"create table " + tableName + "(\n" + "lom_id INT\n"
-						+ ");        ").executeUpdate();
+		this.entityManager.createNativeQuery("create table " + tableName + "(\n" +
+				"lom_id INT\n" +
+				");	")
+				.executeUpdate();
 		entity.persist();
 	}
 
@@ -60,9 +61,11 @@ public class RelationalEntityDAO implements EntityDAO {
 	@Override
 	public void removeEntity(Entity entity) {
 		String tableName = DDLHelper.generateTableNameForAnEntity(entity);
+		entity.remove();
+		entity.flush();
+		entity.clear();
 		this.entityManager.createNativeQuery("drop table " + tableName)
 				.executeUpdate();
-		entity.remove();
 	}
 
 	@Override
@@ -78,8 +81,10 @@ public class RelationalEntityDAO implements EntityDAO {
 		String newTableName = DDLHelper.generateTableNameForAnEntity(entity);
 		String sql = "alter table " + oldTableName + " rename to "
 				+ newTableName;
+		Entity e = entity.merge();
+		e.flush();
 		this.entityManager.createNativeQuery(sql).executeUpdate();
-		return entity.merge();
+		return e;
 	}
 
 	@Override

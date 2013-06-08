@@ -48,7 +48,7 @@ public class EntityServiceImpl implements EntityService {
 			validateNamespace(entity);
 			dao.saveEntity(entity);
 		} catch (Exception e) {
-			throw new ValidationException(e.getMessage());
+			throw new ValidationException(e);
 		}
 	}
 
@@ -62,18 +62,31 @@ public class EntityServiceImpl implements EntityService {
 				.getName());
 
 		for (Entity e : entitiesByName) {
-			boolean nameIsEqualsIgnoreCase = e.getName().equalsIgnoreCase(
-					entity.getName());
-			boolean namespaceIsEqualsIgnoreCase = e.getNamespace()
-					.equalsIgnoreCase(entity.getNamespace());
-			boolean idIsEquals = e.getId() != entity.getId();
+			boolean nameIsEqualsIgnoreCase = entity.getName().equalsIgnoreCase(
+					e.getName());
+			boolean namespaceIsEqualsIgnoreCase = 
+					safeEquals(e.getNamespace(), entity.getNamespace());
+			boolean idNotEquals = e.getId() != entity.getId();
 			if (nameIsEqualsIgnoreCase && namespaceIsEqualsIgnoreCase
-					&& idIsEquals) {
+					&& idNotEquals) {
 				throw new ValidationException(
 						"Entity with same name already exists in this namespace!");
 			}
 		}
 
+	}
+	
+	
+	private static boolean safeEquals(String a, String b) {
+		if (a == null && b == null) {
+			return true;
+		}
+		
+		if (a == null) {
+			return false;
+		}
+		
+		return a.equalsIgnoreCase(b);
 	}
 
 	public void validateName(Entity entity) {

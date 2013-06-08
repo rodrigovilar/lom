@@ -1,4 +1,4 @@
-package com.nanuvem.lom.model;
+package com.nanuvem.lom.dao.typesquare;
 
 import java.util.Set;
 

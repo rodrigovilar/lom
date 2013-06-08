@@ -3,9 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.service.EntityServiceImpl;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,5 @@ privileged aspect EntityServiceImpl_Roo_Service {
     declare @type: EntityServiceImpl: @Service;
     
     declare @type: EntityServiceImpl: @Transactional;
-    
-    
     
 }

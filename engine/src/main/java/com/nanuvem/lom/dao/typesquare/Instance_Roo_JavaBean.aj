@@ -6,7 +6,6 @@ package com.nanuvem.lom.dao.typesquare;
 import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.dao.typesquare.PropertyValue;
-
 import java.util.Set;
 
 privileged aspect Instance_Roo_JavaBean {
