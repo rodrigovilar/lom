@@ -1,11 +1,13 @@
 package com.nanuvem.lom.dao.typesquare;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.ValidationException;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,10 @@ import com.nanuvem.lom.service.EntityServiceImpl;
 import com.nanuvem.lom.service.PropertyNotFoundException;
 import com.nanuvem.lom.service.PropertyServiceImpl;
 
-@RooIntegrationTest(entity = Property.class)
+@RooIntegrationTest(entity = Property.class, count = false, find = false, findAll = false, findEntries = false, flush = false, merge = false, persist = false, remove = false)
 public class PropertyIntegrationTest {
 	private Property property;
 	private Entity entity;
-
-	@Autowired
-	private PropertyDataOnDemand dod;
 
 	@Autowired
 	private EntityServiceImpl entityService;
@@ -41,22 +40,17 @@ public class PropertyIntegrationTest {
 
 	}
 
-	@Test
-	public void testCountAllPropertys() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity1",
-				"namespace1");
-		Assert.assertNotNull(entity);
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property1",
-				null, PropertyType._BINARY, entity);
-		propertyService.saveProperty(property);
-		long count = propertyService.countAllPropertys();
-		Assert.assertTrue(
-				"Counter for 'Property' incorrectly reported there were no entries",
-				count > 0);
+	@After
+	public void cleanDatabase() {
+		Entity.entityManager().flush();
+		Entity.entityManager().clear();
+		List<Entity> allEntitys = entityService.findAllEntitys();
+		List<Entity> copy = new ArrayList<Entity>(allEntitys);
+		for (Entity entity : copy) {
+			entityService.deleteEntity(entity);
+		}
 	}
-
+	
 	@Test
 	public void testCountPropertys() {
 		int countOfPropertiesBeforeThisTest = propertyService
@@ -86,148 +80,6 @@ public class PropertyIntegrationTest {
 
 		Property found = propertyService.findProperty(property.getId());
 		Assert.assertEquals(property.getId(), found.getId());
-	}
-
-	@Test
-	public void testFlush() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity4",
-				"namespace4");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property4",
-				null, PropertyType._BINARY, entity);
-		propertyService.saveProperty(property);
-		Long id = property.getId();
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to provide an identifier",
-				id);
-		property = propertyService.findProperty(id);
-		Assert.assertNotNull(
-				"Find method for 'Property' illegally returned null for id '"
-						+ id + "'", property);
-
-		boolean modified = dod.modifyProperty(property);
-
-		Integer currentVersion = property.getVersion();
-		property.flush();
-		Assert.assertTrue(
-				"Version for 'Property' failed to increment on flush directive",
-				(currentVersion != null && property.getVersion() > currentVersion)
-						|| !modified);
-	}
-
-	@Test
-	public void testFindPropertyEntries() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity5",
-				"namespace5");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property5",
-				null, PropertyType._BINARY, entity);
-		propertyService.saveProperty(property);
-
-		long count = Property.countPropertys();
-		if (count > 20)
-			count = 20;
-		int firstResult = 0;
-		int maxResults = (int) count;
-		List<Property> result = propertyService.findPropertyEntries(
-				firstResult, maxResults);
-		Assert.assertNotNull(
-				"Find entries method for 'Property' illegally returned null",
-				result);
-		Assert.assertEquals(
-				"Find entries method for 'Property' returned an incorrect number of entries",
-				count, result.size());
-	}
-
-	@Test
-	public void testMergeUpdate() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity6",
-				"namespace6");
-		this.entityService.saveEntity(entity);
-
-		property = CommonCreateMethodsForTesting.createProperty("property6",
-				null, PropertyType._BINARY, entity);
-		propertyService.saveProperty(property);
-
-		Long id = property.getId();
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to provide an identifier",
-				id);
-		property = propertyService.findProperty(id);
-		boolean modified = dod.modifyProperty(property);
-		Integer currentVersion = property.getVersion();
-		Property merged = property.merge();
-		property.flush();
-		Assert.assertEquals(
-				"Identifier of merged object not the same as identifier of original object",
-				merged.getId(), id);
-		Assert.assertTrue(
-				"Version for 'Property' failed to increment on merge and flush directive",
-				(currentVersion != null && property.getVersion() > currentVersion)
-						|| !modified);
-	}
-
-	@Test
-	public void testSaveProperty() {
-		entity = CommonCreateMethodsForTesting.createEntity("EntityName1",
-				"EntityNamespace1");
-		this.entityService.saveEntity(entity);
-		property = CommonCreateMethodsForTesting.createProperty(
-				"PropertyName1", null, PropertyType.TEXT, entity);
-		propertyService.saveProperty(property);
-		property.flush();
-		Assert.assertNotNull(
-				"Expected 'Property' identifier to no longer be null",
-				property.getId());
-	}
-
-	@Test
-	public void testDeleteProperty() {
-		entity = CommonCreateMethodsForTesting.createEntity("EntityName2",
-				"EntityNamespace2");
-		this.entityService.saveEntity(entity);
-		property = CommonCreateMethodsForTesting.createProperty(
-				"PropertyName2", null, PropertyType.TEXT, entity);
-		propertyService.saveProperty(property);
-		Property property2 = CommonCreateMethodsForTesting.createProperty(
-				"PropertyName_3", null, PropertyType.TEXT, entity);
-		propertyService.saveProperty(property2);
-
-		long id = property.getId();
-		propertyService.deleteProperty(property);
-		property.flush();
-		propertyService.findProperty(id);
-	}
-
-	@Test
-	public void testUpdatePropertyUpdate() {
-		entity = CommonCreateMethodsForTesting.createEntity("EntityName3",
-				"EntityNamespace3");
-		this.entityService.saveEntity(entity);
-		property = CommonCreateMethodsForTesting.createProperty(
-				"PropertyName3", null, PropertyType.TEXT, entity);
-		this.propertyService.saveProperty(property);
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to initialize correctly",
-				property);
-		Long id = property.getId();
-		Assert.assertNotNull(
-				"Data on demand for 'Property' failed to provide an identifier",
-				id);
-		property = propertyService.findProperty(id);
-		boolean modified = dod.modifyProperty(property);
-		Integer currentVersion = property.getVersion();
-		Property merged = propertyService.updateProperty(property);
-		property.flush();
-		Assert.assertEquals(
-				"Identifier of merged object not the same as identifier of original object",
-				merged.getId(), id);
-		Assert.assertTrue(
-				"Version for 'Property' failed to increment on merge and flush directive",
-				(currentVersion != null && property.getVersion() > currentVersion)
-						|| !modified);
 	}
 
 	/* CREATE PROPERTY */

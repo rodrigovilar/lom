@@ -158,3 +158,16 @@ perform tests
 perform tests 
 perform tests 
 perform tests 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-06-08 02:28:37
+perform tests 
+perform tests 
+perform tests 
+perform tests 
+perform clean 
+perform tests 
+perform package
+perform tests 
+perform clean 
+perform tests 
+perform tests 
+perform tests 

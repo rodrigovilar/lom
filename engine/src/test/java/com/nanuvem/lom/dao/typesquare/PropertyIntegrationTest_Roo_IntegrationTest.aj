@@ -3,9 +3,11 @@
 
 package com.nanuvem.lom.dao.typesquare;
 
+import com.nanuvem.lom.dao.typesquare.PropertyDataOnDemand;
 import com.nanuvem.lom.dao.typesquare.PropertyIntegrationTest;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,5 +19,8 @@ privileged aspect PropertyIntegrationTest_Roo_IntegrationTest {
     declare @type: PropertyIntegrationTest: @ContextConfiguration(locations = "classpath:/META-INF/spring/applicationContext*.xml");
     
     declare @type: PropertyIntegrationTest: @Transactional;
+    
+    @Autowired
+    private PropertyDataOnDemand PropertyIntegrationTest.dod;
     
 }

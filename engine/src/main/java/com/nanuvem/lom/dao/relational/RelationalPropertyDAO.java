@@ -3,16 +3,11 @@ package com.nanuvem.lom.dao.relational;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.nanuvem.lom.dao.PropertyDAO;
-import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.dao.typesquare.Property;
-import com.nanuvem.lom.dao.typesquare.PropertyType;
 
 @Repository
 public class RelationalPropertyDAO implements PropertyDAO {
@@ -57,15 +52,15 @@ public class RelationalPropertyDAO implements PropertyDAO {
 
 	@Override
 	public Property updateProperty(Property property) {
-		// TODO Auto-generated method stub
 		entityManager.clear();
+		Property oldProperty = Property.findProperty(property.getId());
 		String tableName = DDLHelper.generateTableNameForAnEntity(property
 				.getEntity());
 
 		String datatype = this.parsePropertyTypeToHSQLDBDatatype(property);
 
-		String sql = "alter table " + tableName + " alter "
-				+ property.getName() + " " + datatype;
+		String sql = "alter table " + tableName + " CHANGE "
+				+ oldProperty.getName() + " "+ property.getName() + " " + datatype;
 		this.entityManager.createNativeQuery(sql).executeUpdate();
 		return property.merge();
 	}
