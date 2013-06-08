@@ -5,7 +5,6 @@ package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.dao.typesquare.PropertyValue;
-
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 

@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.Entity;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

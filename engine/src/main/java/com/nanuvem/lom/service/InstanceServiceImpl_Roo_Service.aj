@@ -3,9 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.dao.typesquare.Instance;
 import com.nanuvem.lom.service.InstanceServiceImpl;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,5 @@ privileged aspect InstanceServiceImpl_Roo_Service {
     declare @type: InstanceServiceImpl: @Service;
     
     declare @type: InstanceServiceImpl: @Transactional;
-    
-    
     
 }

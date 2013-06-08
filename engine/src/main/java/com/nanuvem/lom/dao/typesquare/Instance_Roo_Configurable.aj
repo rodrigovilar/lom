@@ -4,7 +4,6 @@
 package com.nanuvem.lom.dao.typesquare;
 
 import com.nanuvem.lom.dao.typesquare.Instance;
-
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect Instance_Roo_Configurable {

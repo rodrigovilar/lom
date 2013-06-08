@@ -3,9 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.dao.typesquare.Property;
 import com.nanuvem.lom.service.PropertyServiceImpl;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,5 @@ privileged aspect PropertyServiceImpl_Roo_Service {
     declare @type: PropertyServiceImpl: @Service;
     
     declare @type: PropertyServiceImpl: @Transactional;
-    
-    
     
 }

@@ -1,7 +1,6 @@
-package com.nanuvem.lom.model;
+package com.nanuvem.lom.dao.typesquare;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -10,12 +9,10 @@ import javax.validation.ValidationException;
 import junit.framework.Assert;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.roo.addon.test.RooIntegrationTest;
 
-import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.service.EntityNotFoundException;
 import com.nanuvem.lom.service.EntityService;
 
@@ -26,6 +23,17 @@ public class EntityIntegrationTest {
 	@Autowired
 	private EntityService entityService;
 
+	@After
+	public void cleanDataBase() {
+		Entity.entityManager().flush();
+		Entity.entityManager().clear();
+		List<Entity> allEntitys = entityService.findAllEntitys();
+		List<Entity> copy = new ArrayList<Entity>(allEntitys);
+		for (Entity entity : copy) {
+			entityService.deleteEntity(entity);
+		}
+	}
+	
 	private Entity createEntity(String name, String namespace) {
 		Entity entity = new Entity();
 		entity.setName(name);
@@ -173,11 +181,13 @@ public class EntityIntegrationTest {
 
 	@Test
 	public void updateWithValidNewNameAndNewPackage() {
-		entity = CommonCreateMethodsForTesting.createEntity("entity",
+		entity = CommonCreateMethodsForTesting.createEntity("entityA",
 				"namespace");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 		entity.setName("abc");
 		entity.setNamespace("cde");
+		entityService.updateEntity(entity);
 		Entity entityFound = Entity.findEntity(entity.getId());
 		Assert.assertEquals("abc", entityFound.getName());
 		Assert.assertEquals("cde", entityFound.getNamespace());
@@ -189,7 +199,9 @@ public class EntityIntegrationTest {
 		Entity entity_1 = CommonCreateMethodsForTesting.createEntity("test",
 				"namespaceTest");
 		entityService.saveEntity(entity_1);
+		Entity.entityManager().detach(entity_1);
 		entity_1.setNamespace("");
+		entityService.updateEntity(entity_1);
 		Entity entityFound = Entity.findEntity(entity_1.getId());
 		Assert.assertEquals("", entityFound.getNamespace());
 	}
@@ -198,13 +210,15 @@ public class EntityIntegrationTest {
 	public void updateRenameTwoEntitiesWithSameNameInDifferentPackage() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("ccccc",
 				"ddddd");
 		entityService.saveEntity(entity2);
+		Entity.entityManager().detach(entity2);
 
 		entity.setName("ccccc");
-		// entityService.saveEntity(entity);
+		entityService.updateEntity(entity);
 
 		Entity entity_found = Entity.findEntity(entity.getId());
 		Entity entity2_found = Entity.findEntity(entity2.getId());
@@ -219,13 +233,15 @@ public class EntityIntegrationTest {
 	public void updateRenameForcingCaseInsensitiveName() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("uuuuu",
 				"bbbbb");
 		entityService.saveEntity(entity2);
+		Entity.entityManager().detach(entity2);
 
 		entity2.setName("AaAaA");
-		entityService.saveEntity(entity2);
+		entityService.updateEntity(entity2);
 
 	}
 
@@ -233,10 +249,12 @@ public class EntityIntegrationTest {
 	public void updateRenameForcingCaseInsensitivePackage() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("aaaaa",
 				"ccccc");
 		entityService.saveEntity(entity2);
+		Entity.entityManager().detach(entity2);
 
 		entity2.setNamespace("bbbbb");
 		entityService.saveEntity(entity2);
@@ -247,13 +265,15 @@ public class EntityIntegrationTest {
 	public void updateRenamingCausingTwoEntitiesWithSameNameInDefaultPackage() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 
 		Entity entity2 = CommonCreateMethodsForTesting
 				.createEntity("ccccc", "");
 		entityService.saveEntity(entity2);
+		Entity.entityManager().detach(entity2);
 
 		entity2.setName("aaaaa");
-		entityService.saveEntity(entity2);
+		entityService.updateEntity(entity2);
 
 	}
 
@@ -261,13 +281,15 @@ public class EntityIntegrationTest {
 	public void updateRenamingCausingTwoEntitiesWithSameNameInNonDefaultPackage() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 
 		Entity entity2 = CommonCreateMethodsForTesting.createEntity("ccccc",
 				"bbbbb");
 		entityService.saveEntity(entity2);
+		Entity.entityManager().detach(entity2);
 
 		entity2.setName("aaaaa");
-		entityService.saveEntity(entity2);
+		entityService.updateEntity(entity2);
 
 	}
 
@@ -275,8 +297,10 @@ public class EntityIntegrationTest {
 	public void updateNameAndNamespaceWithSpaces() {
 		entity = CommonCreateMethodsForTesting.createEntity("ooooo", "iiiii");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 		entity.setName("n a m e");
 		entity.setNamespace("n a m e s p a c e");
+		entityService.updateEntity(entity);
 
 		Entity entity_found = Entity.findEntity(entity.getId());
 
@@ -288,6 +312,7 @@ public class EntityIntegrationTest {
 	public void updateRemoveName() {
 		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "bbbbb");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 		entity.setName("");
 		entityService.updateEntity(entity);
 
@@ -298,14 +323,19 @@ public class EntityIntegrationTest {
 		entity = CommonCreateMethodsForTesting.createEntity("entity",
 				"namespace");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
 		entity.setName("@#$%");
-		entityService.saveEntity(entity);
+		entityService.updateEntity(entity);
 	}
 
 	@Test(expected = ValidationException.class)
 	public void updateRenameCausingNamespaceWithInvalidChar() {
-		entity = CommonCreateMethodsForTesting.createEntity("aaaaa", "@#$%^&*");
+		entity = CommonCreateMethodsForTesting.createEntity("entity",
+				"namespace");
 		entityService.saveEntity(entity);
+		Entity.entityManager().detach(entity);
+		entity.setNamespace("@#$%");
+		entityService.updateEntity(entity);
 	}
 
 	@Test(expected = EntityNotFoundException.class)
@@ -325,8 +355,8 @@ public class EntityIntegrationTest {
 				"namespace");
 		entityService.saveEntity(entity);
 		Entity found = Entity.findEntity(entity.getId());
-		found.remove();
-		entity.remove();
+		entityService.deleteEntity(found);
+		entityService.deleteEntity(found);
 	}
 
 	@Test(expected = EntityNotFoundException.class)
