@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.web;
 
-import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.service.EntityService;
 import com.nanuvem.lom.web.EntityController;
 import java.util.List;

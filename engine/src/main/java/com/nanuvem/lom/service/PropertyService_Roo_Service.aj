@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.model.Property;
+import com.nanuvem.lom.dao.typesquare.Property;
 import com.nanuvem.lom.service.PropertyService;
 import java.util.List;
 

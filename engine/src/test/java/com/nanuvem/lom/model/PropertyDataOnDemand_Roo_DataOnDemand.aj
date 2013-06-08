@@ -3,10 +3,10 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.dao.typesquare.Property;
+import com.nanuvem.lom.dao.typesquare.PropertyType;
 import com.nanuvem.lom.model.EntityDataOnDemand;
-import com.nanuvem.lom.model.Property;
 import com.nanuvem.lom.model.PropertyDataOnDemand;
-import com.nanuvem.lom.model.PropertyType;
 import com.nanuvem.lom.service.PropertyService;
 import java.security.SecureRandom;
 import java.util.ArrayList;

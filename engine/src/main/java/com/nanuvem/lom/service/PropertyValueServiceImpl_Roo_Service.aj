@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.model.PropertyValue;
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
 import com.nanuvem.lom.service.PropertyValueServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,28 +15,6 @@ privileged aspect PropertyValueServiceImpl_Roo_Service {
     
     declare @type: PropertyValueServiceImpl: @Transactional;
     
-    public long PropertyValueServiceImpl.countAllPropertyValues() {
-        return PropertyValue.countPropertyValues();
-    }
-    
-    public PropertyValue PropertyValueServiceImpl.findPropertyValue(Long id) {
-        return PropertyValue.findPropertyValue(id);
-    }
-    
-    public List<PropertyValue> PropertyValueServiceImpl.findAllPropertyValues() {
-        return PropertyValue.findAllPropertyValues();
-    }
-    
-    public List<PropertyValue> PropertyValueServiceImpl.findPropertyValueEntries(int firstResult, int maxResults) {
-        return PropertyValue.findPropertyValueEntries(firstResult, maxResults);
-    }
-    
-    public void PropertyValueServiceImpl.savePropertyValue(PropertyValue propertyValue) {
-        propertyValue.persist();
-    }
-    
-    public PropertyValue PropertyValueServiceImpl.updatePropertyValue(PropertyValue propertyValue) {
-        return propertyValue.merge();
-    }
+   
     
 }

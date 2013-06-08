@@ -126,3 +126,4 @@ focus --class ~.model.PropertyValue
 finder list
 finder add --finderName findPropertyValuesByInstance 
 finder add --finderName findPropertyValuesByInstance --class ~.service.PropertyValueServiceImpl
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-05-29 17:27:38

@@ -3,7 +3,7 @@
 
 package com.nanuvem.lom.service;
 
-import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.dao.typesquare.Entity;
 import com.nanuvem.lom.service.EntityServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,28 +15,6 @@ privileged aspect EntityServiceImpl_Roo_Service {
     
     declare @type: EntityServiceImpl: @Transactional;
     
-    public long EntityServiceImpl.countAllEntitys() {
-        return Entity.countEntitys();
-    }
     
-    public void EntityServiceImpl.deleteEntity(Entity entity) {
-        entity.remove();
-    }
-    
-    public Entity EntityServiceImpl.findEntity(Long id) {
-        return Entity.findEntity(id);
-    }
-    
-    public List<Entity> EntityServiceImpl.findAllEntitys() {
-        return Entity.findAllEntitys();
-    }
-    
-    public List<Entity> EntityServiceImpl.findEntityEntries(int firstResult, int maxResults) {
-        return Entity.findEntityEntries(firstResult, maxResults);
-    }
-    
-    public Entity EntityServiceImpl.updateEntity(Entity entity) {
-        return entity.merge();
-    }
     
 }

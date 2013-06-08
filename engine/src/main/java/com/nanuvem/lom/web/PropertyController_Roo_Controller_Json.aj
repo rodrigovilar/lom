@@ -3,8 +3,8 @@
 
 package com.nanuvem.lom.web;
 
-import com.nanuvem.lom.model.Entity;
-import com.nanuvem.lom.model.Property;
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.Property;
 import com.nanuvem.lom.service.PropertyService;
 import com.nanuvem.lom.web.PropertyController;
 import java.util.List;

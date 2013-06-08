@@ -3,9 +3,9 @@
 
 package com.nanuvem.lom.model;
 
+import com.nanuvem.lom.dao.typesquare.PropertyValue;
 import com.nanuvem.lom.model.InstanceDataOnDemand;
 import com.nanuvem.lom.model.PropertyDataOnDemand;
-import com.nanuvem.lom.model.PropertyValue;
 import com.nanuvem.lom.model.PropertyValueDataOnDemand;
 import com.nanuvem.lom.service.PropertyValueService;
 import java.security.SecureRandom;

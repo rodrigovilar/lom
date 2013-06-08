@@ -5,39 +5,48 @@ import java.util.regex.Pattern;
 
 import javax.validation.ValidationException;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
 
-import com.nanuvem.lom.model.Entity;
+import com.nanuvem.lom.dao.EntityDAO;
+import com.nanuvem.lom.dao.relational.RelationalEntityDAO;
+import com.nanuvem.lom.dao.typesquare.Entity;
+import com.nanuvem.lom.dao.typesquare.TypeSquareEntityDAO;
+
+// TODO Auto-generated method stub
 
 public class EntityServiceImpl implements EntityService {
 
+	// private EntityDAO dao = new TypeSquareEntityDAO();
+	private RelationalEntityDAO dao = new RelationalEntityDAO();
+
 	public List<Entity> findEntitysByNameLike(String name) {
 		if (name == null || name.equals("")) {
-			return Entity.findAllEntitys();
+			return dao.findAllEntities();
 		}
-		return Entity.findEntitysByNameLike(name).getResultList();
+		return dao.findEntitiesByNameLike(name);
 	}
 
 	public List<Entity> findEntitysByNamespaceEquals(String namespace) {
-		return Entity.findEntitysByNamespaceEquals(namespace).getResultList();
+		return dao.findEntitiesByNamespaceEquals(namespace);
 	}
 
 	public List<Entity> findEntitysByNamespaceLike(String namespace) {
 		if (namespace == null) {
-			return Entity.findEntitysByNamespaceEquals(null).getResultList();
+			return dao.findEntitiesByNamespaceEquals(null);
 		}
 
 		if (namespace.equals("")) {
-			return Entity.findAllEntitys();
+			return dao.findAllEntities();
 		}
-		return Entity.findEntitysByNamespaceLike(namespace).getResultList();
+		return dao.findEntitiesByNamespaceLike(namespace);
 	}
 
 	public void saveEntity(Entity entity) {
 		try {
 			validateName(entity);
 			validateNamespace(entity);
-			entity.persist();
+			dao.saveEntity(entity);
 		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());
 		}
@@ -49,8 +58,8 @@ public class EntityServiceImpl implements EntityService {
 			throw new ValidationException("Without name!");
 		}
 
-		List<Entity> entitiesByName = Entity.findEntitysByNameLike(
-				entity.getName()).getResultList();
+		List<Entity> entitiesByName = dao.findEntitiesByNameLike(entity
+				.getName());
 
 		for (Entity e : entitiesByName) {
 			boolean nameIsEqualsIgnoreCase = e.getName().equalsIgnoreCase(
@@ -90,4 +99,38 @@ public class EntityServiceImpl implements EntityService {
 		}
 
 	}
+
+	public long countAllEntitys() {
+		return dao.countEntities();
+	}
+
+	public void deleteEntity(Entity entity) {
+		try {
+			dao.removeEntity(entity);
+		} catch (InvalidDataAccessApiUsageException e) {
+			throw new EntityNotFoundException(
+					"Cannot remove an unknown entity!");
+		}catch (JpaSystemException e) {
+			throw new EntityNotFoundException(
+					"Cannot remove an unknown entity!");
+		}
+	}
+
+	public Entity findEntity(Long id) {
+		return dao.findEntity(id);
+	}
+
+	public List<Entity> findAllEntitys() {
+		return dao.findAllEntities();
+	}
+
+	public List<Entity> findEntityEntries(int firstResult, int maxResults) {
+		return dao.findEntityEntries(firstResult, maxResults);
+	}
+
+	public Entity updateEntity(Entity entity) {
+		this.validateName(entity);
+		return dao.update(entity);
+	}
+
 }
