@@ -8,8 +8,6 @@ import com.nanuvem.lom.dao.typesquare.Property;
 public interface PropertyDAO {
 
 	void saveProperty(Property property);
-
-	Entity findEntity(Long id);
 	
 	void removeProperty(Property property);
 

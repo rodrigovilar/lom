@@ -32,7 +32,6 @@ public class TypeSquareInstanceDAO implements InstanceDAO {
 		return Instance.findAllInstances();
 	}
 
-	@Override
 	public List<Instance> findInstanceEntries(int firstResult, int maxResults) {
 		return Instance.findInstanceEntries(firstResult, maxResults);
 	}

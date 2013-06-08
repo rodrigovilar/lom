@@ -123,6 +123,9 @@ public class EntityServiceImpl implements EntityService {
 		} catch (InvalidDataAccessApiUsageException e) {
 			throw new EntityNotFoundException(
 					"Cannot remove an unknown entity!");
+		}catch (JpaSystemException e) {
+			throw new EntityNotFoundException(
+					"Cannot remove an unknown entity!");
 		}
 	}
 
