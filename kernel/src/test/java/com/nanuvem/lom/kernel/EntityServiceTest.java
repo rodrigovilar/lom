@@ -81,20 +81,61 @@ public class EntityServiceTest {
 
 	@Test
 	public void nameAndNamespaceWithInvalidChars() {
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa$", "Invalid value for Entity name: aaa$");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa#", "Invalid value for Entity name: aaa#");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa=", "Invalid value for Entity name: aaa=");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa.a", "Invalid value for Entity name: aaa.a");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa/a", "Invalid value for Entity name: aaa/a");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa*", "Invalid value for Entity name: aaa*");
-		this.expectExceptionOnCreateInvalidEntity("a", "aaa'", "Invalid value for Entity name: aaa'");
-		this.expectExceptionOnCreateInvalidEntity("a$", "aaa", "Invalid value for Entity namespace: a$");
-		this.expectExceptionOnCreateInvalidEntity("a#", "aaa", "Invalid value for Entity namespace: a#");
-		this.expectExceptionOnCreateInvalidEntity("a=", "aaa", "Invalid value for Entity namespace: a=");
-		this.expectExceptionOnCreateInvalidEntity("a'", "aaa", "Invalid value for Entity namespace: a'");
-		this.expectExceptionOnCreateInvalidEntity("a.", "aaa", "Invalid value for Entity namespace: a.");
-		this.expectExceptionOnCreateInvalidEntity("a/a", "aaa", "Invalid value for Entity namespace: a/a");
-		this.expectExceptionOnCreateInvalidEntity("a*", "aaa", "Invalid value for Entity namespace: a*");	
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa$",
+				"Invalid value for Entity name: aaa$");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa#",
+				"Invalid value for Entity name: aaa#");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa=",
+				"Invalid value for Entity name: aaa=");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa.a",
+				"Invalid value for Entity name: aaa.a");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa/a",
+				"Invalid value for Entity name: aaa/a");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa*",
+				"Invalid value for Entity name: aaa*");
+		this.expectExceptionOnCreateInvalidEntity("a", "aaa'",
+				"Invalid value for Entity name: aaa'");
+		this.expectExceptionOnCreateInvalidEntity("a$", "aaa",
+				"Invalid value for Entity namespace: a$");
+		this.expectExceptionOnCreateInvalidEntity("a#", "aaa",
+				"Invalid value for Entity namespace: a#");
+		this.expectExceptionOnCreateInvalidEntity("a=", "aaa",
+				"Invalid value for Entity namespace: a=");
+		this.expectExceptionOnCreateInvalidEntity("a'", "aaa",
+				"Invalid value for Entity namespace: a'");
+		this.expectExceptionOnCreateInvalidEntity("a.", "aaa",
+				"Invalid value for Entity namespace: a.");
+		this.expectExceptionOnCreateInvalidEntity("a/a", "aaa",
+				"Invalid value for Entity namespace: a/a");
+		this.expectExceptionOnCreateInvalidEntity("a*", "aaa",
+				"Invalid value for Entity namespace: a*");
+	}
+
+	@Test
+	public void validNewNameAndPackage() {
+		createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "b", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "a", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", "b", "aaa");
+		createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "", "bbb");
+		createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", null, "bbb");
+		createUpdateAndVerifyOneEntity("a.b.c", "aaa1", "a.b.c.aaa1", "b",
+				"bbb");
+		createUpdateAndVerifyOneEntity("a.b.c", "aaa2", "a.b.c.aaa2", "b.c",
+				"bbb");
+	}
+
+	@Test
+	public void removePackageSetPackage(){
+		createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "", "aaa");
+		createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "", "bbb");
+		createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "b", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", null, "aaa");
+		createUpdateAndVerifyOneEntity("a", "aaa4", "a.aaa4", null, "bbb");
+		createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", "b", "bbb");
+		
+		createUpdateAndVerifyOneEntity("a", "aaa5", "a.aaa5", "a", "aaa5");
+		createUpdateAndVerifyOneEntity("a", "aaa6", "a.aaa6", "a", "aaa7");
+		createUpdateAndVerifyOneEntity(null, "aaa3", "aaa3", null, "aaa4");		
 	}
 
 	private void expectExceptionOnCreateInvalidEntity(String namespace,
@@ -105,6 +146,28 @@ public class EntityServiceTest {
 		} catch (MetadataException e) {
 			Assert.assertEquals(expectedMessage, e.getMessage());
 		}
+	}
+
+	private void createUpdateAndVerifyOneEntity(String firstNamespace,
+			String firstName, String updatePath, String secondNamespace,
+			String secondName) {
+
+		Entity entity = new Entity();
+		entity.setNamespace(firstNamespace);
+		entity.setName(firstName);
+		service.create(entity);
+
+		Assert.assertNotNull(entity.getId());
+		Assert.assertEquals((Integer) 0, entity.getVersion());
+
+		Entity entity1 = service.update("secondNamespace", "secondName",
+				entity.getId(), entity.getVersion());
+
+		List<Entity> allEntities = service.listAll();
+		Entity entityFound = allEntities.get(0);
+
+		Assert.assertEquals((Integer) 1, entity1.getVersion());
+		Assert.assertNotSame(entity, entityFound);
 	}
 
 	private void createAndVerifyTwoEntities(String string, String string2,

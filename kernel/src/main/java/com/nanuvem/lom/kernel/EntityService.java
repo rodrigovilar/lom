@@ -6,9 +6,9 @@ import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class EntityService {
-		
+
 	private EntityDao dao;
-	
+
 	public EntityService(DaoFactory factory) {
 		this.dao = factory.createEntityDao();
 	}
@@ -24,5 +24,8 @@ public class EntityService {
 	public void remove(Entity entity) {
 		dao.remove(entity);
 	}
-	
+
+	public Entity update(String namespace, String name, Long id, Integer version) {
+		return dao.update(namespace, name, id, version);
+	}
 }

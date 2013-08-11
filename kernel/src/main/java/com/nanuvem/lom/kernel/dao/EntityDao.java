@@ -12,4 +12,5 @@ public interface EntityDao {
 
 	void remove(Entity entity);
 
+	Entity update(String namespace, String name, Long id, Integer version);
 }
