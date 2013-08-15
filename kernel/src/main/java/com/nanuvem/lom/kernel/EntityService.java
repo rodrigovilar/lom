@@ -28,4 +28,12 @@ public class EntityService {
 	public Entity update(String namespace, String name, Long id, Integer version) {
 		return dao.update(namespace, name, id, version);
 	}
+
+	public Entity update(EntityDTO entityDTO) {
+		return dao.update(entityDTO);
+	}
+
+	public Entity findEntityById(Long id) {
+		return dao.findEntityById(id);
+	}
 }

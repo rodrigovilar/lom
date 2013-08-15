@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
+import com.nanuvem.lom.kernel.EntityDTO;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
@@ -37,7 +38,7 @@ public class MemoryEntityDao implements EntityDao {
 				Entity e = new Entity();
 				e.setName(name);
 				e.setNamespace(namespace);
-				e.setVersion(version+1);
+				e.setVersion(version + 1);
 				e.setId(id);
 				entities.remove(entity);
 				entities.add(e);
@@ -45,6 +46,21 @@ public class MemoryEntityDao implements EntityDao {
 			}
 		}
 		return null;
+	}
+
+	public Entity update(EntityDTO entityDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Entity findEntityById(Long id) {
+		for (Entity entity : entities) {
+			if (entity.getId().equals(id)) {
+				return entity;
+			}
+		}
+		return null;
+
 	}
 
 }
