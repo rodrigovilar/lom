@@ -63,4 +63,29 @@ public class MemoryEntityDao implements EntityDao {
 
 	}
 
+	public List<Entity> listEntitiesByFragmentOfNameAndPackage(
+			String namespaceFragment, String nameFragment) {
+		List<Entity> entities = new ArrayList<Entity>();
+		boolean entityNamespaceContainsFragmentLike = false;
+		boolean entityNameContainsFragmentLike = false;
+		
+		if (namespaceFragment == null)
+			namespaceFragment = "";
+
+		if (nameFragment == null)
+			nameFragment = "";
+
+		for (Entity e : this.listAll()) {
+			entityNamespaceContainsFragmentLike = e.getNamespace()
+					.toLowerCase().contains(namespaceFragment.toLowerCase());
+
+			entityNameContainsFragmentLike = e.getName().toLowerCase()
+					.contains(nameFragment.toLowerCase());
+
+			if (entityNamespaceContainsFragmentLike
+					&& entityNameContainsFragmentLike)
+				entities.add(e);
+		}
+		return entities;
+	}
 }

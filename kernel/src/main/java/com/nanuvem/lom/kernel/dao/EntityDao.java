@@ -18,4 +18,7 @@ public interface EntityDao {
 	Entity update(EntityDTO entityDTO);
 
 	Entity findEntityById(Long id);
+
+	List<Entity> listEntitiesByFragmentOfNameAndPackage(String namespaceFragment,
+			String nameFragment);
 }

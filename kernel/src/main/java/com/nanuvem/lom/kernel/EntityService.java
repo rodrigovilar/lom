@@ -1,5 +1,6 @@
 package com.nanuvem.lom.kernel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.dao.DaoFactory;
@@ -35,5 +36,11 @@ public class EntityService {
 
 	public Entity findEntityById(Long id) {
 		return dao.findEntityById(id);
+	}
+
+	public List<Entity> listEntitiesByFragmentOfNameAndPackage(
+			String namespaceFragment, String nameFragment) {
+		return dao.listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
+				nameFragment);
 	}
 }
