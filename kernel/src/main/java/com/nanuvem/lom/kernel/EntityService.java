@@ -43,4 +43,8 @@ public class EntityService {
 		return dao.listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
 				nameFragment);
 	}
+
+	public Entity readEntityByNamespaceAndName(String namespace, String name) {
+		return dao.readEntityByNamespaceAndName(namespace, name);
+	}
 }

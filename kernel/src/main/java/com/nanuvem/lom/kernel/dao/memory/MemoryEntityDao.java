@@ -88,4 +88,9 @@ public class MemoryEntityDao implements EntityDao {
 		}
 		return entities;
 	}
+
+	public Entity readEntityByNamespaceAndName(String namespace, String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

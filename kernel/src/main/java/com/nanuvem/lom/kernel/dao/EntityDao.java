@@ -21,4 +21,6 @@ public interface EntityDao {
 
 	List<Entity> listEntitiesByFragmentOfNameAndPackage(String namespaceFragment,
 			String nameFragment);
+
+	Entity readEntityByNamespaceAndName(String namespace, String name);
 }

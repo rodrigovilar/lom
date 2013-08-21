@@ -552,6 +552,108 @@ public class EntityServiceTest {
 				"Invalid value for Entity namespace: ns*");
 	}
 
+	@Test
+	public void getEntityByValidNameAndPackage() {
+		expectExceptionOnInvalidListEntity("ns", "n", "Entity not found: ns.n");
+		Entity entity1 = createEntity("ns1", "n1");
+		Entity foundEntity1 = service.readEntityByNamespaceAndName("ns1", "n1");
+		Assert.assertEquals(entity1, foundEntity1);
+
+		Entity entity2 = createEntity("ns2", "n2");
+		Entity foundEntity2 = service.readEntityByNamespaceAndName("ns2", "n2");
+		Assert.assertEquals(entity2, foundEntity2);
+
+		expectExceptionOnInvalidGetEntity("ns1", "n", "Entity not found: ns1.n");
+		expectExceptionOnInvalidGetEntity("ns", "n1", "Entity not found: ns.n1");
+		expectExceptionOnInvalidGetEntity("ns2", "n1",
+				"Entity not found: ns2.n1");
+		List<Entity> allEntities = service.listAll();
+		Assert.assertEquals(2, allEntities.size());
+		Assert.assertEquals(entity1, allEntities.get(0));
+		Assert.assertEquals(entity2, allEntities.get(1));
+	}
+
+	@Test
+	public void getEntityByEmptyNameAndPackage() {
+		createEntity("ns1", "n1");
+		Entity entity2 = createEntity("ns2", "n2");
+		expectExceptionOnInvalidGetEntity("", "n1", "Entity not found: n1");
+
+		Entity foundEntity2 = service.readEntityByNamespaceAndName(null, "n2");
+		Assert.assertEquals(entity2, foundEntity2);
+
+		expectExceptionOnInvalidGetEntity("ns1", "", "Entity not found: ns1");
+	}
+
+	@Test
+	public void getEntityByNameAndPackageWithSpaces() {
+		expectExceptionOnInvalidGetEntity("", "na me",
+				"Invalid key for Entity: na me");
+		expectExceptionOnInvalidGetEntity("name space", "name",
+				"Invalid key for Entity: name space.name");
+		expectExceptionOnInvalidGetEntity("namespace", "na me",
+				"Invalid key for Entity: namespace.na me");
+	}
+
+	@Test
+	public void getEntityForcingCaseInsensitivePackagesAndNames() {
+		Entity entity = createEntity("nS", "nA");
+		Entity ea = service.readEntityByNamespaceAndName("ns", "na");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntityByNamespaceAndName("NS", "NA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntityByNamespaceAndName("nS", "nA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntityByNamespaceAndName("NS", "na");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntityByNamespaceAndName("ns", "NA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntityByNamespaceAndName("Ns", "Na");
+		Assert.assertEquals(entity, ea);
+
+	}
+
+	@Test
+	public void getEntityUsingInvalidNameAndPackage() {
+		expectExceptionOnInvalidGetEntity("ns", "n$",
+				"Invalid key for Entity: ns.n$");
+		expectExceptionOnInvalidGetEntity("ns", "n#",
+				"Invalid key for Entity: ns.n#");
+		expectExceptionOnInvalidGetEntity("ns", "n=",
+				"Invalid key for Entity: ns.n=");
+		expectExceptionOnInvalidGetEntity("ns", "n/n",
+				"Invalid key for Entity: ns.n/n");
+		expectExceptionOnInvalidGetEntity("ns", "n*",
+				"Invalid key for Entity: ns.*");
+		expectExceptionOnInvalidGetEntity("ns", "n'",
+				"Invalid key for Entity: ns.'");
+		expectExceptionOnInvalidGetEntity("ns$", "n",
+				"Invalid key for Entity: ns$.n");
+		expectExceptionOnInvalidGetEntity("ns#", "n",
+				"Invalid key for Entity: ns#.n");
+		expectExceptionOnInvalidGetEntity("ns=", "n",
+				"Invalid key for Entity: ns=.n");
+		expectExceptionOnInvalidGetEntity("ns/", "n",
+				"Invalid key for Entity: ns/.n");
+		expectExceptionOnInvalidGetEntity("ns*", "n",
+				"Invalid key for Entity: ns*.n");
+		expectExceptionOnInvalidGetEntity("ns'", "n",
+				"Invalid key for Entity: ns'.n");
+	}
+
+	private Entity createEntity(String namespace, String name) {
+		Entity entity = new Entity();
+		entity.setName(name);
+		entity.setNamespace(namespace);
+		service.create(entity);
+		return entity;
+	}
+
 	private void listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
 			List<Entity> expectedListedEntities, String namespaceFragment,
 			String nameFragment) {
@@ -566,6 +668,16 @@ public class EntityServiceTest {
 			index++;
 		}
 
+	}
+
+	private void expectExceptionOnInvalidGetEntity(String namespace,
+			String name, String expectedMessage) {
+		try {
+			service.readEntityByNamespaceAndName(namespace, name);
+			fail();
+		} catch (MetadataException me) {
+			Assert.assertEquals(me.getMessage(), expectedMessage);
+		}
 	}
 
 	private void expectExceptionOnInvalidListEntity(String namespaceFragment,
@@ -603,22 +715,6 @@ public class EntityServiceTest {
 		}
 	}
 
-	// unused
-	private void expectExceptionOnInvalidEntityUpdate(String firstnamespace,
-			String firstname, String secondnamespace, String secondname,
-			String expectedMessage, long id) {
-		Entity entity = new Entity();
-		entity.setNamespace(firstnamespace);
-		entity.setName(firstname);
-		service.create(entity);
-		try {
-			service.update(secondnamespace, secondname, id, entity.getVersion());
-			fail();
-		} catch (MetadataException me) {
-			Assert.assertEquals(expectedMessage, me.getMessage());
-		}
-	}
-
 	private void expectExceptionOnInvalidEntityUpdate(
 			EntityDTO createEntityDTO, EntityDTO updateEntityDTO,
 			String expectedMessage) {
@@ -632,38 +728,6 @@ public class EntityServiceTest {
 			service.update(updateEntityDTO.getNamespace(),
 					updateEntityDTO.getName(), entity.getId(),
 					entity.getVersion());
-			fail();
-		} catch (MetadataException me) {
-			Assert.assertEquals(expectedMessage, me.getMessage());
-		}
-	}
-
-	// unused
-	private void expectExceptionOnInvalidEntityUpdate(String firstnamespace,
-			String firstname, String secondnamespace, String secondname,
-			Integer version, String expectedMessage) {
-		Entity entity = new Entity();
-		entity.setNamespace(firstnamespace);
-		entity.setName(firstname);
-		service.create(entity);
-		try {
-			service.update(secondnamespace, secondname, entity.getId(), version);
-			fail();
-		} catch (MetadataException me) {
-			Assert.assertEquals(expectedMessage, me.getMessage());
-		}
-	}
-
-	// unused
-	private void expectExceptionOnInvlidEntityUpdate(String firstnamespace,
-			String firstname, String secondnamespace, String secondname,
-			long id, Integer version, String expectedMessage) {
-		Entity entity = new Entity();
-		entity.setNamespace(firstnamespace);
-		entity.setName(firstname);
-		service.create(entity);
-		try {
-			service.update(secondnamespace, secondname, id, version);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
