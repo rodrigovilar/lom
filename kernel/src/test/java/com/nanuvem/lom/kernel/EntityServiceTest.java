@@ -646,6 +646,109 @@ public class EntityServiceTest {
 				"Invalid key for Entity: ns'.n");
 	}
 
+	@Test
+	public void deleteEntityByValidNameAndPackage() {
+		Entity entity1 = new Entity();
+		entity1.setNamespace("ns");
+		entity1.setName("n");
+		this.expectExceptionOnInvalidRemoveEntity("ns1.n",
+				"Entity not found: ns.n");
+		Entity entity2 = this.createEntity("ns1", "n1");
+		Entity entity3 = this.createEntity("ns2", "n2");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n",
+				"Entity not found: ns.n");
+		entity1.setNamespace("ns1");
+		this.expectExceptionOnInvalidRemoveEntity("ns1.n",
+				"Entity not found: ns1.n");
+		entity1.setNamespace("ns");
+		entity1.setName("n1");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n1",
+				"Entity not found: ns.n1");
+		entity1.setNamespace("ns2");
+		this.expectExceptionOnInvalidRemoveEntity("ns2.n1",
+				"Entity not found: ns2.n1");
+		service.remove(entity2);
+		service.remove(entity3);
+
+		Assert.assertEquals(0, service.listAll().size());
+	}
+
+	@Test
+	public void deleteEntityByEmptyNameAndPackage() {
+		this.createEntity("ns1", "n1");
+		this.createEntity(null, "n2");
+		this.expectExceptionOnInvalidRemoveEntity("n1", "Entity not found: n1");
+		service.deleteEntity("n2");
+		this.expectExceptionOnInvalidRemoveEntity("ns1",
+				"Entity not found: ns1");
+	}
+
+	@Test
+	public void deleteEntityByNameAndPackageWithSpaces() {
+		this.expectExceptionOnInvalidRemoveEntity("na me",
+				"Entity not found: na me");
+		this.expectExceptionOnInvalidRemoveEntity("name space.name",
+				"Entity not found: name space.name");
+		this.expectExceptionOnInvalidRemoveEntity("namespace.na me",
+				"Entity not found: namespace.na me");
+	}
+
+	@Test
+	public void deleteEntityForcingCaseInsensitivePackagesAndNames() {
+		this.createEntity("nS", "nA");
+		service.deleteEntity("ns.na");
+		this.createEntity("nS", "nA");
+		service.deleteEntity("NS.NA");
+		this.createEntity("nS", "nA");
+		service.deleteEntity("nS.nA");
+		this.createEntity("nS", "nA");
+		service.deleteEntity("NS.na");
+		this.createEntity("nS", "nA");
+		service.deleteEntity("ns.NA");
+		this.createEntity("nS", "nA");
+		service.deleteEntity("Ns.Na");
+	}
+
+	@Test
+	public void deleteEntityUsingInvalidNameAndPackage() {
+		this.expectExceptionOnInvalidRemoveEntity("ns.n$",
+				"Invalid key for Entity: ns.n$");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n#",
+				"Invalid key for Entity: ns.n#");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n=",
+				"Invalid key for Entity: ns.n=");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n/n",
+				"Invalid key for Entity: ns.n/n");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n*",
+				"Invalid key for Entity: ns.n*");
+		this.expectExceptionOnInvalidRemoveEntity("ns.n'",
+				"Invalid key for Entity: ns.n'");
+		this.expectExceptionOnInvalidRemoveEntity("ns$.n",
+				"Invalid key for Entity: ns.n");
+		this.expectExceptionOnInvalidRemoveEntity("ns#.n",
+				"Invalid key for Entity: ns.n");
+		this.expectExceptionOnInvalidRemoveEntity("ns=.n",
+				"Invalid key for Entity: ns.n");
+		this.expectExceptionOnInvalidRemoveEntity("ns.",
+				"Invalid key for Entity: ns.");
+		this.expectExceptionOnInvalidRemoveEntity("ns/n.n",
+				"Invalid key for Entity: ns/n.n");
+		this.expectExceptionOnInvalidRemoveEntity("ns*.n",
+				"Invalid key for Entity: ns*.n");
+		this.expectExceptionOnInvalidRemoveEntity("ns'.n",
+				"Invalid key for Entity: ns'.n");
+	}
+
+	private void expectExceptionOnInvalidRemoveEntity(String namespaceAndName,
+			String expectedMessage) {
+		try {
+			service.deleteEntity(namespaceAndName);
+			fail();
+		} catch (MetadataException me) {
+			Assert.assertEquals(expectedMessage, me);
+		}
+	}
+
 	private Entity createEntity(String namespace, String name) {
 		Entity entity = new Entity();
 		entity.setName(name);

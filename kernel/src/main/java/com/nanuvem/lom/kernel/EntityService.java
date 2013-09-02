@@ -47,4 +47,8 @@ public class EntityService {
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
 		return dao.readEntityByNamespaceAndName(namespace, name);
 	}
+	
+	public void deleteEntity(String namespaceAndName){
+		dao.deleteEntity(namespaceAndName);
+	}
 }

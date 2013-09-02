@@ -93,4 +93,9 @@ public class MemoryEntityDao implements EntityDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void deleteEntity(String namespaceAndName) {
+		// TODO Auto-generated method stub
+		
+	}
 }
