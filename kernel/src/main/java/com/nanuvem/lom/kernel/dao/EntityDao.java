@@ -3,7 +3,6 @@ package com.nanuvem.lom.kernel.dao;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
-import com.nanuvem.lom.kernel.EntityDTO;
 
 public interface EntityDao {
 
@@ -15,7 +14,7 @@ public interface EntityDao {
 
 	Entity update(String namespace, String name, Long id, Integer version);
 
-	Entity update(EntityDTO entityDTO);
+	Entity update(Entity entity);
 
 	Entity findEntityById(Long id);
 

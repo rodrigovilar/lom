@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
-import com.nanuvem.lom.kernel.EntityDTO;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
@@ -48,7 +47,7 @@ public class MemoryEntityDao implements EntityDao {
 		return null;
 	}
 
-	public Entity update(EntityDTO entityDTO) {
+	public Entity update(Entity entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -30,8 +30,8 @@ public class EntityService {
 		return dao.update(namespace, name, id, version);
 	}
 
-	public Entity update(EntityDTO entityDTO) {
-		return dao.update(entityDTO);
+	public Entity update(Entity entity) {
+		return dao.update(entity);
 	}
 
 	public Entity findEntityById(Long id) {

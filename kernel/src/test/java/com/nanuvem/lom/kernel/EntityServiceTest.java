@@ -140,17 +140,9 @@ public class EntityServiceTest {
 	}
 
 	@Test
-	public void renameCaousingTwoEntitiesWithSameNameInDifferentPackages() {
-		Entity ea = new Entity();
-		ea.setNamespace("a");
-		ea.setName("aaa");
-		service.create(ea);
-
-		Entity eb = new Entity();
-		eb.setNamespace("b");
-		eb.setName("bbb");
-		service.create(eb);
-
+	public void renameCausingTwoEntitiesWithSameNameInDifferentPackages() {
+		Entity ea = this.createAndSaveOneEntity("a", "aaa");
+		Entity eb = this.createAndSaveOneEntity("b", "bbb");
 		service.update("c", "bbb", ea.getId(), ea.getVersion());
 	}
 
@@ -195,13 +187,13 @@ public class EntityServiceTest {
 
 	@Test
 	public void removeName() {
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "namespace", null,
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", null,
 				"The name of an Entity is mandatory");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "namespace", "",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
 				"The name of an Entity is mandatory");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", null, null,
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long)null, null,
 				"The name of an Entity is mandatory");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", null, "",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "",
 				"The name of an Entity is mandatory");
 	}
 
@@ -239,33 +231,33 @@ public class EntityServiceTest {
 
 	@Test
 	public void renameMoveCausingNameAndPackagesWithInvalidChars() {
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa$",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa$",
 				"Invalid value for Entity name: aaa$");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa#",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa#",
 				"Invalid value for Entity name: aaa#");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa=",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa=",
 				"Invalid value for Entity name: aaa=");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa'",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa'",
 				"Invalid value for Entity name: aaa'");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa.a",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa.a",
 				"Invalid value for Entity name: aaa.a");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa/a",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa/a",
 				"Invalid value for Entity name: aaa/a");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a", "aaa*",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa*",
 				"Invalid value for Entity name: aaa*");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a$", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a$", "aaa",
 				"Invalid value for Entity namespace: a$");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a#", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a#", "aaa",
 				"Invalid value for Entity namespace: a#");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a=", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a=", "aaa",
 				"Invalid value for Entity namespace: a=");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a'", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a'", "aaa",
 				"Invalid value for Entity namespace: a'");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a.", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a.", "aaa",
 				"Invalid value for Entity namespace: a.");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a/a", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a/a", "aaa",
 				"Invalid value for Entity namespace: a/a");
-		expectExceptionOnInvlidEntityUpdate("a", "aaa", "a*", "aaa",
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a*", "aaa",
 				"Invalid value for Entity namespace: a*");
 	}
 
@@ -287,39 +279,30 @@ public class EntityServiceTest {
 
 	@Test
 	public void invalidIdAndVersion() {
-		EntityDTO createEntityDTO1 = new EntityDTO(null, null, "a", "aaa");
-		EntityDTO updateEntityDTO1 = new EntityDTO(null, new Integer(0),
-				"namespace", "name");
-		expectExceptionOnInvalidEntityUpdate(createEntityDTO1,
-				updateEntityDTO1, "The id of an Entity is mandatory on update");
+		Entity entity1 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdate("namespace", "name", null,
+				entity1.getVersion(),
+				"The id of an Entity is mandatory on update");
 
-		EntityDTO createEntityDTO2 = new EntityDTO(null, null, "a", "aaa");
-		EntityDTO updateEntityDTO2 = new EntityDTO(createEntityDTO2.getId(),
-				null, "a", "aaa");
-		expectExceptionOnInvalidEntityUpdate(createEntityDTO2,
-				updateEntityDTO2,
+		Entity entity2 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", entity2.getId(), null,
 				"The version of an Entity is mandatory on update");
 
-		EntityDTO createEntityDTO3 = new EntityDTO(null, null, "a", "aaa");
-		EntityDTO updateEntityDTO3 = new EntityDTO(null, null, "a", "aaa");
-		expectExceptionOnInvalidEntityUpdate(createEntityDTO3,
-				updateEntityDTO3,
+		Entity entity3 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long)null, null,
 				"The version and id of an Entity are mandatory on update");
 
-		EntityDTO createEntityDTO4 = new EntityDTO(null, null, "a", "aaa");
-		EntityDTO updateEntityDTO4 = new EntityDTO(
-				createEntityDTO4.getId() + 1, createEntityDTO4.getVersion(),
-				"name", "aaa");
-		expectExceptionOnInvalidEntityUpdate(createEntityDTO4,
-				updateEntityDTO4, "Invalid id for Entity a.aaa");
+		Entity entity4 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdate("name", "aaa",
+				entity4.getId() + 1, entity4.getVersion(),
+				"Invalid id for Entity a.aaa");
 
-		EntityDTO createEntityDTO5 = new EntityDTO(null, null, "a", "aaa");
-		EntityDTO updateEntityDTO5 = new EntityDTO(
-				createEntityDTO4.getId() + 1, new Integer(-1), "namespace",
-				"name");
+		Entity entity5 = this.createAndSaveOneEntity("a", "aaa");
 		expectExceptionOnInvalidEntityUpdate(
-				createEntityDTO5,
-				updateEntityDTO5,
+				"namespace",
+				"name",
+				entity5.getId(),
+				entity5.getVersion() - 1,
 				"Updating a deprecated version of Entity a.aaa. Get the entity again to obtain the newest version and proceed updating.");
 	}
 
@@ -818,26 +801,17 @@ public class EntityServiceTest {
 		}
 	}
 
-	private void expectExceptionOnInvalidEntityUpdate(
-			EntityDTO createEntityDTO, EntityDTO updateEntityDTO,
-			String expectedMessage) {
-		Entity entity = new Entity();
-		entity.setNamespace(createEntityDTO.getNamespace());
-		entity.setName(createEntityDTO.getName());
-		service.create(entity);
-		createEntityDTO.setId(entity.getId());
-		createEntityDTO.setVersion(entity.getVersion());
+	private void expectExceptionOnInvalidEntityUpdate(String namespace,
+			String name, Long id, Integer version, String expectedMessage) {
 		try {
-			service.update(updateEntityDTO.getNamespace(),
-					updateEntityDTO.getName(), entity.getId(),
-					entity.getVersion());
+			service.update(namespace, name, id, version);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
 		}
 	}
 
-	private void expectExceptionOnInvlidEntityUpdate(String firstnamespace,
+	private void expectExceptionOnInvalidEntityUpdate(String firstnamespace,
 			String firstname, String secondnamespace, String secondname,
 			String expectedMessage) {
 		Entity entity = new Entity();
