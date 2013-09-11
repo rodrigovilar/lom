@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
+import com.nanuvem.lom.kernel.MetadataException;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
@@ -67,7 +68,7 @@ public class MemoryEntityDao implements EntityDao {
 		List<Entity> entities = new ArrayList<Entity>();
 		boolean entityNamespaceContainsFragmentLike = false;
 		boolean entityNameContainsFragmentLike = false;
-		
+
 		if (namespaceFragment == null)
 			namespaceFragment = "";
 
@@ -84,17 +85,26 @@ public class MemoryEntityDao implements EntityDao {
 			if (entityNamespaceContainsFragmentLike
 					&& entityNameContainsFragmentLike)
 				entities.add(e);
-		}
+		} // TODO Auto-generated method stub
+
 		return entities;
 	}
 
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
-		// TODO Auto-generated method stub
+		if (namespace == null) {
+			namespace = "";
+		}
+		for (Entity e : this.listAll()) {
+			if (e.getNamespace().equalsIgnoreCase(namespace)
+					&& e.getName().equalsIgnoreCase(name)) {
+				return e;
+			}
+		}
 		return null;
 	}
 
 	public void deleteEntity(String namespaceAndName) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

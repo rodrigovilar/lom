@@ -49,7 +49,7 @@ public class EntityServiceTest {
 		this.expectExceptionOnCreateInvalidEntity("name space", "name",
 				"Invalid value for Entity namespace: name space");
 		this.expectExceptionOnCreateInvalidEntity("namespace", "na me",
-				"Invalid value for Entity name: namespace.na me");
+				"Invalid value for Entity name: na me");
 	}
 
 	@Test
@@ -191,7 +191,7 @@ public class EntityServiceTest {
 				"The name of an Entity is mandatory");
 		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
 				"The name of an Entity is mandatory");
-		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long)null, null,
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long) null, null,
 				"The name of an Entity is mandatory");
 		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "",
 				"The name of an Entity is mandatory");
@@ -289,7 +289,7 @@ public class EntityServiceTest {
 				"The version of an Entity is mandatory on update");
 
 		Entity entity3 = this.createAndSaveOneEntity("a", "aaa");
-		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long)null, null,
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long) null, null,
 				"The version and id of an Entity are mandatory on update");
 
 		Entity entity4 = this.createAndSaveOneEntity("a", "aaa");
@@ -559,7 +559,7 @@ public class EntityServiceTest {
 	@Test
 	public void getEntityByEmptyNameAndPackage() {
 		createEntity("ns1", "n1");
-		Entity entity2 = createEntity("ns2", "n2");
+		Entity entity2 = createEntity(null, "n2");
 		expectExceptionOnInvalidGetEntity("", "n1", "Entity not found: n1");
 
 		Entity foundEntity2 = service.readEntityByNamespaceAndName(null, "n2");
@@ -612,9 +612,9 @@ public class EntityServiceTest {
 		expectExceptionOnInvalidGetEntity("ns", "n/n",
 				"Invalid key for Entity: ns.n/n");
 		expectExceptionOnInvalidGetEntity("ns", "n*",
-				"Invalid key for Entity: ns.*");
+				"Invalid key for Entity: ns.n*");
 		expectExceptionOnInvalidGetEntity("ns", "n'",
-				"Invalid key for Entity: ns.'");
+				"Invalid key for Entity: ns.n'");
 		expectExceptionOnInvalidGetEntity("ns$", "n",
 				"Invalid key for Entity: ns$.n");
 		expectExceptionOnInvalidGetEntity("ns#", "n",
@@ -762,7 +762,7 @@ public class EntityServiceTest {
 			service.readEntityByNamespaceAndName(namespace, name);
 			fail();
 		} catch (MetadataException me) {
-			Assert.assertEquals(me.getMessage(), expectedMessage);
+			Assert.assertEquals(expectedMessage, me.getMessage());
 		}
 	}
 
@@ -861,12 +861,16 @@ public class EntityServiceTest {
 		service.remove(entity1);
 	}
 
-	private void createAndVerifyTwoEntities(String string, String string2,
-			String string3, String string4) {
+	private void createAndVerifyTwoEntities(String entity1namespace,
+			String entity1name, String entity2namespace, String entity2name) {
 		Entity entity1 = new Entity();
+		entity1.setNamespace(entity1namespace);
+		entity1.setName(entity1name);
 		service.create(entity1);
 
 		Entity entity2 = new Entity();
+		entity2.setNamespace(entity2namespace);
+		entity2.setName(entity2name);
 		service.create(entity2);
 
 		Assert.assertNotNull(entity1.getId());
@@ -895,7 +899,7 @@ public class EntityServiceTest {
 		return entity;
 	}
 
-	private void createAndVerifyOneEntity(String name, String namespace) {
+	private void createAndVerifyOneEntity(String namespace, String name) {
 		Entity entity = new Entity();
 		entity.setNamespace(namespace);
 		entity.setName(name);
