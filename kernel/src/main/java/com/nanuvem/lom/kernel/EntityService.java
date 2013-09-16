@@ -54,11 +54,24 @@ public class EntityService {
 		return dao.listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
 				nameFragment);
 	}
+	public Entity readEntity(String fullEntityName){
+		int lastIndexOf = fullEntityName.lastIndexOf(".");
+		String namespace = fullEntityName.substring(0, lastIndexOf);
+		String name = fullEntityName.substring(lastIndexOf+1, fullEntityName.length());
+		
+		if (namespace.equals("")){
+			namespace = "";
+			
+		}
+		
+		return this.readEntityByNamespaceAndName(namespace, name);
+	}
 	//TODO - refactoring of validations
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
+		StringBuilder builder;
 		if (!(Pattern.matches("[a-zA-Z0-9_]+", name) && Pattern.matches(
 				"[a-zA-Z0-9_]+", namespace))) {
-			StringBuilder builder = new StringBuilder();
+			builder = new StringBuilder();
 			builder.append("Invalid key for Entity: ");
 			if (!namespace.isEmpty()) {
 				builder.append(namespace);
@@ -74,7 +87,7 @@ public class EntityService {
 			return entity;
 		}
 
-		StringBuilder builder = new StringBuilder();
+		builder = new StringBuilder();
 		builder.append("Entity not found: ");
 		if (namespace.length() > 0) {
 			builder.append(namespace);

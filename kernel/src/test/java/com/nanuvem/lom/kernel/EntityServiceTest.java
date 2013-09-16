@@ -537,13 +537,13 @@ public class EntityServiceTest {
 
 	@Test
 	public void getEntityByValidNameAndPackage() {
-		expectExceptionOnInvalidListEntity("ns", "n", "Entity not found: ns.n");
+		expectExceptionOnInvalidGetEntity("ns", "n", "Entity not found: ns.n");
 		Entity entity1 = createEntity("ns1", "n1");
-		Entity foundEntity1 = service.readEntityByNamespaceAndName("ns1", "n1");
+		Entity foundEntity1 = service.readEntity("ns1.n1");
 		Assert.assertEquals(entity1, foundEntity1);
 
 		Entity entity2 = createEntity("ns2", "n2");
-		Entity foundEntity2 = service.readEntityByNamespaceAndName("ns2", "n2");
+		Entity foundEntity2 = service.readEntity("ns2.n2");
 		Assert.assertEquals(entity2, foundEntity2);
 
 		expectExceptionOnInvalidGetEntity("ns1", "n", "Entity not found: ns1.n");
@@ -562,7 +562,7 @@ public class EntityServiceTest {
 		Entity entity2 = createEntity(null, "n2");
 		expectExceptionOnInvalidGetEntity("", "n1", "Entity not found: n1");
 
-		Entity foundEntity2 = service.readEntityByNamespaceAndName(null, "n2");
+		Entity foundEntity2 = service.readEntity(".n2");
 		Assert.assertEquals(entity2, foundEntity2);
 
 		expectExceptionOnInvalidGetEntity("ns1", "", "Entity not found: ns1");
@@ -581,22 +581,22 @@ public class EntityServiceTest {
 	@Test
 	public void getEntityForcingCaseInsensitivePackagesAndNames() {
 		Entity entity = createEntity("nS", "nA");
-		Entity ea = service.readEntityByNamespaceAndName("ns", "na");
+		Entity ea = service.readEntity("ns.na");
 		Assert.assertEquals(entity, ea);
 
-		ea = service.readEntityByNamespaceAndName("NS", "NA");
+		ea = service.readEntity("NS.NA");
 		Assert.assertEquals(entity, ea);
 
-		ea = service.readEntityByNamespaceAndName("nS", "nA");
+		ea = service.readEntity("nS.nA");
 		Assert.assertEquals(entity, ea);
 
-		ea = service.readEntityByNamespaceAndName("NS", "na");
+		ea = service.readEntity("NS.na");
 		Assert.assertEquals(entity, ea);
 
-		ea = service.readEntityByNamespaceAndName("ns", "NA");
+		ea = service.readEntity("ns.NA");
 		Assert.assertEquals(entity, ea);
 
-		ea = service.readEntityByNamespaceAndName("Ns", "Na");
+		ea = service.readEntity("Ns.Na");
 		Assert.assertEquals(entity, ea);
 
 	}
@@ -631,23 +631,16 @@ public class EntityServiceTest {
 
 	@Test
 	public void deleteEntityByValidNameAndPackage() {
-		Entity entity1 = new Entity();
-		entity1.setNamespace("ns");
-		entity1.setName("n");
-		this.expectExceptionOnInvalidRemoveEntity("ns1.n",
+		this.expectExceptionOnInvalidRemoveEntity("ns.n",
 				"Entity not found: ns.n");
 		Entity entity2 = this.createEntity("ns1", "n1");
 		Entity entity3 = this.createEntity("ns2", "n2");
 		this.expectExceptionOnInvalidRemoveEntity("ns.n",
 				"Entity not found: ns.n");
-		entity1.setNamespace("ns1");
 		this.expectExceptionOnInvalidRemoveEntity("ns1.n",
 				"Entity not found: ns1.n");
-		entity1.setNamespace("ns");
-		entity1.setName("n1");
 		this.expectExceptionOnInvalidRemoveEntity("ns.n1",
 				"Entity not found: ns.n1");
-		entity1.setNamespace("ns2");
 		this.expectExceptionOnInvalidRemoveEntity("ns2.n1",
 				"Entity not found: ns2.n1");
 		service.remove(entity2);
@@ -669,11 +662,11 @@ public class EntityServiceTest {
 	@Test
 	public void deleteEntityByNameAndPackageWithSpaces() {
 		this.expectExceptionOnInvalidRemoveEntity("na me",
-				"Entity not found: na me");
+				"Invalid key for Entity: na me");
 		this.expectExceptionOnInvalidRemoveEntity("name space.name",
-				"Entity not found: name space.name");
+				"Invalid key for Entity: name space.name");
 		this.expectExceptionOnInvalidRemoveEntity("namespace.na me",
-				"Entity not found: namespace.na me");
+				"Invalid key for Entity: namespace.na me");
 	}
 
 	@Test
@@ -759,7 +752,7 @@ public class EntityServiceTest {
 	private void expectExceptionOnInvalidGetEntity(String namespace,
 			String name, String expectedMessage) {
 		try {
-			service.readEntityByNamespaceAndName(namespace, name);
+			service.readEntity(namespace + "." + name);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
@@ -773,7 +766,7 @@ public class EntityServiceTest {
 					nameFragment);
 			fail();
 		} catch (MetadataException me) {
-			Assert.assertEquals(me.getMessage(), expectedMessage);
+			Assert.assertEquals(expectedMessage, me.getMessage());
 		}
 	}
 

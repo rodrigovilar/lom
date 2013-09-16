@@ -69,9 +69,9 @@ public class MemoryEntityDao implements EntityDao {
 		boolean entityNamespaceContainsFragmentLike = false;
 		boolean entityNameContainsFragmentLike = false;
 
-		if (namespaceFragment == null)
+		if (namespaceFragment == null) {
 			namespaceFragment = "";
-
+		}
 		if (nameFragment == null)
 			nameFragment = "";
 
@@ -86,7 +86,6 @@ public class MemoryEntityDao implements EntityDao {
 					&& entityNameContainsFragmentLike)
 				entities.add(e);
 		} // TODO Auto-generated method stub
-
 		return entities;
 	}
 
