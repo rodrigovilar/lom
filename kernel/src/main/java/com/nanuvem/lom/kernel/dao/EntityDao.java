@@ -18,10 +18,10 @@ public interface EntityDao {
 
 	Entity findEntityById(Long id);
 
-	List<Entity> listEntitiesByFragmentOfNameAndPackage(String namespaceFragment,
-			String nameFragment);
+	List<Entity> listEntitiesByFragmentOfNameAndPackage(
+			String namespaceFragment, String nameFragment);
 
 	Entity readEntityByNamespaceAndName(String namespace, String name);
-	
+
 	void delete(String namespaceAndName);
 }

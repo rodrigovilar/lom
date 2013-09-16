@@ -121,20 +121,19 @@ public class EntityService {
 		}
 		return true;
 	}
-	
-	private static boolean safeEqualsIgnoreCase(String a, String b){
+
+	private static boolean safeEqualsIgnoreCase(String a, String b) {
 		return (safeEquals(a, b) && a.equalsIgnoreCase(b));
 	}
-	
-	
+
 	private void validateNameWithinNamespace(Entity entity) {
 		List<Entity> entitiesByName = dao.listAll();
 
 		for (Entity e : entitiesByName) {
 			boolean nameIsEqualsIgnoreCase = entity.getName().equalsIgnoreCase(
 					e.getName());
-			boolean namespaceIsEqualsIgnoreCase = safeEqualsIgnoreCase(e.getNamespace(),
-					entity.getNamespace());
+			boolean namespaceIsEqualsIgnoreCase = safeEqualsIgnoreCase(
+					e.getNamespace(), entity.getNamespace());
 			boolean idNotEquals = e.getId() != entity.getId();
 			if (nameIsEqualsIgnoreCase && namespaceIsEqualsIgnoreCase
 					&& idNotEquals) {
