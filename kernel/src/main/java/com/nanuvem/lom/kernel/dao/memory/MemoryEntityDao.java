@@ -102,7 +102,7 @@ public class MemoryEntityDao implements EntityDao {
 		return null;
 	}
 
-	public void deleteEntity(String namespaceAndName) {
+	public void delete(String namespaceAndName) {
 		// TODO Auto-generated method stub
 
 	}

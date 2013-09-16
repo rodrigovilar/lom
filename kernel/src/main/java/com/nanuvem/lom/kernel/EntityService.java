@@ -54,19 +54,22 @@ public class EntityService {
 		return dao.listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
 				nameFragment);
 	}
-	public Entity readEntity(String fullEntityName){
+
+	public Entity readEntity(String fullEntityName) {
 		int lastIndexOf = fullEntityName.lastIndexOf(".");
 		String namespace = fullEntityName.substring(0, lastIndexOf);
-		String name = fullEntityName.substring(lastIndexOf+1, fullEntityName.length());
-		
-		if (namespace.equals("")){
+		String name = fullEntityName.substring(lastIndexOf + 1,
+				fullEntityName.length());
+
+		if (namespace.equals("")) {
 			namespace = "";
-			
+
 		}
-		
+
 		return this.readEntityByNamespaceAndName(namespace, name);
 	}
-	//TODO - refactoring of validations
+
+	// TODO - refactoring of validations
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
 		StringBuilder builder;
 		if (!(Pattern.matches("[a-zA-Z0-9_]+", name) && Pattern.matches(
@@ -76,52 +79,61 @@ public class EntityService {
 			if (!namespace.isEmpty()) {
 				builder.append(namespace);
 			}
-			if (!namespace.isEmpty() && !name.isEmpty()){
+			if (!namespace.isEmpty() && !name.isEmpty()) {
 				builder.append(".");
 			}
-			throw new MetadataException(builder.toString()+name);
-		}
-		
-		Entity entity = dao.readEntityByNamespaceAndName(namespace, name);
-		if (entity != null){
-			return entity;
+			throw new MetadataException(builder.toString() + name);
 		}
 
-		builder = new StringBuilder();
-		builder.append("Entity not found: ");
+		Entity entity = dao.readEntityByNamespaceAndName(namespace, name);
+		if (entity != null) {
+			return entity;
+		}
+		String entityNotFoundExceptionMsg = buildEntityNotFoundExceptionMessage(
+				namespace, name, "Entity not found: ");
+		throw new MetadataException(entityNotFoundExceptionMsg);
+
+	}
+
+	private String buildEntityNotFoundExceptionMessage(String namespace,
+			String name, String msg) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(msg);
 		if (namespace.length() > 0) {
 			builder.append(namespace);
 		}
-		if (!namespace.isEmpty() && !name.isEmpty()){
+		if (!namespace.isEmpty() && !name.isEmpty()) {
 			builder.append(".");
 		}
-		throw new MetadataException(builder.toString() + name);
-	
+		return builder.toString() + name;
 	}
 
-	public void deleteEntity(String namespaceAndName) {
-		dao.deleteEntity(namespaceAndName);
+	public void delete(String namespaceAndName) {
+		dao.delete(namespaceAndName);
 	}
 
 	private static boolean safeEquals(String a, String b) {
 		if (a == null && b == null) {
 			return true;
 		}
-
 		if (a == null) {
 			return false;
 		}
-
-		return a.equalsIgnoreCase(b);
+		return true;
 	}
-
+	
+	private static boolean safeEqualsIgnoreCase(String a, String b){
+		return (safeEquals(a, b) && a.equalsIgnoreCase(b));
+	}
+	
+	
 	private void validateNameWithinNamespace(Entity entity) {
 		List<Entity> entitiesByName = dao.listAll();
 
 		for (Entity e : entitiesByName) {
 			boolean nameIsEqualsIgnoreCase = entity.getName().equalsIgnoreCase(
 					e.getName());
-			boolean namespaceIsEqualsIgnoreCase = safeEquals(e.getNamespace(),
+			boolean namespaceIsEqualsIgnoreCase = safeEqualsIgnoreCase(e.getNamespace(),
 					entity.getNamespace());
 			boolean idNotEquals = e.getId() != entity.getId();
 			if (nameIsEqualsIgnoreCase && namespaceIsEqualsIgnoreCase

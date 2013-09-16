@@ -23,5 +23,5 @@ public interface EntityDao {
 
 	Entity readEntityByNamespaceAndName(String namespace, String name);
 	
-	void deleteEntity(String namespaceAndName);
+	void delete(String namespaceAndName);
 }

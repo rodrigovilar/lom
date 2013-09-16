@@ -654,7 +654,7 @@ public class EntityServiceTest {
 		this.createEntity("ns1", "n1");
 		this.createEntity(null, "n2");
 		this.expectExceptionOnInvalidRemoveEntity("n1", "Entity not found: n1");
-		service.deleteEntity("n2");
+		service.delete("n2");
 		this.expectExceptionOnInvalidRemoveEntity("ns1",
 				"Entity not found: ns1");
 	}
@@ -672,17 +672,17 @@ public class EntityServiceTest {
 	@Test
 	public void deleteEntityForcingCaseInsensitivePackagesAndNames() {
 		this.createEntity("nS", "nA");
-		service.deleteEntity("ns.na");
+		service.delete("ns.na");
 		this.createEntity("nS", "nA");
-		service.deleteEntity("NS.NA");
+		service.delete("NS.NA");
 		this.createEntity("nS", "nA");
-		service.deleteEntity("nS.nA");
+		service.delete("nS.nA");
 		this.createEntity("nS", "nA");
-		service.deleteEntity("NS.na");
+		service.delete("NS.na");
 		this.createEntity("nS", "nA");
-		service.deleteEntity("ns.NA");
+		service.delete("ns.NA");
 		this.createEntity("nS", "nA");
-		service.deleteEntity("Ns.Na");
+		service.delete("Ns.Na");
 	}
 
 	@Test
@@ -718,7 +718,7 @@ public class EntityServiceTest {
 	private void expectExceptionOnInvalidRemoveEntity(String namespaceAndName,
 			String expectedMessage) {
 		try {
-			service.deleteEntity(namespaceAndName);
+			service.delete(namespaceAndName);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me);
