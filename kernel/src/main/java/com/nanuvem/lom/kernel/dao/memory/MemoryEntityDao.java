@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
-import com.nanuvem.lom.kernel.MetadataException;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
@@ -20,31 +19,11 @@ public class MemoryEntityDao implements EntityDao {
 	}
 
 	public List<Entity> listAll() {
-		return entities;
-	}
-
-	public void remove(Entity e) {
-		for (Entity entity : entities) {
-			if (entity.getId().equals(e.getId())) {
-				entities.remove(entity);
-				return;
-			}
-		}
+		return new ArrayList<Entity>(this.entities);
 	}
 
 	public Entity update(String namespace, String name, Long id, Integer version) {
-		for (Entity entity : entities) {
-			if (entity.getId().equals(id)) {
-				Entity e = new Entity();
-				e.setName(name);
-				e.setNamespace(namespace);
-				e.setVersion(version + 1);
-				e.setId(id);
-				entities.remove(entity);
-				entities.add(e);
-				return e;
-			}
-		}
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -54,48 +33,19 @@ public class MemoryEntityDao implements EntityDao {
 	}
 
 	public Entity findEntityById(Long id) {
-		for (Entity entity : entities) {
-			if (entity.getId().equals(id)) {
-				return entity;
-			}
-		}
+		// TODO Auto-generated method stub
 		return null;
-
 	}
 
 	public List<Entity> listEntitiesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment) {
-		List<Entity> entities = new ArrayList<Entity>();
-		boolean entityNamespaceContainsFragmentLike = false;
-		boolean entityNameContainsFragmentLike = false;
-
-		if (namespaceFragment == null) {
-			namespaceFragment = "";
-		}
-		if (nameFragment == null)
-			nameFragment = "";
-
-		for (Entity e : this.listAll()) {
-			entityNamespaceContainsFragmentLike = e.getNamespace()
-					.toLowerCase().contains(namespaceFragment.toLowerCase());
-
-			entityNameContainsFragmentLike = e.getName().toLowerCase()
-					.contains(nameFragment.toLowerCase());
-
-			if (entityNamespaceContainsFragmentLike
-					&& entityNameContainsFragmentLike)
-				entities.add(e);
-		} // TODO Auto-generated method stub
-		return entities;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
-		if (namespace == null) {
-			namespace = "";
-		}
-		for (Entity e : this.listAll()) {
-			if (e.getNamespace().equalsIgnoreCase(namespace)
-					&& e.getName().equalsIgnoreCase(name)) {
+		for (Entity e : this.entities) {
+			if (e.getNamespace().equals(namespace) && e.getName().equals(name)) {
 				return e;
 			}
 		}
@@ -106,4 +56,16 @@ public class MemoryEntityDao implements EntityDao {
 		// TODO Auto-generated method stub
 
 	}
+
+	public void delete(Entity entity) {
+		for (int i = 0; i < this.entities.size(); i++) {
+			Entity e = this.entities.get(i);
+			if (e.getName().equals(entity.getName())
+					&& e.getNamespace().equals(entity.getNamespace())) {
+				this.entities.remove(e);
+			}
+		}
+
+	}
+
 }

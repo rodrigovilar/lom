@@ -10,7 +10,7 @@ public interface EntityDao {
 
 	List<Entity> listAll();
 
-	void remove(Entity entity);
+	void delete(Entity entity);
 
 	Entity update(String namespace, String name, Long id, Integer version);
 
