@@ -326,308 +326,307 @@ public class EntityServiceTest {
 	//
 	// }
 
-	// @Test
-	// public void listAllEntities() {
-	// List<Entity> allEntities = service.listAll();
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
-	// Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
-	// Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
-	//
-	// allEntities = service.listAll();
-	//
-	// Assert.assertEquals(3, allEntities.size());
-	// Assert.assertEquals(entity1, allEntities.get(0));
-	// Assert.assertEquals(entity2, allEntities.get(1));
-	// Assert.assertEquals(entity3, allEntities.get(2));
-	//
-	// service.delete(entity1);
-	// service.delete(entity2);
-	// service.delete(entity3);
-	//
-	// Assert.assertEquals(0, service.listAll().size());
-	// }
-	//
-	// @Test
-	// public void listEntitiesByValidFragmentOfNameAndPackage() {
-	// String namespaceFragment = "ns";
-	// String nameFragment = "n";
-	// List<Entity> allEntities = service
-	// .listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
-	// nameFragment);
-	//
-	// Assert.assertEquals(0, allEntities.size());
-	// Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
-	// Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
-	// Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
-	//
-	// allEntities = service.listEntitiesByFragmentOfNameAndPackage(
-	// namespaceFragment, nameFragment);
-	//
-	// Assert.assertEquals(3, allEntities.size());
-	// Assert.assertEquals(entity1, allEntities.get(0));
-	// Assert.assertEquals(entity2, allEntities.get(1));
-	// Assert.assertEquals(entity3, allEntities.get(2));
-	//
-	// service.delete(entity1);
-	// service.delete(entity2);
-	// service.delete(entity3);
-	//
-	// Assert.assertEquals(0, service.listAll().size());
-	//
-	// }
-	//
-	// @Test
-	// public void listEntitiesByEmptyNameAndPackage() {
-	// List<Entity> allEntities = service
-	// .listEntitiesByFragmentOfNameAndPackage("", "");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// allEntities = service.listEntitiesByFragmentOfNameAndPackage("ns", "");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// allEntities = service.listEntitiesByFragmentOfNameAndPackage("", "n");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
-	// Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
-	// Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
-	// List<Entity> expectedEntities = new ArrayList<Entity>();
-	// expectedEntities.add(entity1);
-	// expectedEntities.add(entity2);
-	// expectedEntities.add(entity3);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "", "");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, null, "");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "", null);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "ns", "");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "", "n");
-	//
-	// allEntities = service.listEntitiesByFragmentOfNameAndPackage("nspace",
-	// "");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// for (Entity entity : expectedEntities) {
-	// service.delete(entity);
-	// }
-	//
-	// Assert.assertEquals(0, service.listAll().size());
-	// }
-	//
-	// @Test
-	// public void entitiesWithDefaultPackageMustAppearWhenPackageIsNotGiven() {
-	// Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
-	// Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
-	// Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
-	// List<Entity> expectedEntities = new ArrayList<Entity>();
-	// expectedEntities.add(entity1);
-	// expectedEntities.add(entity2);
-	// expectedEntities.add(entity3);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, null, "");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "", null);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, null, null);
-	//
-	// List<Entity> allEntities = service
-	// .listEntitiesByFragmentOfNameAndPackage(null, "nspace");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// allEntities = service.listEntitiesByFragmentOfNameAndPackage(null,
-	// "name");
-	// Assert.assertEquals(0, allEntities.size());
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "ns", "");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "", "n");
-	//
-	// for (Entity entity : expectedEntities) {
-	// service.delete(entity);
-	// }
-	//
-	// Assert.assertEquals(0, service.listAll().size());
-	//
-	// }
-	//
-	// @Test
-	// public void listEntitiesByFragmentOfNameAndPackagesWithSpaces() {
-	// expectExceptionOnInvalidListEntity(null, "na me",
-	// "Invalid value for Entity name: na me");
-	// expectExceptionOnInvalidListEntity("name space", null,
-	// "Invalid value for Entity namespace: name space");
-	// expectExceptionOnInvalidListEntity("namespace", "na me",
-	// "Invalid value for Entity name: namespace.na me");
-	// expectExceptionOnInvalidListEntity("name space", "name",
-	// "Invalid value for Entity namespace: name space");
-	// }
-	//
-	// @Test
-	// public void listEntitiesForcingCaseInsensitivePackagesAndNames() {
-	// Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
-	// Entity entity2 = this.createAndSaveOneEntity("NS2", "n2");
-	// Entity entity3 = this.createAndSaveOneEntity("NS3", "N3");
-	// List<Entity> expectedEntities = new ArrayList<Entity>();
-	// expectedEntities.add(entity1);
-	// expectedEntities.add(entity2);
-	// expectedEntities.add(entity3);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "ns", "n");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "NS", "n");
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "ns", null);
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, null, "N");
-	//
-	// listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-	// expectedEntities, "N", "N");
-	// }
-	//
-	// @Test
-	// public void listEntitiesUsingInvalidFragmentOfNameAndPackage() {
-	// expectExceptionOnInvalidListEntity("ns", "n$",
-	// "Invalid value for Entity name: n$");
-	// expectExceptionOnInvalidListEntity("ns", "n#",
-	// "Invalid value for Entity name: n#");
-	// expectExceptionOnInvalidListEntity("ns", "n=",
-	// "Invalid value for Entity name: n=");
-	// expectExceptionOnInvalidListEntity("ns", "n'",
-	// "Invalid value for Entity name: n'");
-	// expectExceptionOnInvalidListEntity("ns", "n.n",
-	// "Invalid value for Entity name: n.n");
-	// expectExceptionOnInvalidListEntity("ns", "n/n",
-	// "Invalid value for Entity name: n/n");
-	// expectExceptionOnInvalidListEntity("ns", "n*",
-	// "Invalid value for Entity name: n*");
-	// expectExceptionOnInvalidListEntity("ns$", "n",
-	// "Invalid value for Entity namespace: ns$");
-	// expectExceptionOnInvalidListEntity("ns#", "n",
-	// "Invalid value for Entity namespace: ns#");
-	// expectExceptionOnInvalidListEntity("ns=", "n",
-	// "Invalid value for Entity namespace: ns=");
-	// expectExceptionOnInvalidListEntity("ns'", "n",
-	// "Invalid value for Entity namespace: ns'");
-	// expectExceptionOnInvalidListEntity("ns.", "n",
-	// "Invalid value for Entity namespace: ns.");
-	// expectExceptionOnInvalidListEntity("ns/a", "n",
-	// "Invalid value for Entity namespace: ns/a");
-	// expectExceptionOnInvalidListEntity("ns*", "n",
-	// "Invalid value for Entity namespace: ns*");
-	// }
-	//
-	// @Test
-	// public void getEntityByValidNameAndPackage() {
-	// expectExceptionOnInvalidGetEntity("ns", "n", "Entity not found: ns.n");
-	// Entity entity1 = createEntity("ns1", "n1");
-	// Entity foundEntity1 = service.readEntity("ns1.n1");
-	// Assert.assertEquals(entity1, foundEntity1);
-	//
-	// Entity entity2 = createEntity("ns2", "n2");
-	// Entity foundEntity2 = service.readEntity("ns2.n2");
-	// Assert.assertEquals(entity2, foundEntity2);
-	//
-	// expectExceptionOnInvalidGetEntity("ns1", "n", "Entity not found: ns1.n");
-	// expectExceptionOnInvalidGetEntity("ns", "n1", "Entity not found: ns.n1");
-	// expectExceptionOnInvalidGetEntity("ns2", "n1",
-	// "Entity not found: ns2.n1");
-	// List<Entity> allEntities = service.listAll();
-	// Assert.assertEquals(2, allEntities.size());
-	// Assert.assertEquals(entity1, allEntities.get(0));
-	// Assert.assertEquals(entity2, allEntities.get(1));
-	// }
-	//
-	// @Test
-	// public void getEntityByEmptyNameAndPackage() {
-	// createEntity("ns1", "n1");
-	// Entity entity2 = createEntity(null, "n2");
-	// expectExceptionOnInvalidGetEntity("", "n1", "Entity not found: n1");
-	//
-	// Entity foundEntity2 = service.readEntity(".n2");
-	// Assert.assertEquals(entity2, foundEntity2);
-	//
-	// expectExceptionOnInvalidGetEntity("ns1", "", "Entity not found: ns1");
-	// }
-	//
-	// @Test
-	// public void getEntityByNameAndPackageWithSpaces() {
-	// expectExceptionOnInvalidGetEntity("", "na me",
-	// "Invalid key for Entity: na me");
-	// expectExceptionOnInvalidGetEntity("name space", "name",
-	// "Invalid key for Entity: name space.name");
-	// expectExceptionOnInvalidGetEntity("namespace", "na me",
-	// "Invalid key for Entity: namespace.na me");
-	// }
-	//
-	// @Test
-	// public void getEntityForcingCaseInsensitivePackagesAndNames() {
-	// Entity entity = createEntity("nS", "nA");
-	// Entity ea = service.readEntity("ns.na");
-	// Assert.assertEquals(entity, ea);
-	//
-	// ea = service.readEntity("NS.NA");
-	// Assert.assertEquals(entity, ea);
-	//
-	// ea = service.readEntity("nS.nA");
-	// Assert.assertEquals(entity, ea);
-	//
-	// ea = service.readEntity("NS.na");
-	// Assert.assertEquals(entity, ea);
-	//
-	// ea = service.readEntity("ns.NA");
-	// Assert.assertEquals(entity, ea);
-	//
-	// ea = service.readEntity("Ns.Na");
-	// Assert.assertEquals(entity, ea);
-	//
-	// }
-	//
-	// @Test
-	// public void getEntityUsingInvalidNameAndPackage() {
-	// expectExceptionOnInvalidGetEntity("ns", "n$",
-	// "Invalid key for Entity: ns.n$");
-	// expectExceptionOnInvalidGetEntity("ns", "n#",
-	// "Invalid key for Entity: ns.n#");
-	// expectExceptionOnInvalidGetEntity("ns", "n=",
-	// "Invalid key for Entity: ns.n=");
-	// expectExceptionOnInvalidGetEntity("ns", "n/n",
-	// "Invalid key for Entity: ns.n/n");
-	// expectExceptionOnInvalidGetEntity("ns", "n*",
-	// "Invalid key for Entity: ns.n*");
-	// expectExceptionOnInvalidGetEntity("ns", "n'",
-	// "Invalid key for Entity: ns.n'");
-	// expectExceptionOnInvalidGetEntity("ns$", "n",
-	// "Invalid key for Entity: ns$.n");
-	// expectExceptionOnInvalidGetEntity("ns#", "n",
-	// "Invalid key for Entity: ns#.n");
-	// expectExceptionOnInvalidGetEntity("ns=", "n",
-	// "Invalid key for Entity: ns=.n");
-	// expectExceptionOnInvalidGetEntity("ns/", "n",
-	// "Invalid key for Entity: ns/.n");
-	// expectExceptionOnInvalidGetEntity("ns*", "n",
-	// "Invalid key for Entity: ns*.n");
-	// expectExceptionOnInvalidGetEntity("ns'", "n",
-	// "Invalid key for Entity: ns'.n");
-	// }
-	//
+	@Test
+	public void listAllEntities() {
+		List<Entity> allEntities = service.listAll();
+		Assert.assertEquals(0, allEntities.size());
+
+		Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
+		Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
+		Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
+
+		allEntities = service.listAll();
+
+		Assert.assertEquals(3, allEntities.size());
+		Assert.assertEquals(entity1, allEntities.get(0));
+		Assert.assertEquals(entity2, allEntities.get(1));
+		Assert.assertEquals(entity3, allEntities.get(2));
+
+		service.delete(entity1);
+		service.delete(entity2);
+		service.delete(entity3);
+
+		Assert.assertEquals(0, service.listAll().size());
+	}
+
+	@Test
+	public void listEntitiesByValidFragmentOfNameAndPackage() {
+		String namespaceFragment = "ns";
+		String nameFragment = "n";
+		List<Entity> allEntities = service
+				.listEntitiesByFragmentOfNameAndPackage(namespaceFragment,
+						nameFragment);
+
+		Assert.assertEquals(0, allEntities.size());
+		Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
+		Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
+		Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
+
+		allEntities = service.listEntitiesByFragmentOfNameAndPackage(
+				namespaceFragment, nameFragment);
+
+		Assert.assertEquals(3, allEntities.size());
+		Assert.assertEquals(entity1, allEntities.get(0));
+		Assert.assertEquals(entity2, allEntities.get(1));
+		Assert.assertEquals(entity3, allEntities.get(2));
+
+		service.delete(entity1);
+		service.delete(entity2);
+		service.delete(entity3);
+
+		Assert.assertEquals(0, service.listAll().size());
+
+	}
+
+	@Test
+	public void listEntitiesByEmptyNameAndPackage() {
+		List<Entity> allEntities = service
+				.listEntitiesByFragmentOfNameAndPackage("", "");
+		Assert.assertEquals(0, allEntities.size());
+
+		allEntities = service.listEntitiesByFragmentOfNameAndPackage("ns", "");
+		Assert.assertEquals(0, allEntities.size());
+
+		allEntities = service.listEntitiesByFragmentOfNameAndPackage("", "n");
+		Assert.assertEquals(0, allEntities.size());
+
+		Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
+		Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
+		Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
+		List<Entity> expectedEntities = new ArrayList<Entity>();
+		expectedEntities.add(entity1);
+		expectedEntities.add(entity2);
+		expectedEntities.add(entity3);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "", "");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, null, "");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "", null);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "ns", "");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "", "n");
+
+		allEntities = service.listEntitiesByFragmentOfNameAndPackage("nspace",
+				"");
+		Assert.assertEquals(0, allEntities.size());
+
+		for (Entity entity : expectedEntities) {
+			service.delete(entity);
+		}
+
+		Assert.assertEquals(0, service.listAll().size());
+	}
+
+	@Test
+	public void entitiesWithDefaultPackageMustAppearWhenPackageIsNotGiven() {
+		Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
+		Entity entity2 = this.createAndSaveOneEntity("ns2", "n2");
+		Entity entity3 = this.createAndSaveOneEntity("ns2", "n3");
+		List<Entity> expectedEntities = new ArrayList<Entity>();
+		expectedEntities.add(entity1);
+		expectedEntities.add(entity2);
+		expectedEntities.add(entity3);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, null, "");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "", null);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, null, null);
+
+		List<Entity> allEntities = service
+				.listEntitiesByFragmentOfNameAndPackage(null, "nspace");
+		Assert.assertEquals(0, allEntities.size());
+
+		allEntities = service.listEntitiesByFragmentOfNameAndPackage(null,
+				"name");
+		Assert.assertEquals(0, allEntities.size());
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "ns", "");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "", "n");
+
+		for (Entity entity : expectedEntities) {
+			service.delete(entity);
+		}
+
+		Assert.assertEquals(0, service.listAll().size());
+	}
+
+	@Test
+	public void listEntitiesByFragmentOfNameAndPackagesWithSpaces() {
+		expectExceptionOnInvalidListEntity(null, "na me",
+				"Invalid value for Entity name: na me");
+		expectExceptionOnInvalidListEntity("name space", null,
+				"Invalid value for Entity namespace: name space");
+		expectExceptionOnInvalidListEntity("namespace", "na me",
+				"Invalid value for Entity name: na me");
+		expectExceptionOnInvalidListEntity("name space", "name",
+				"Invalid value for Entity namespace: name space");
+	}
+
+	@Test
+	public void listEntitiesForcingCaseInsensitivePackagesAndNames() {
+		Entity entity1 = this.createAndSaveOneEntity("ns1", "n1");
+		Entity entity2 = this.createAndSaveOneEntity("NS2", "n2");
+		Entity entity3 = this.createAndSaveOneEntity("NS3", "N3");
+		List<Entity> expectedEntities = new ArrayList<Entity>();
+		expectedEntities.add(entity1);
+		expectedEntities.add(entity2);
+		expectedEntities.add(entity3);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "ns", "n");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "NS", "n");
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "ns", null);
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, null, "N");
+
+		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
+				expectedEntities, "N", "N");
+	}
+
+	@Test
+	public void listEntitiesUsingInvalidFragmentOfNameAndPackage() {
+		expectExceptionOnInvalidListEntity("ns", "n$",
+				"Invalid value for Entity name: n$");
+		expectExceptionOnInvalidListEntity("ns", "n#",
+				"Invalid value for Entity name: n#");
+		expectExceptionOnInvalidListEntity("ns", "n=",
+				"Invalid value for Entity name: n=");
+		expectExceptionOnInvalidListEntity("ns", "n'",
+				"Invalid value for Entity name: n'");
+		expectExceptionOnInvalidListEntity("ns", "n.n",
+				"Invalid value for Entity name: n.n");
+		expectExceptionOnInvalidListEntity("ns", "n/n",
+				"Invalid value for Entity name: n/n");
+		expectExceptionOnInvalidListEntity("ns", "n*",
+				"Invalid value for Entity name: n*");
+		expectExceptionOnInvalidListEntity("ns$", "n",
+				"Invalid value for Entity namespace: ns$");
+		expectExceptionOnInvalidListEntity("ns#", "n",
+				"Invalid value for Entity namespace: ns#");
+		expectExceptionOnInvalidListEntity("ns=", "n",
+				"Invalid value for Entity namespace: ns=");
+		expectExceptionOnInvalidListEntity("ns'", "n",
+				"Invalid value for Entity namespace: ns'");
+		// expectExceptionOnInvalidListEntity("ns.", "n",
+		// "Invalid value for Entity namespace: ns.");
+		expectExceptionOnInvalidListEntity("ns/a", "n",
+				"Invalid value for Entity namespace: ns/a");
+		expectExceptionOnInvalidListEntity("ns*", "n",
+				"Invalid value for Entity namespace: ns*");
+	}
+
+	@Test
+	public void getEntityByValidNameAndPackage() {
+		expectExceptionOnInvalidGetEntity("ns", "n", "Entity not found: ns.n");
+		Entity entity1 = createEntity("ns1", "n1");
+		Entity foundEntity1 = service.readEntity("ns1.n1");
+		Assert.assertEquals(entity1, foundEntity1);
+
+		Entity entity2 = createEntity("ns2", "n2");
+		Entity foundEntity2 = service.readEntity("ns2.n2");
+		Assert.assertEquals(entity2, foundEntity2);
+
+		expectExceptionOnInvalidGetEntity("ns1", "n", "Entity not found: ns1.n");
+		expectExceptionOnInvalidGetEntity("ns", "n1", "Entity not found: ns.n1");
+		expectExceptionOnInvalidGetEntity("ns2", "n1",
+				"Entity not found: ns2.n1");
+		List<Entity> allEntities = service.listAll();
+		Assert.assertEquals(2, allEntities.size());
+		Assert.assertEquals(entity1, allEntities.get(0));
+		Assert.assertEquals(entity2, allEntities.get(1));
+	}
+
+	@Test
+	public void getEntityByEmptyNameAndPackage() {
+		createEntity("ns1", "n1");
+		Entity entity2 = createEntity(null, "n2");
+		expectExceptionOnInvalidGetEntity("", "n1", "Entity not found: n1");
+
+		Entity foundEntity2 = service.readEntity(".n2");
+		Assert.assertEquals(entity2, foundEntity2);
+
+		expectExceptionOnInvalidGetEntity("ns1", "", "Entity not found: ns1");
+	}
+	
+	@Test
+	public void getEntityByNameAndPackageWithSpaces() {
+		expectExceptionOnInvalidGetEntity("", "na me",
+				"Invalid key for Entity: na me");
+		expectExceptionOnInvalidGetEntity("name space", "name",
+				"Invalid key for Entity: name space.name");
+		expectExceptionOnInvalidGetEntity("namespace", "na me",
+				"Invalid key for Entity: namespace.na me");
+	}
+	
+	@Test
+	public void getEntityForcingCaseInsensitivePackagesAndNames() {
+		Entity entity = createEntity("nS", "nA");
+		Entity ea = service.readEntity("ns.na");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntity("NS.NA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntity("nS.nA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntity("NS.na");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntity("ns.NA");
+		Assert.assertEquals(entity, ea);
+
+		ea = service.readEntity("Ns.Na");
+		Assert.assertEquals(entity, ea);
+
+	}
+	
+	@Test
+	public void getEntityUsingInvalidNameAndPackage() {
+		expectExceptionOnInvalidGetEntity("ns", "n$",
+				"Invalid key for Entity: ns.n$");
+		expectExceptionOnInvalidGetEntity("ns", "n#",
+				"Invalid key for Entity: ns.n#");
+		expectExceptionOnInvalidGetEntity("ns", "n=",
+				"Invalid key for Entity: ns.n=");
+		expectExceptionOnInvalidGetEntity("ns", "n/n",
+				"Invalid key for Entity: ns.n/n");
+		expectExceptionOnInvalidGetEntity("ns", "n*",
+				"Invalid key for Entity: ns.n*");
+		expectExceptionOnInvalidGetEntity("ns", "n'",
+				"Invalid key for Entity: ns.n'");
+		expectExceptionOnInvalidGetEntity("ns$", "n",
+				"Invalid key for Entity: ns$.n");
+		expectExceptionOnInvalidGetEntity("ns#", "n",
+				"Invalid key for Entity: ns#.n");
+		expectExceptionOnInvalidGetEntity("ns=", "n",
+				"Invalid key for Entity: ns=.n");
+		expectExceptionOnInvalidGetEntity("ns/", "n",
+				"Invalid key for Entity: ns/.n");
+		expectExceptionOnInvalidGetEntity("ns*", "n",
+				"Invalid key for Entity: ns*.n");
+		expectExceptionOnInvalidGetEntity("ns'", "n",
+				"Invalid key for Entity: ns'.n");
+	}
+	
 	// @Test
 	// public void deleteEntityByValidNameAndPackage() {
 	// this.expectExceptionOnInvalidRemoveEntity("ns.n",
@@ -751,7 +750,7 @@ public class EntityServiceTest {
 	private void expectExceptionOnInvalidGetEntity(String namespace,
 			String name, String expectedMessage) {
 		try {
-			service.readEntity(namespace + "." + name);
+			Entity readEntity = service.readEntity(namespace + "." + name);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());

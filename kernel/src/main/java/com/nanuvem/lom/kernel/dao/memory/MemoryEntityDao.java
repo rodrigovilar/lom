@@ -39,13 +39,21 @@ public class MemoryEntityDao implements EntityDao {
 
 	public List<Entity> listEntitiesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Entity> results = new ArrayList<Entity>();
+		for (Entity e : this.entities) {
+			if (e.getNamespace().toLowerCase()
+					.contains(namespaceFragment.toLowerCase())
+					&& e.getName().toLowerCase()
+							.contains(nameFragment.toLowerCase())) {
+				results.add(e);
+			}
+		}
+		return results;
 	}
 
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
 		for (Entity e : this.entities) {
-			if (e.getNamespace().equals(namespace) && e.getName().equals(name)) {
+			if (e.getNamespace().equalsIgnoreCase(namespace) && e.getName().equalsIgnoreCase(name)) {
 				return e;
 			}
 		}

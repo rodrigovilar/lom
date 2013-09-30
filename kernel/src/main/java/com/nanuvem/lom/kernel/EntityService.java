@@ -35,7 +35,12 @@ public class EntityService {
 		}
 
 		String readEntityQuery = entity.getNamespace() + "." + entity.getName();
-		Entity found = this.readEntity(readEntityQuery);
+		Entity found = null;
+		try {
+			found = this.readEntity(readEntityQuery);
+		} catch (MetadataException me) {
+			found = null;
+		}
 
 		if (found != null && found.getName().equals(entity.getName())
 				&& found.getNamespace().equals(entity.getNamespace())) {
@@ -59,15 +64,75 @@ public class EntityService {
 
 	public List<Entity> listEntitiesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment) {
-		// TODO Auto-generated method stub
-		return null;
+		if (namespaceFragment == null) {
+			namespaceFragment = "";
+		}
+
+		if (nameFragment == null) {
+			nameFragment = "";
+		}
+
+		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespaceFragment)
+				&& !namespaceFragment.isEmpty()) {
+			throw new MetadataException("Invalid value for Entity namespace: "
+					+ namespaceFragment);
+		}
+
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", nameFragment)
+				&& !nameFragment.isEmpty()) {
+			throw new MetadataException("Invalid value for Entity name: "
+					+ nameFragment);
+		}
+
+		return this.dao.listEntitiesByFragmentOfNameAndPackage(
+				namespaceFragment, nameFragment);
 	}
 
 	public Entity readEntity(String string) {
 		String namespace = string.substring(0, string.lastIndexOf("."));
 		String name = string.substring(string.lastIndexOf(".") + 1,
 				string.length());
-		return this.dao.readEntityByNamespaceAndName(namespace, name);
+		
+		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespace)
+				&& !namespace.isEmpty()) {
+			if (string.startsWith(".")) {
+				string = string.substring(1);
+			}
+			if (string.endsWith(".")) {
+				string = string.substring(0, string.length() - 1);
+			}
+			throw new MetadataException("Invalid key for Entity: "
+					+ string);
+		}
+
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", name)
+				&& !name.isEmpty()) {
+			if (string.startsWith(".")) {
+				string = string.substring(1);
+			}
+			if (string.endsWith(".")) {
+				string = string.substring(0, string.length() - 1);
+			}
+			throw new MetadataException("Invalid key for Entity: "
+					+string);
+		}
+
+		if (namespace.isEmpty()) {
+			namespace = "default";
+		}
+		Entity entityByNamespaceAndName = this.dao
+				.readEntityByNamespaceAndName(namespace, name);
+
+		if (entityByNamespaceAndName == null) {
+			if (string.startsWith(".")) {
+				string = string.substring(1);
+			}
+			if (string.endsWith(".")) {
+				string = string.substring(0, string.length() - 1);
+			}
+			throw new MetadataException("Entity not found: " + string);
+		}
+		return entityByNamespaceAndName;
 	}
 
 	public void delete(String string) {
