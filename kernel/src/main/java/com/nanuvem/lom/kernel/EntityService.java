@@ -89,10 +89,18 @@ public class EntityService {
 	}
 
 	public Entity readEntity(String string) {
-		String namespace = string.substring(0, string.lastIndexOf("."));
-		String name = string.substring(string.lastIndexOf(".") + 1,
-				string.length());
-		
+		String namespace = null;
+		String name = null;
+
+		if (string.contains(".")) {
+			namespace = string.substring(0, string.lastIndexOf("."));
+			name = string.substring(string.lastIndexOf(".") + 1,
+					string.length());
+		} else {
+			namespace = "default";
+			name = string;
+		}
+
 		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespace)
 				&& !namespace.isEmpty()) {
 			if (string.startsWith(".")) {
@@ -101,20 +109,17 @@ public class EntityService {
 			if (string.endsWith(".")) {
 				string = string.substring(0, string.length() - 1);
 			}
-			throw new MetadataException("Invalid key for Entity: "
-					+ string);
+			throw new MetadataException("Invalid key for Entity: " + string);
 		}
 
-		if (!Pattern.matches("[a-zA-Z1-9]{1,}", name)
-				&& !name.isEmpty()) {
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", name) && !name.isEmpty()) {
 			if (string.startsWith(".")) {
 				string = string.substring(1);
 			}
 			if (string.endsWith(".")) {
 				string = string.substring(0, string.length() - 1);
 			}
-			throw new MetadataException("Invalid key for Entity: "
-					+string);
+			throw new MetadataException("Invalid key for Entity: " + string);
 		}
 
 		if (namespace.isEmpty()) {
@@ -136,7 +141,8 @@ public class EntityService {
 	}
 
 	public void delete(String string) {
-		// TODO Auto-generated method stub
+		Entity readEntity = this.readEntity(string);
+		this.dao.delete(readEntity);
 	}
 
 	public Entity update(Entity updateEntity) {
