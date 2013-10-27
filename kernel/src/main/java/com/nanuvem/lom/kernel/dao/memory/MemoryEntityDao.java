@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.Entity;
+import com.nanuvem.lom.kernel.MetadataException;
 import com.nanuvem.lom.kernel.dao.EntityDao;
 
 public class MemoryEntityDao implements EntityDao {
@@ -23,13 +24,26 @@ public class MemoryEntityDao implements EntityDao {
 	}
 
 	public Entity update(String namespace, String name, Long id, Integer version) {
-		// TODO Auto-generated method stub
-		return null;
+		for (Entity e : this.listAll()) {
+			if (e.getId().equals(id)) {
+				e.setName(name);
+				e.setNamespace(namespace);
+				e.setVersion(version);
+				return e;
+			}
+		}
+		throw new MetadataException("Entity does not exits!");
 	}
 
 	public Entity update(Entity entity) {
-		// TODO Auto-generated method stub
-		return null;
+		for (Entity e : this.listAll()) {
+			if (e.getId().equals(entity.getId())) {
+				this.entities.remove(e);
+				this.entities.add(entity);
+				return entity;
+			}
+		}
+		throw new MetadataException("Entity does not exits!");
 	}
 
 	public Entity findEntityById(Long id) {
@@ -53,7 +67,8 @@ public class MemoryEntityDao implements EntityDao {
 
 	public Entity readEntityByNamespaceAndName(String namespace, String name) {
 		for (Entity e : this.entities) {
-			if (e.getNamespace().equalsIgnoreCase(namespace) && e.getName().equalsIgnoreCase(name)) {
+			if (e.getNamespace().equalsIgnoreCase(namespace)
+					&& e.getName().equalsIgnoreCase(name)) {
 				return e;
 			}
 		}

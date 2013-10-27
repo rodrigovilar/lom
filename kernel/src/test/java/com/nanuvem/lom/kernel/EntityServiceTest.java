@@ -112,90 +112,91 @@ public class EntityServiceTest {
 				"Invalid value for Entity namespace: a*");
 	}
 
-	// @Test
-	// public void validNewNameAndPackage() {
-	// createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "b", "bbb");
-	// createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "a", "bbb");
-	// createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", "b", "aaa");
-	// createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "", "bbb");
-	// createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", null, "bbb");
-	// createUpdateAndVerifyOneEntity("a.b.c", "aaa1", "a.b.c.aaa1", "b",
-	// "bbb");
-	// createUpdateAndVerifyOneEntity("a.b.c", "aaa2", "a.b.c.aaa2", "b.c",
-	// "bbb");
-	// }
+	@Test
+	public void validNewNameAndPackage() {
+		createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "b", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "a", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", "b", "aaa");
+		createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "", "bbb");
+		createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", null, "bbb");
+		createUpdateAndVerifyOneEntity("a.b.c", "aaa1", "a.b.c.aaa1", "b",
+				"bbb");
+		createUpdateAndVerifyOneEntity("a.b.c", "aaa2", "a.b.c.aaa2", "b.c",
+				"bbb");
+	}
 
-	// @Test
-	// public void removePackageSetPackage() {
-	// createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "", "aaa");
-	// createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "", "bbb");
-	// createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "b", "bbb");
-	// createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", null, "aaa");
-	// createUpdateAndVerifyOneEntity("a", "aaa4", "a.aaa4", null, "bbb");
-	// createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", "b", "bbb");
-	//
-	// createUpdateAndVerifyOneEntity("a", "aaa5", "a.aaa5", "a", "aaa5");
-	// createUpdateAndVerifyOneEntity("a", "aaa6", "a.aaa6", "a", "aaa7");
-	// createUpdateAndVerifyOneEntity(null, "aaa3", "aaa3", null, "aaa4");
-	// }
-	//
-	// @Test
-	// public void renameCausingTwoEntitiesWithSameNameInDifferentPackages() {
-	// Entity ea = this.createAndSaveOneEntity("a", "aaa");
-	// Entity eb = this.createAndSaveOneEntity("b", "bbb");
-	// service.update("c", "bbb", ea.getId(), ea.getVersion());
-	// }
-	//
-	// @Test
-	// public void moveCausingTwoEntitiesWithSameNameInDifferentPackages() {
-	// Entity ea = new Entity();
-	// ea.setNamespace("a");
-	// ea.setName("aaa");
-	// service.create(ea);
-	//
-	// Entity eb = new Entity();
-	// eb.setNamespace("b");
-	// eb.setName("bbb");
-	// service.create(eb);
-	//
-	// service.update("c", "bbb", ea.getId(), ea.getVersion());
-	// }
-	//
-	// @Test
-	// public void newNameAndPackageWithSpaces() {
-	// Entity ea = new Entity();
-	// ea.setNamespace("a");
-	// ea.setName("aaa");
-	// service.create(ea);
-	// try {
-	// service.update("name space", "aaa", ea.getId(), ea.getVersion());
-	// fail();
-	// } catch (MetadataException me) {
-	// Assert.assertEquals(
-	// "Invalid value for Entity namespace: name space",
-	// me.getMessage());
-	// }
-	// try {
-	// service.update("namespace", "na me", ea.getId(), ea.getVersion());
-	// fail();
-	// } catch (MetadataException me) {
-	// Assert.assertEquals(
-	// "Invalid value for Entity name: namespace.na me",
-	// me.getMessage());
-	// }
-	// }
-	// @Test
-	// public void removeName() {
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", null,
-	// "The name of an Entity is mandatory");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
-	// "The name of an Entity is mandatory");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long) null, null,
-	// "The name of an Entity is mandatory");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "",
-	// "The name of an Entity is mandatory");
-	// }
-	//
+	@Test
+	public void removePackageSetPackage() {
+		createUpdateAndVerifyOneEntity("a", "aaa1", "a.aaa1", "", "aaa");
+		createUpdateAndVerifyOneEntity("a", "aaa2", "a.aaa2", "", "bbb");
+		createUpdateAndVerifyOneEntity("", "aaa1", "aaa1", "b", "bbb");
+		createUpdateAndVerifyOneEntity("a", "aaa3", "a.aaa3", null, "aaa");
+		createUpdateAndVerifyOneEntity("a", "aaa4", "a.aaa4", null, "bbb");
+		createUpdateAndVerifyOneEntity(null, "aaa2", "aaa2", "b", "bbb");
+
+		createUpdateAndVerifyOneEntity("a", "aaa5", "a.aaa5", "a", "aaa5");
+		createUpdateAndVerifyOneEntity("a", "aaa6", "a.aaa6", "a", "aaa7");
+		createUpdateAndVerifyOneEntity(null, "aaa3", "aaa3", null, "aaa4");
+	}
+
+	@Test
+	public void renameCausingTwoEntitiesWithSameNameInDifferentPackages() {
+		Entity ea = this.createAndSaveOneEntity("a", "aaa");
+		Entity eb = this.createAndSaveOneEntity("b", "bbb");
+		service.update("c", "bbb", ea.getId(), ea.getVersion());
+	}
+
+	@Test
+	public void moveCausingTwoEntitiesWithSameNameInDifferentPackages() {
+		Entity ea = new Entity();
+		ea.setNamespace("a");
+		ea.setName("aaa");
+		service.create(ea);
+
+		Entity eb = new Entity();
+		eb.setNamespace("b");
+		eb.setName("bbb");
+		service.create(eb);
+
+		service.update("c", "bbb", ea.getId(), ea.getVersion());
+	}
+
+	@Test
+	public void newNameAndPackageWithSpaces() {
+		Entity ea = new Entity();
+		ea.setNamespace("a");
+		ea.setName("aaa");
+		service.create(ea);
+		try {
+			// validate entity method refactoring fot this test
+			service.update("name space", "aaa", ea.getId(), ea.getVersion());
+			fail();
+		} catch (MetadataException me) {
+			Assert.assertEquals(
+					"Invalid value for Entity namespace: name space",
+					me.getMessage());
+		}
+		try {
+			service.update("namespace", "na me", ea.getId(), ea.getVersion());
+			fail();
+		} catch (MetadataException me) {
+			Assert.assertEquals("Invalid value for Entity name: na me",
+					me.getMessage());
+		}
+	}
+
+	@Test
+	public void removeName() {
+//		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", null,
+//				"The name of an Entity is mandatory");
+//		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
+//				"The name of an Entity is mandatory");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, null,
+				"The name of an Entity is mandatory");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "",
+				"The name of an Entity is mandatory");
+	}
+
 	// @Test
 	// public void renameMoveCausingTwoEntitiesWithSameNameInDefaultPackage() {
 	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
@@ -243,7 +244,7 @@ public class EntityServiceTest {
 	// "Invalid value for Entity name: aaa.a");
 	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa/a",
 	// "Invalid value for Entity name: aaa/a");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa*",
+	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a"expectedMessage, "aaa*",
 	// "Invalid value for Entity name: aaa*");
 	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a$", "aaa",
 	// "Invalid value for Entity namespace: a$");
@@ -666,7 +667,7 @@ public class EntityServiceTest {
 		this.expectExceptionOnInvalidRemoveEntity("namespace.na me",
 				"Invalid key for Entity: namespace.na me");
 	}
-	
+
 	@Test
 	public void deleteEntityForcingCaseInsensitivePackagesAndNames() {
 		this.createEntity("nS", "nA");
@@ -682,7 +683,7 @@ public class EntityServiceTest {
 		this.createEntity("nS", "nA");
 		service.delete("Ns.Na");
 	}
-	
+
 	@Test
 	public void deleteEntityUsingInvalidNameAndPackage() {
 		this.expectExceptionOnInvalidRemoveEntity("ns.n$",
@@ -703,8 +704,8 @@ public class EntityServiceTest {
 				"Invalid key for Entity: ns#.n");
 		this.expectExceptionOnInvalidRemoveEntity("ns=.n",
 				"Invalid key for Entity: ns=.n");
-//		this.expectExceptionOnInvalidRemoveEntity("ns.",
-//				"Invalid key for Entity: ns.");
+		// this.expectExceptionOnInvalidRemoveEntity("ns.",
+		// "Invalid key for Entity: ns.");
 		this.expectExceptionOnInvalidRemoveEntity("ns/n.n",
 				"Invalid key for Entity: ns/n.n");
 		this.expectExceptionOnInvalidRemoveEntity("ns*.n",
@@ -791,20 +792,20 @@ public class EntityServiceTest {
 		}
 	}
 
-	private void expectExceptionOnInvalidEntityUpdate(String namespace,
-			String name, Long id, Integer version, String expectedMessage) {
-		try {
-			Entity updateEntity = new Entity();
-			updateEntity.setNamespace(namespace);
-			updateEntity.setName(name);
-			updateEntity.setId(id);
-			updateEntity.setVersion(version);
-			service.update(updateEntity);
-			fail();
-		} catch (MetadataException me) {
-			Assert.assertEquals(expectedMessage, me.getMessage());
-		}
-	}
+//	private void expectExceptionOnInvalidEntityUpdate(String namespace,
+//			String name, Long id, Integer version, String expectedMessage) {
+//		try {
+//			Entity updateEntity = new Entity();
+//			updateEntity.setNamespace(namespace);
+//			updateEntity.setName(name);
+//			updateEntity.setId(id);
+//			updateEntity.setVersion(version);
+//			service.update(updateEntity);
+//			fail();
+//		} catch (MetadataException me) {
+//			Assert.assertEquals(expectedMessage, me.getMessage());
+//		}
+//	}
 
 	private void expectExceptionOnInvalidEntityUpdate(String firstnamespace,
 			String firstname, String secondnamespace, String secondname,
@@ -814,6 +815,8 @@ public class EntityServiceTest {
 		entity.setName(firstname);
 		service.create(entity);
 		try {
+			entity.setNamespace(secondnamespace);
+			entity.setName(secondname);
 			service.update(entity);
 			fail();
 		} catch (MetadataException me) {

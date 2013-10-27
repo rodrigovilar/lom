@@ -1,7 +1,6 @@
 package com.nanuvem.lom.kernel;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.nanuvem.lom.kernel.dao.DaoFactory;
@@ -15,7 +14,7 @@ public class EntityService {
 		this.dao = factory.createEntityDao();
 	}
 
-	public void create(Entity entity) {
+	private void validateEntity(Entity entity) {
 		if (entity.getName() == null || entity.getName().equals("")) {
 			throw new MetadataException("The name of an Entity is mandatory");
 		}
@@ -54,7 +53,10 @@ public class EntityService {
 			message.append(" entity already exists");
 			throw new MetadataException(message.toString());
 		}
+	}
 
+	public void create(Entity entity) {
+		this.validateEntity(entity);
 		this.dao.create(entity);
 	}
 
@@ -125,6 +127,7 @@ public class EntityService {
 		if (namespace.isEmpty()) {
 			namespace = "default";
 		}
+		
 		Entity entityByNamespaceAndName = this.dao
 				.readEntityByNamespaceAndName(namespace, name);
 
@@ -146,12 +149,22 @@ public class EntityService {
 	}
 
 	public Entity update(Entity updateEntity) {
-		// TODO Auto-generated method stub
-		return null;
+		this.validateEntity(updateEntity);
+		return this.dao.update(updateEntity);
 	}
 
 	public void delete(Entity entity) {
 		this.dao.delete(entity);
+	}
+
+	public Entity update(String namespace, String name, Long id, Integer version) {
+		Entity updateEntity = new Entity();
+		updateEntity.setId(id);
+		updateEntity.setName(name);
+		updateEntity.setNamespace(namespace);
+		updateEntity.setVersion(version);
+		this.validateEntity(updateEntity);
+		return this.dao.update(namespace, name, id, version);
 	}
 
 }
