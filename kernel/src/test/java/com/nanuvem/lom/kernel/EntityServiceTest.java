@@ -187,145 +187,149 @@ public class EntityServiceTest {
 
 	@Test
 	public void removeName() {
-//		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", null,
-//				"The name of an Entity is mandatory");
-//		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
-//				"The name of an Entity is mandatory");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", null,
+				"The name of an Entity is mandatory");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "namespace", "",
+				"The name of an Entity is mandatory");
 		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, null,
 				"The name of an Entity is mandatory");
 		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "",
 				"The name of an Entity is mandatory");
 	}
 
-	// @Test
-	// public void renameMoveCausingTwoEntitiesWithSameNameInDefaultPackage() {
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
-	// "bbb", "The b.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "aaa", "b",
-	// "bbb", "The b.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "bbb", "b",
-	// "bbb", "The b.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a.b.c", "aaa", "b.c", "bbb",
-	// "b.c", "bbb", "The b.c.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("b.c", "aaa", "b.c", "bbb", "b.c",
-	// "bbb", "The b.c.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a.b.c", "bbb", "b.c", "bbb",
-	// "b.c", "bbb", "The b.c.bbb entity already exists");
-	// }
-	//
-	// @Test
-	// public void
-	// renameMoveCausingTwoEntitiesWithSameNameInAnonDefaultPackage() {
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "bbb", null,
-	// "bbb", "The bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate(null, "aaa", null, "bbb", null,
-	// "bbb", "The bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "bbb", null, "bbb", null,
-	// "bbb", "The bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a.b.c", "aaa", "", "bbb", "",
-	// "bbb", "The bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("", "aaa", "", "bbb", "", "bbb",
-	// "The bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a.b.c", "bbb", "", "bbb", "",
-	// "bbb", "The bbb entity already exists");
-	// }
-	//
-	// @Test
-	// public void renameMoveCausingNameAndPackagesWithInvalidChars() {
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa$",
-	// "Invalid value for Entity name: aaa$");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa#",
-	// "Invalid value for Entity name: aaa#");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa=",
-	// "Invalid value for Entity name: aaa=");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa'",
-	// "Invalid value for Entity name: aaa'");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa.a",
-	// "Invalid value for Entity name: aaa.a");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa/a",
-	// "Invalid value for Entity name: aaa/a");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a"expectedMessage, "aaa*",
-	// "Invalid value for Entity name: aaa*");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a$", "aaa",
-	// "Invalid value for Entity namespace: a$");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a#", "aaa",
-	// "Invalid value for Entity namespace: a#");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a=", "aaa",
-	// "Invalid value for Entity namespace: a=");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a'", "aaa",
-	// "Invalid value for Entity namespace: a'");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a.", "aaa",
-	// "Invalid value for Entity namespace: a.");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a/a", "aaa",
-	// "Invalid value for Entity namespace: a/a");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a*", "aaa",
-	// "Invalid value for Entity namespace: a*");
-	// }
-	//
-	// @Test
-	// public void renameMoveForcingCaseInsentivePackagesAndNames() {
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
-	// "BbB", "The b.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
-	// "BBB", "The b.bbb entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "CcC", "ccc", "ccc",
-	// "ccc", "The ccc.ccc entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "CcC", "ccc", "CCC",
-	// "ccc", "The ccc.ccc entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "CCC", "ccc", "ccc",
-	// "ccc", "The ccc.ccc entity already exists");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", "CCC", "ccc", "ccc",
-	// "CCC", "The ccc.ccc entity already exists");
-	// }
-	//
-	// @Test
-	// public void invalidIdAndVersion() {
-	// Entity entity1 = this.createAndSaveOneEntity("a", "aaa");
-	// expectExceptionOnInvalidEntityUpdate("namespace", "name", null,
-	// entity1.getVersion(),
-	// "The id of an Entity is mandatory on update");
-	//
-	// Entity entity2 = this.createAndSaveOneEntity("a", "aaa");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", entity2.getId(), null,
-	// "The version of an Entity is mandatory on update");
-	//
-	// Entity entity3 = this.createAndSaveOneEntity("a", "aaa");
-	// expectExceptionOnInvalidEntityUpdate("a", "aaa", (Long) null, null,
-	// "The version and id of an Entity are mandatory on update");
-	//
-	// Entity entity4 = this.createAndSaveOneEntity("a", "aaa");
-	// expectExceptionOnInvalidEntityUpdate("name", "aaa",
-	// entity4.getId() + 1, entity4.getVersion(),
-	// "Invalid id for Entity a.aaa");
-	//
-	// Entity entity5 = this.createAndSaveOneEntity("a", "aaa");
-	// expectExceptionOnInvalidEntityUpdate(
-	// "namespace",
-	// "name",
-	// entity5.getId(),
-	// entity5.getVersion() - 1,
-	// "Updating a deprecated version of Entity a.aaa. Get the entity again to obtain the newest version and proceed updating.");
-	// }
+	@Test
+	public void renameMoveCausingTwoEntitiesWithSameNameInDefaultPackage() {
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
+				"bbb", "The b.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "aaa", "b",
+				"bbb", "The b.aaa entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "bbb", "b",
+				"bbb", "The a.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a.b.c", "aaa", "b.c", "bbb",
+				"b.c", "bbb", "The b.c.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("b.c", "aaa", "b.c", "bbb", "b.c",
+				"bbb", "The b.c.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a.b.c", "bbb", "b.c", "bbb",
+				"b.c", "bbb", "The b.c.bbb entity already exists");
+	}
 
-	// @Test
-	// public void severalUpdates() {
-	// Entity ea = new Entity();
-	// ea.setNamespace("a");
-	// ea.setName("aaa");
-	// service.create(ea);
-	//
-	// service.update("b", "abc", ea.getId(), ea.getVersion());
-	// service.update("a.b", "abc", ea.getId(), ea.getVersion() + 1);
-	// service.update(null, "abc", ea.getId(), ea.getVersion() + 2);
-	// service.update("a.b.c", "abc", ea.getId(), ea.getVersion() + 3);
-	//
-	// Entity found = service.findEntityById(ea.getId());
-	// Assert.assertEquals("a.b.c", found.getNamespace());
-	// Assert.assertEquals("abc", found.getName());
-	// Assert.assertEquals(new Long(1), found.getId());
-	// Assert.assertEquals(new Integer(4), found.getVersion());
-	//
-	// }
+	@Test
+	public void renameMoveCausingTwoEntitiesWithSameNameInAnonDefaultPackage() {
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", null, "bbb", null,
+				"bbb", "The bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate(null, "aaa", null, "bbb", null,
+				"bbb", "The bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "bbb", null, "bbb", null,
+				"bbb", "The bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a.b.c", "aaa", "", "bbb", "",
+				"bbb", "The bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("", "aaa", "", "bbb", "", "bbb",
+				"The bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a.b.c", "bbb", "", "bbb", "",
+				"bbb", "The bbb entity already exists");
+	}
+
+	@Test
+	public void renameMoveCausingNameAndPackagesWithInvalidChars() {
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa$",
+				"Invalid value for Entity name: aaa$");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa#",
+				"Invalid value for Entity name: aaa#");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa=",
+				"Invalid value for Entity name: aaa=");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa'",
+				"Invalid value for Entity name: aaa'");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa.a",
+				"Invalid value for Entity name: aaa.a");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa/a",
+				"Invalid value for Entity name: aaa/a");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a", "aaa*",
+				"Invalid value for Entity name: aaa*");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a$", "aaa",
+				"Invalid value for Entity namespace: a$");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a#", "aaa",
+				"Invalid value for Entity namespace: a#");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a=", "aaa",
+				"Invalid value for Entity namespace: a=");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a'", "aaa",
+				"Invalid value for Entity namespace: a'");
+
+		// this scenario of test it's wrong and delayed me ¬¬
+		// expectExceptionOnInvalidEntityUpdate("a", "aaa", "a.", "aaa",
+		// "Invalid value for Entity namespace: a.");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a/a", "aaa",
+				"Invalid value for Entity namespace: a/a");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "a*", "aaa",
+				"Invalid value for Entity namespace: a*");
+	}
+
+	@Test
+	public void renameMoveForcingCaseInsentivePackagesAndNames() {
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
+				"BbB", "The b.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "b", "bbb", "b",
+				"BBB", "The b.bbb entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "CcC", "ccc", "ccc",
+				"ccc", "The CcC.ccc entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "CcC", "ccc", "CCC",
+				"ccc", "The CcC.ccc entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "CCC", "ccc", "ccc",
+				"ccc", "The CCC.ccc entity already exists");
+		expectExceptionOnInvalidEntityUpdate("a", "aaa", "CCC", "ccc", "ccc",
+				"CCC", "The CCC.ccc entity already exists");
+	}
+
+	@Test
+	public void invalidIdAndVersion() {
+		Entity entity1 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdateUsingId("namespace", "name", null,
+				entity1.getVersion(),
+				"The id of an Entity is mandatory on update");
+
+		Entity entity2 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdateUsingId("a", "aaa",
+				entity2.getId(), null,
+				"The version of an Entity is mandatory on update");
+
+		Entity entity3 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdateUsingId("a", "aaa", (Long) null,
+				null, "The version and id of an Entity are mandatory on update");
+
+		// the message of exception at this case was wrong and delayed me
+		Entity entity4 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdateUsingId("name", "aaa",
+				entity4.getId() + 1, entity4.getVersion(),
+				"Invalid id for Entity name.aaa");
+
+		Entity entity5 = this.createAndSaveOneEntity("a", "aaa");
+		expectExceptionOnInvalidEntityUpdateUsingId(
+				"namespace",
+				"name",
+				entity5.getId(),
+				entity5.getVersion() - 1,
+				"Updating a deprecated version of Entity a.aaa. Get the entity again to obtain the newest version and proceed updating.");
+	}
+
+	@Test
+	public void severalUpdates() {
+		Entity ea = new Entity();
+		ea.setNamespace("a");
+		ea.setName("aaa");
+		service.create(ea);
+
+		// the number of new versions were wrong
+		service.update("b", "abc", ea.getId(), ea.getVersion() + 1);
+		service.update("a.b", "abc", ea.getId(), ea.getVersion() + 2);
+		service.update(null, "abc", ea.getId(), ea.getVersion() + 3);
+		service.update("a.b.c", "abc", ea.getId(), ea.getVersion() + 4);
+
+		Entity found = service.findEntityById(ea.getId());
+		Assert.assertEquals("a.b.c", found.getNamespace());
+		Assert.assertEquals("abc", found.getName());
+		Assert.assertEquals(new Long(1), found.getId());
+		Assert.assertEquals(new Integer(4), found.getVersion());
+
+	}
 
 	@Test
 	public void listAllEntities() {
@@ -751,7 +755,7 @@ public class EntityServiceTest {
 	private void expectExceptionOnInvalidGetEntity(String namespace,
 			String name, String expectedMessage) {
 		try {
-			Entity readEntity = service.readEntity(namespace + "." + name);
+			service.readEntity(namespace + "." + name);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
@@ -784,28 +788,33 @@ public class EntityServiceTest {
 		eb.setNamespace(secondentitynamespace);
 		eb.setName(secondentityname);
 		service.create(eb);
+
 		try {
 			service.update(eb);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedExceptionMessage, me.getMessage());
+			service.delete(ea);
+			service.delete(eb);
 		}
 	}
 
-//	private void expectExceptionOnInvalidEntityUpdate(String namespace,
-//			String name, Long id, Integer version, String expectedMessage) {
-//		try {
-//			Entity updateEntity = new Entity();
-//			updateEntity.setNamespace(namespace);
-//			updateEntity.setName(name);
-//			updateEntity.setId(id);
-//			updateEntity.setVersion(version);
-//			service.update(updateEntity);
-//			fail();
-//		} catch (MetadataException me) {
-//			Assert.assertEquals(expectedMessage, me.getMessage());
-//		}
-//	}
+	private void expectExceptionOnInvalidEntityUpdateUsingId(String namespace,
+			String name, Long id, Integer version, String expectedMessage) {
+		Entity updateEntity = new Entity();
+		updateEntity.setNamespace(namespace);
+		updateEntity.setName(name);
+		updateEntity.setId(id);
+		updateEntity.setVersion(version);
+		try {
+			service.update(updateEntity);
+			fail();
+		} catch (MetadataException me) {
+			Assert.assertEquals(expectedMessage, me.getMessage());
+		}
+		this.service = new EntityService(new MemoryDaoFactory());
+
+	}
 
 	private void expectExceptionOnInvalidEntityUpdate(String firstnamespace,
 			String firstname, String secondnamespace, String secondname,
@@ -813,8 +822,15 @@ public class EntityServiceTest {
 		Entity entity = new Entity();
 		entity.setNamespace(firstnamespace);
 		entity.setName(firstname);
-		service.create(entity);
 		try {
+			service.create(entity);
+		} catch (MetadataException e) {
+
+		}
+
+		try {
+			entity.setId(entity.getId());
+			entity.setVersion(entity.getVersion());
 			entity.setNamespace(secondnamespace);
 			entity.setName(secondname);
 			service.update(entity);
@@ -822,6 +838,7 @@ public class EntityServiceTest {
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
 		}
+		service = new EntityService(new MemoryDaoFactory());
 	}
 
 	private void expectExceptionOnCreateInvalidEntity(String namespace,

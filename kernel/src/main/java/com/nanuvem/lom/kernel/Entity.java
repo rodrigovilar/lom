@@ -1,6 +1,8 @@
 package com.nanuvem.lom.kernel;
 
-public class Entity {
+import java.io.Serializable;
+
+public class Entity implements Serializable {
 
 	private Long id;
 	private Integer version;

@@ -127,7 +127,7 @@ public class EntityService {
 		if (namespace.isEmpty()) {
 			namespace = "default";
 		}
-		
+
 		Entity entityByNamespaceAndName = this.dao
 				.readEntityByNamespaceAndName(namespace, name);
 
@@ -149,6 +149,7 @@ public class EntityService {
 	}
 
 	public Entity update(Entity updateEntity) {
+		this.validateEntityOnUpdate(updateEntity);
 		this.validateEntity(updateEntity);
 		return this.dao.update(updateEntity);
 	}
@@ -163,8 +164,26 @@ public class EntityService {
 		updateEntity.setName(name);
 		updateEntity.setNamespace(namespace);
 		updateEntity.setVersion(version);
+		this.validateEntityOnUpdate(updateEntity);
 		this.validateEntity(updateEntity);
 		return this.dao.update(namespace, name, id, version);
+	}
+
+	private void validateEntityOnUpdate(Entity updateEntity) {
+		if (updateEntity.getId() == null && updateEntity.getVersion() == null) {
+			throw new MetadataException(
+					"The version and id of an Entity are mandatory on update");
+		} else if (updateEntity.getId() == null) {
+			throw new MetadataException(
+					"The id of an Entity is mandatory on update");
+		} else if (updateEntity.getVersion() == null) {
+			throw new MetadataException(
+					"The version of an Entity is mandatory on update");
+		}
+	}
+
+	public Entity findEntityById(Long id) {
+		return this.dao.findEntityById(id);
 	}
 
 }
