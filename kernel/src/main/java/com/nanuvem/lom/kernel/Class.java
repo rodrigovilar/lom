@@ -2,8 +2,13 @@ package com.nanuvem.lom.kernel;
 
 import java.io.Serializable;
 
-public class Entity implements Serializable {
+public class Class implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Long id;
 	private Integer version;
 	private String name;
@@ -41,6 +46,10 @@ public class Entity implements Serializable {
 		this.namespace = namespace;
 	}
 
+	public String getFullName(){
+		return this.getNamespace()+"."+this.getName();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -61,7 +70,7 @@ public class Entity implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Entity other = (Entity) obj;
+		Class other = (Class) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
