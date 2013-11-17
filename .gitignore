@@ -1,3 +1,6 @@
 /engine/target/
 /guirenderer/target/
 /guirenderer/home/
+/kernel/target/
+/business/target
+/business/.settings/
