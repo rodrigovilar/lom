@@ -15,3 +15,6 @@ entity jpa --class com.nanuvem.lom.business.Clazz
 field string --fieldName name
 field string --fieldName namespace
 service --interface com.nanuvem.lom.business.ClassService --entity ~.business.Clazz
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2013-11-17 16:37:53
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2013-11-18 18:28:03
+web mvc json setup
