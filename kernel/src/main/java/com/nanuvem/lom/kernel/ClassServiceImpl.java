@@ -11,7 +11,7 @@ public class ClassServiceImpl {
 	private ClassDao dao;
 
 	public ClassServiceImpl(DaoFactory factory) {
-		this.dao = factory.createEntityDao();
+		this.dao = factory.createClassDao();
 	}
 
 	private void validateEntity(Class clazz) {
@@ -86,62 +86,62 @@ public class ClassServiceImpl {
 					+ nameFragment);
 		}
 
-		return this.dao.listEntitiesByFragmentOfNameAndPackage(
+		return this.dao.listClassesByFragmentOfNameAndPackage(
 				namespaceFragment, nameFragment);
 	}
 
-	public Class readClass(String string) {
-        String namespace = null;
-        String name = null;
+	public Class readClass(String fullname) {
+		String namespace = null;
+		String name = null;
 
-        if (string.contains(".")) {
-                namespace = string.substring(0, string.lastIndexOf("."));
-                name = string.substring(string.lastIndexOf(".") + 1,
-                                string.length());
-        } else {
-                namespace = "default";
-                name = string;
-        }
+		if (fullname.contains(".")) {
+			namespace = fullname.substring(0, fullname.lastIndexOf("."));
+			name = fullname.substring(fullname.lastIndexOf(".") + 1,
+					fullname.length());
+		} else {
+			namespace = "default";
+			name = fullname;
+		}
 
-        if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespace)
-                        && !namespace.isEmpty()) {
-                if (string.startsWith(".")) {
-                        string = string.substring(1);
-                }
-                if (string.endsWith(".")) {
-                        string = string.substring(0, string.length() - 1);
-                }
-                throw new MetadataException("Invalid key for Class: " + string);
-        }
+		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespace)
+				&& !namespace.isEmpty()) {
+			if (fullname.startsWith(".")) {
+				fullname = fullname.substring(1);
+			}
+			if (fullname.endsWith(".")) {
+				fullname = fullname.substring(0, fullname.length() - 1);
+			}
+			throw new MetadataException("Invalid key for Class: " + fullname);
+		}
 
-        if (!Pattern.matches("[a-zA-Z1-9]{1,}", name) && !name.isEmpty()) {
-                if (string.startsWith(".")) {
-                        string = string.substring(1);
-                }
-                if (string.endsWith(".")) {
-                        string = string.substring(0, string.length() - 1);
-                }
-                throw new MetadataException("Invalid key for Class: " + string);
-        }
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", name) && !name.isEmpty()) {
+			if (fullname.startsWith(".")) {
+				fullname = fullname.substring(1);
+			}
+			if (fullname.endsWith(".")) {
+				fullname = fullname.substring(0, fullname.length() - 1);
+			}
+			throw new MetadataException("Invalid key for Class: " + fullname);
+		}
 
-        if (namespace.isEmpty()) {
-                namespace = "default";
-        }
+		if (namespace.isEmpty()) {
+			namespace = "default";
+		}
 
-        Class entityByNamespaceAndName = this.dao
-                        .readEntityByNamespaceAndName(namespace, name);
+		Class entityByNamespaceAndName = this.dao.readClassByFullName(namespace
+				+ "." + name);
 
-        if (entityByNamespaceAndName == null) {
-                if (string.startsWith(".")) {
-                        string = string.substring(1);
-                }
-                if (string.endsWith(".")) {
-                        string = string.substring(0, string.length() - 1);
-                }
-                throw new MetadataException("Class not found: " + string);
-        }
-        return entityByNamespaceAndName;
-}
+		if (entityByNamespaceAndName == null) {
+			if (fullname.startsWith(".")) {
+				fullname = fullname.substring(1);
+			}
+			if (fullname.endsWith(".")) {
+				fullname = fullname.substring(0, fullname.length() - 1);
+			}
+			throw new MetadataException("Class not found: " + fullname);
+		}
+		return entityByNamespaceAndName;
+	}
 
 	public void delete(String string) {
 		Class readClass = this.readClass(string);
@@ -182,7 +182,7 @@ public class ClassServiceImpl {
 		}
 	}
 
-	public Class findEntityById(Long id) {
+	public Class findClassById(Long id) {
 		return this.dao.findClassById(id);
 	}
 

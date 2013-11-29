@@ -2,7 +2,7 @@ package com.nanuvem.lom.kernel.dao;
 
 public interface DaoFactory {
 
-	ClassDao createEntityDao();
+	ClassDao createClassDao();
 
 	AttributeDao createAttributeDao();
 	

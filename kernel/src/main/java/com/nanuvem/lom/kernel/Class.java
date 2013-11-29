@@ -1,6 +1,8 @@
 package com.nanuvem.lom.kernel;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Class implements Serializable {
 
@@ -13,6 +15,7 @@ public class Class implements Serializable {
 	private Integer version;
 	private String name;
 	private String namespace;
+	private List<Attribute> attributes = new LinkedList<Attribute>();	
 
 	public Long getId() {
 		return id;
@@ -50,6 +53,14 @@ public class Class implements Serializable {
 		return this.getNamespace()+"."+this.getName();
 	}
 	
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,5 +104,4 @@ public class Class implements Serializable {
 			return false;
 		return true;
 	}
-
 }

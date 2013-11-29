@@ -9,23 +9,28 @@ import com.nanuvem.lom.kernel.Class;
 import com.nanuvem.lom.kernel.MetadataException;
 import com.nanuvem.lom.kernel.dao.ClassDao;
 
-public class MemoryEntityDao implements ClassDao {
+public class MemoryClassDao implements ClassDao {
 
 	private Long id = 1L;
 
-	private List<Class> entities = new ArrayList<Class>();
+	private List<Class> classes = new ArrayList<Class>();
 
 	public void create(Class entity) {
 		entity.setId(id++);
 		entity.setVersion(0);
-		
+
 		// this fixes a interesting bug for update entity
 		Class clone = (Class) SerializationUtils.clone(entity);
-		entities.add(clone);
+		classes.add(clone);
 	}
 
 	public List<Class> listAll() {
-		return new ArrayList<Class>(this.entities);
+		List<Class> classesReturn = new ArrayList<Class>();
+		
+		for(Class classEach : this.classes){
+			classesReturn.add((Class) SerializationUtils.clone(classEach));
+		}
+		return classesReturn;
 	}
 
 	// TODO refactoring later
@@ -58,10 +63,10 @@ public class MemoryEntityDao implements ClassDao {
 		return this.update(entity);
 	}
 
-	public Class update(Class entity) {
+	public Class update(Class clazz) {
 		for (Class e : this.listAll()) {
-			if (e.getId().equals(entity.getId())) {
-				if (e.getVersion() > entity.getVersion()) {
+			if (e.getId().equals(clazz.getId())) {
+				if (e.getVersion() > clazz.getVersion()) {
 					throw new MetadataException(
 							"Updating a deprecated version of Class "
 									+ e.getNamespace()
@@ -69,43 +74,42 @@ public class MemoryEntityDao implements ClassDao {
 									+ e.getName()
 									+ ". Get the Class again to obtain the newest version and proceed updating.");
 				}
-				this.entities.remove(e);
-				this.entities.add(entity);
-				return entity;
+				this.classes.remove(e);
+				this.classes.add(clazz);
+				return (Class) SerializationUtils.clone(clazz);
 			}
 		}
 		throw new MetadataException("Invalid id for Class "
-				+ entity.getNamespace() + "." + entity.getName());
+				+ clazz.getNamespace() + "." + clazz.getName());
 	}
 
 	public Class findClassById(Long id) {
-		for (Class e : this.entities) {
+		for (Class e : this.classes) {
 			if (e.getId().equals(id)) {
-				return e;
+				return (Class) SerializationUtils.clone(e);
 			}
 		}
 		return null;
 	}
 
-	public List<Class> listEntitiesByFragmentOfNameAndPackage(
+	public List<Class> listClassesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment) {
 		List<Class> results = new ArrayList<Class>();
-		for (Class e : this.entities) {
+		for (Class e : this.classes) {
 			if (e.getNamespace().toLowerCase()
 					.contains(namespaceFragment.toLowerCase())
 					&& e.getName().toLowerCase()
 							.contains(nameFragment.toLowerCase())) {
-				results.add(e);
+				results.add((Class) SerializationUtils.clone(e));
 			}
 		}
 		return results;
 	}
 
-	public Class readEntityByNamespaceAndName(String namespace, String name) {
-		for (Class e : this.entities) {
-			if (namespace.equalsIgnoreCase(e.getNamespace())
-					&& name.equalsIgnoreCase(e.getName())) {
-				return e;
+	public Class readClassByFullName(String fullClassName) {
+		for (Class classEach : this.classes) {
+			if (fullClassName.equalsIgnoreCase(classEach.getFullName())) {
+				return (Class) SerializationUtils.clone(classEach);
 			}
 		}
 		return null;
@@ -116,14 +120,12 @@ public class MemoryEntityDao implements ClassDao {
 	}
 
 	public void delete(Class entity) {
-		for (int i = 0; i < this.entities.size(); i++) {
-			Class e = this.entities.get(i);
+		for (int i = 0; i < this.classes.size(); i++) {
+			Class e = this.classes.get(i);
 			if (e.getName().equals(entity.getName())
 					&& e.getNamespace().equals(entity.getNamespace())) {
-				this.entities.remove(e);
+				this.classes.remove(e);
 			}
 		}
-
 	}
-
 }
