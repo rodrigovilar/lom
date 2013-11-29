@@ -18,10 +18,10 @@ public interface ClassDao {
 
 	Class findClassById(Long id);
 
-	List<Class> listEntitiesByFragmentOfNameAndPackage(
+	List<Class> listClassesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment);
 
-	Class readEntityByNamespaceAndName(String namespace, String name);
+	Class readClassByFullName(String fullClassName);
 
 	void delete(String namespaceAndName);
 }

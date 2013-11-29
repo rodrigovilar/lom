@@ -10,4 +10,8 @@ public interface AttributeDao {
 
 	List<Attribute> listAllAttributes(String fullClassName);
 
+	Attribute findAttributeById(Long id);
+
+	Attribute findAttributeByNameAndFullnameClass(String nameAttribute,	String fullnameClass);
+
 }
