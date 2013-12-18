@@ -25,25 +25,10 @@ public class MemoryAttributeDao implements AttributeDao {
 
 		Class clazz = this.classDao.findClassById(attribute.getClazz().getId());
 		attribute.setClazz(clazz);
-
-		if (attribute.getSequence() == null) {
-			if (clazz.getAttributes().isEmpty()) {
-				attribute.setSequence(1);
-			} else {
-				int size = clazz.getAttributes().size();
-				int ultimoSequence = clazz.getAttributes().get(size - 1)
-						.getSequence();
-				attribute.setSequence(ultimoSequence + 1);
-			}
-			clazz.getAttributes().add(attribute);
-			this.classDao.update(clazz);
-			return;
-		}
-
+		
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
-			if (attribute.getSequence().equals(
-					clazz.getAttributes().get(i).getSequence())) {
+			if (attribute.getSequence().equals(clazz.getAttributes().get(i).getSequence())) {
 				break;
 			}
 		}
@@ -71,8 +56,8 @@ public class MemoryAttributeDao implements AttributeDao {
 		this.classDao.update(clazz);
 	}
 
-	public List<Attribute> listAllAttributes(String fullClassName) {
-		Class clazz = this.classDao.readClassByFullName(fullClassName);
+	public List<Attribute> listAllAttributes(String classFullName) {
+		Class clazz = this.classDao.readClassByFullName(classFullName);
 
 		List<Attribute> cloneAttributes = new ArrayList<Attribute>();
 		for (Attribute at : clazz.getAttributes()) {
@@ -94,10 +79,10 @@ public class MemoryAttributeDao implements AttributeDao {
 		return null;
 	}
 
-	public Attribute findAttributeByNameAndFullnameClass(String nameAttribute,
-			String fullNameClass) {
+	public Attribute findAttributeByNameAndClassFullName(String nameAttribute,
+			String classFullName) {
 
-		Class clazzFound = this.classDao.readClassByFullName(fullNameClass);
+		Class clazzFound = this.classDao.readClassByFullName(classFullName);
 		if (clazzFound.getAttributes() != null) {
 			for (Attribute attributeEach : clazzFound.getAttributes()) {
 				if (attributeEach.getName().equalsIgnoreCase(nameAttribute)) {

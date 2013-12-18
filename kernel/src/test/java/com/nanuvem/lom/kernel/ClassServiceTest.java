@@ -38,10 +38,10 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void twoEntitiesWithSameNameInDifferentNamespaces() {
-		createAndVerifyTwoEntities("p1", "name", "p2", "name");
-		createAndVerifyTwoEntities(null, "name", "p1", "name");
-		createAndVerifyTwoEntities("a", "name", "a.b", "name");
+	public void twoClassesWithSameNameInDifferentNamespaces() {
+		createAndVerifyTwoClasses("p1", "name", "p2", "name");
+		createAndVerifyTwoClasses(null, "name", "p1", "name");
+		createAndVerifyTwoClasses("a", "name", "a.b", "name");
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void twoEntitiesWithSameNameInDefaultNamespace() {
+	public void twoClassesWithSameNameInDefaultNamespace() {
 		createAndSaveOneClass(null, "aaa");
 		this.expectExceptionOnCreateInvalidClass(null, "aaa",
 				"The aaa Class already exists");
@@ -74,7 +74,7 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void twoEntitiesWithSameNameInAnonDefaultNamespace() {
+	public void twoClassesWithSameNameInAnonDefaultNamespace() {
 		createAndSaveOneClass("a", "aaa");
 		this.expectExceptionOnCreateInvalidClass("a", "aaa",
 				"The a.aaa Class already exists");
@@ -139,14 +139,14 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void renameCausingTwoEntitiesWithSameNameInDifferentPackages() {
+	public void renameCausingTwoClassesWithSameNameInDifferentPackages() {
 		Class ea = this.createAndSaveOneClass("a", "aaa");
 		Class eb = this.createAndSaveOneClass("b", "bbb");
 		service.update("c", "bbb", ea.getId(), ea.getVersion());
 	}
 
 	@Test
-	public void moveCausingTwoEntitiesWithSameNameInDifferentPackages() {
+	public void moveCausingTwoClassesWithSameNameInDifferentPackages() {
 		Class ea = new Class();
 		ea.setNamespace("a");
 		ea.setName("aaa");
@@ -197,7 +197,7 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void renameMoveCausingTwoEntitiesWithSameNameInDefaultPackage() {
+	public void renameMoveCausingTwoClassesWithSameNameInDefaultPackage() {
 		expectExceptionOnInvalidClassUpdate("a", "aaa", "b", "bbb", "b", "bbb",
 				"The b.bbb Class already exists");
 		expectExceptionOnInvalidClassUpdate("a", "aaa", "b", "aaa", "b", "bbb",
@@ -213,7 +213,7 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void renameMoveCausingTwoEntitiesWithSameNameInAnonDefaultPackage() {
+	public void renameMoveCausingTwoClassesWithSameNameInAnonDefaultPackage() {
 		expectExceptionOnInvalidClassUpdate("a", "aaa", null, "bbb", null,
 				"bbb", "The bbb Class already exists");
 		expectExceptionOnInvalidClassUpdate(null, "aaa", null, "bbb", null,
@@ -330,20 +330,20 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void listAllEntities() {
-		List<Class> allEntities = service.listAll();
-		Assert.assertEquals(0, allEntities.size());
+	public void listAllClasses() {
+		List<Class> allClasses = service.listAll();
+		Assert.assertEquals(0, allClasses.size());
 
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
 		Class clazz2 = this.createAndSaveOneClass("ns2", "n2");
 		Class clazz3 = this.createAndSaveOneClass("ns2", "n3");
 
-		allEntities = service.listAll();
+		allClasses = service.listAll();
 
-		Assert.assertEquals(3, allEntities.size());
-		Assert.assertEquals(clazz1, allEntities.get(0));
-		Assert.assertEquals(clazz2, allEntities.get(1));
-		Assert.assertEquals(clazz3, allEntities.get(2));
+		Assert.assertEquals(3, allClasses.size());
+		Assert.assertEquals(clazz1, allClasses.get(0));
+		Assert.assertEquals(clazz2, allClasses.get(1));
+		Assert.assertEquals(clazz3, allClasses.get(2));
 
 		service.delete(clazz1);
 		service.delete(clazz2);
@@ -353,25 +353,25 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void listEntitiesByValidFragmentOfNameAndPackage() {
+	public void listClassesByValidFragmentOfNameAndPackage() {
 		String namespaceFragment = "ns";
 		String nameFragment = "n";
-		List<Class> allEntities = service
+		List<Class> allClasses = service
 				.listClassesByFragmentOfNameAndPackage(namespaceFragment,
 						nameFragment);
 
-		Assert.assertEquals(0, allEntities.size());
+		Assert.assertEquals(0, allClasses.size());
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
 		Class clazz2 = this.createAndSaveOneClass("ns2", "n2");
 		Class clazz3 = this.createAndSaveOneClass("ns2", "n3");
 
-		allEntities = service.listClassesByFragmentOfNameAndPackage(
+		allClasses = service.listClassesByFragmentOfNameAndPackage(
 				namespaceFragment, nameFragment);
 
-		Assert.assertEquals(3, allEntities.size());
-		Assert.assertEquals(clazz1, allEntities.get(0));
-		Assert.assertEquals(clazz2, allEntities.get(1));
-		Assert.assertEquals(clazz3, allEntities.get(2));
+		Assert.assertEquals(3, allClasses.size());
+		Assert.assertEquals(clazz1, allClasses.get(0));
+		Assert.assertEquals(clazz2, allClasses.get(1));
+		Assert.assertEquals(clazz3, allClasses.get(2));
 
 		service.delete(clazz1);
 		service.delete(clazz2);
@@ -382,45 +382,45 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void listEntitiesByEmptyNameAndPackage() {
-		List<Class> allEntities = service
+	public void listClassesByEmptyNameAndPackage() {
+		List<Class> allClasses = service
 				.listClassesByFragmentOfNameAndPackage("", "");
-		Assert.assertEquals(0, allEntities.size());
+		Assert.assertEquals(0, allClasses.size());
 
-		allEntities = service.listClassesByFragmentOfNameAndPackage("ns", "");
-		Assert.assertEquals(0, allEntities.size());
+		allClasses = service.listClassesByFragmentOfNameAndPackage("ns", "");
+		Assert.assertEquals(0, allClasses.size());
 
-		allEntities = service.listClassesByFragmentOfNameAndPackage("", "n");
-		Assert.assertEquals(0, allEntities.size());
+		allClasses = service.listClassesByFragmentOfNameAndPackage("", "n");
+		Assert.assertEquals(0, allClasses.size());
 
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
 		Class clazz2 = this.createAndSaveOneClass("ns2", "n2");
 		Class clazz3 = this.createAndSaveOneClass("ns2", "n3");
-		List<Class> expectedEntities = new ArrayList<Class>();
-		expectedEntities.add(clazz1);
-		expectedEntities.add(clazz2);
-		expectedEntities.add(clazz3);
+		List<Class> expectedClasses = new ArrayList<Class>();
+		expectedClasses.add(clazz1);
+		expectedClasses.add(clazz2);
+		expectedClasses.add(clazz3);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "", "");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "", "");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, null, "");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, null, "");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "", null);
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "", null);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "ns", "");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "ns", "");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "", "n");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "", "n");
 
-		allEntities = service.listClassesByFragmentOfNameAndPackage("nspace",
+		allClasses = service.listClassesByFragmentOfNameAndPackage("nspace",
 				"");
-		Assert.assertEquals(0, allEntities.size());
+		Assert.assertEquals(0, allClasses.size());
 
-		for (Class clazz : expectedEntities) {
+		for (Class clazz : expectedClasses) {
 			service.delete(clazz);
 		}
 
@@ -428,39 +428,39 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void entitiesWithDefaultPackageMustAppearWhenPackageIsNotGiven() {
+	public void classesWithDefaultPackageMustAppearWhenPackageIsNotGiven() {
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
 		Class clazz2 = this.createAndSaveOneClass("ns2", "n2");
 		Class clazz3 = this.createAndSaveOneClass("ns2", "n3");
-		List<Class> expectedEntities = new ArrayList<Class>();
-		expectedEntities.add(clazz1);
-		expectedEntities.add(clazz2);
-		expectedEntities.add(clazz3);
+		List<Class> expectedClasses = new ArrayList<Class>();
+		expectedClasses.add(clazz1);
+		expectedClasses.add(clazz2);
+		expectedClasses.add(clazz3);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, null, "");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, null, "");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "", null);
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "", null);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, null, null);
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, null, null);
 
-		List<Class> allEntities = service
+		List<Class> allClasses = service
 				.listClassesByFragmentOfNameAndPackage(null, "nspace");
-		Assert.assertEquals(0, allEntities.size());
+		Assert.assertEquals(0, allClasses.size());
 
-		allEntities = service.listClassesByFragmentOfNameAndPackage(null,
+		allClasses = service.listClassesByFragmentOfNameAndPackage(null,
 				"name");
-		Assert.assertEquals(0, allEntities.size());
+		Assert.assertEquals(0, allClasses.size());
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "ns", "");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "ns", "");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "", "n");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "", "n");
 
-		for (Class clazz : expectedEntities) {
+		for (Class clazz : expectedClasses) {
 			service.delete(clazz);
 		}
 
@@ -468,7 +468,7 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void listEntitiesByFragmentOfNameAndPackagesWithSpaces() {
+	public void listClassesByFragmentOfNameAndPackagesWithSpaces() {
 		expectExceptionOnInvalidListClass(null, "na me",
 				"Invalid value for Class name: na me");
 		expectExceptionOnInvalidListClass("name space", null,
@@ -480,32 +480,32 @@ public class ClassServiceTest {
 	}
 
 	@Test
-	public void listEntitiesForcingCaseInsensitivePackagesAndNames() {
+	public void listClassesForcingCaseInsensitivePackagesAndNames() {
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
 		Class clazz2 = this.createAndSaveOneClass("NS2", "n2");
 		Class clazz3 = this.createAndSaveOneClass("NS3", "N3");
-		List<Class> expectedEntities = new ArrayList<Class>();
-		expectedEntities.add(clazz1);
-		expectedEntities.add(clazz2);
-		expectedEntities.add(clazz3);
+		List<Class> expectedClasses = new ArrayList<Class>();
+		expectedClasses.add(clazz1);
+		expectedClasses.add(clazz2);
+		expectedClasses.add(clazz3);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "ns", "n");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "ns", "n");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "NS", "n");
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "ns", null);
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "NS", "n");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "ns", null);
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, null, "N");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, null, "N");
 
-		listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-				expectedEntities, "N", "N");
+		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+				expectedClasses, "N", "N");
 	}
 
 	@Test
-	public void listEntitiesUsingInvalidFragmentOfNameAndPackage() {
+	public void listClassesUsingInvalidFragmentOfNameAndPackage() {
 		expectExceptionOnInvalidListClass("ns", "n$",
 				"Invalid value for Class name: n$");
 		expectExceptionOnInvalidListClass("ns", "n#",
@@ -552,22 +552,21 @@ public class ClassServiceTest {
 		expectExceptionOnInvalidGetClass("ns.n1", "Class not found: ns.n1");
 		expectExceptionOnInvalidGetClass("ns2.n1", "Class not found: ns2.n1");
 
-		List<Class> allEntities = service.listAll();
-		Assert.assertEquals(2, allEntities.size());
-		Assert.assertEquals(clazz1, allEntities.get(0));
-		Assert.assertEquals(clazz2, allEntities.get(1));
+		List<Class> allClasses = service.listAll();
+		Assert.assertEquals(2, allClasses.size());
+		Assert.assertEquals(clazz1, allClasses.get(0));
+		Assert.assertEquals(clazz2, allClasses.get(1));
 	}
 
 	@Test
 	public void getClassByEmptyNameAndPackage() {
-//		VALIDAR ESSE TESTE COM SINVAL E RODRIGOV
-//		createClass("ns1", "n1");
-//		Class clazz2 = createClass(null, "n2");
-//		expectExceptionOnInvalidGetClass(".n1", "Class not found: n1");
-//
-//		Class foundClass2 = service.readClass(".n2");
-//		Assert.assertEquals(clazz2, foundClass2);
-//		expectExceptionOnInvalidGetClass("ns1.", "Class not found: ns1");
+		createClass("ns1", "n1");
+		Class clazz2 = createClass(null, "n2");
+		expectExceptionOnInvalidGetClass(".n1", "Class not found: n1");
+
+		Class foundClass2 = service.readClass(".n2");
+		Assert.assertEquals(clazz2, foundClass2);
+		expectExceptionOnInvalidGetClass("ns1.", "Class not found: ns1");
 	}
 
 	@Test
@@ -734,26 +733,26 @@ public class ClassServiceTest {
 		return clazz;
 	}
 
-	private void listEntitiesByFragmentOfNamespaceAndNamesAndVerifyThatEntitiesWhereListed(
-			List<Class> expectedListedEntities, String namespaceFragment,
+	private void listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
+			List<Class> expectedListedClasses, String namespaceFragment,
 			String nameFragment) {
 
-		List<Class> allEntities = service
+		List<Class> allClasses = service
 				.listClassesByFragmentOfNameAndPackage(namespaceFragment,
 						nameFragment);
-		Assert.assertEquals(expectedListedEntities.size(), allEntities.size());
+		Assert.assertEquals(expectedListedClasses.size(), allClasses.size());
 		int index = 0;
-		for (Class expected : expectedListedEntities) {
-			Assert.assertEquals(expected, allEntities.get(index));
+		for (Class expected : expectedListedClasses) {
+			Assert.assertEquals(expected, allClasses.get(index));
 			index++;
 		}
 
 	}
 
-	private void expectExceptionOnInvalidGetClass(String fullName,
+	private void expectExceptionOnInvalidGetClass(String classFullName,
 			String expectedMessage) {
 		try {
-			service.readClass(fullName);
+			service.readClass(classFullName);
 			fail();
 		} catch (MetadataException me) {
 			Assert.assertEquals(expectedMessage, me.getMessage());
@@ -869,8 +868,8 @@ public class ClassServiceTest {
 
 		Class clazz1 = service.update(updateClass);
 
-		List<Class> allEntities = service.listAll();
-		Class clazzFound = allEntities.get(0);
+		List<Class> allClasses = service.listAll();
+		Class clazzFound = allClasses.get(0);
 
 		Assert.assertEquals((Integer) 1, clazz1.getVersion());
 		Assert.assertNotSame(clazz, clazzFound);
@@ -878,7 +877,7 @@ public class ClassServiceTest {
 		service.delete(clazz1);
 	}
 
-	private void createAndVerifyTwoEntities(String clazz1namespace,
+	private void createAndVerifyTwoClasses(String clazz1namespace,
 			String clazz1name, String clazz2namespace, String clazz2name) {
 		Class clazz1 = new Class();
 		clazz1.setNamespace(clazz1namespace);
@@ -896,10 +895,10 @@ public class ClassServiceTest {
 		Assert.assertEquals((Integer) 0, clazz1.getVersion());
 		Assert.assertEquals((Integer) 0, clazz2.getVersion());
 
-		List<Class> entities = service.listAll();
-		Assert.assertEquals(2, entities.size());
-		Assert.assertEquals(clazz1, entities.get(0));
-		Assert.assertEquals(clazz2, entities.get(1));
+		List<Class> classes = service.listAll();
+		Assert.assertEquals(2, classes.size());
+		Assert.assertEquals(clazz1, classes.get(0));
+		Assert.assertEquals(clazz2, classes.get(1));
 
 		service.delete(clazz1);
 		service.delete(clazz2);
@@ -925,9 +924,9 @@ public class ClassServiceTest {
 		Assert.assertNotNull(clazz.getId());
 		Assert.assertEquals((Integer) 0, clazz.getVersion());
 
-		List<Class> entities = service.listAll();
-		Assert.assertEquals(1, entities.size());
-		Assert.assertEquals(clazz, entities.get(0));
+		List<Class> classes = service.listAll();
+		Assert.assertEquals(1, classes.size());
+		Assert.assertEquals(clazz, classes.get(0));
 
 		service.delete(clazz);
 	}

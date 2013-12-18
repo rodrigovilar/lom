@@ -15,20 +15,20 @@ public class MemoryClassDao implements ClassDao {
 
 	private List<Class> classes = new ArrayList<Class>();
 
-	public void create(Class entity) {
-		entity.setId(id++);
-		entity.setVersion(0);
+	public void create(Class clazz) {
+		clazz.setId(id++);
+		clazz.setVersion(0);
 
-		// this fixes a interesting bug for update entity
-		Class clone = (Class) SerializationUtils.clone(entity);
+		// this fixes a interesting bug for update class
+		Class clone = (Class) SerializationUtils.clone(clazz);
 		classes.add(clone);
 	}
 
 	public List<Class> listAll() {
 		List<Class> classesReturn = new ArrayList<Class>();
 		
-		for(Class classEach : this.classes){
-			classesReturn.add((Class) SerializationUtils.clone(classEach));
+		for(Class clazz : this.classes){
+			classesReturn.add((Class) SerializationUtils.clone(clazz));
 		}
 		return classesReturn;
 	}
@@ -55,12 +55,12 @@ public class MemoryClassDao implements ClassDao {
 		// throw new MetadataException("Invalid id for Entity " + namespace +
 		// "."
 		// + name);
-		Class entity = new Class();
-		entity.setId(id);
-		entity.setName(name);
-		entity.setNamespace(namespace);
-		entity.setVersion(version);
-		return this.update(entity);
+		Class clazz = new Class();
+		clazz.setId(id);
+		clazz.setName(name);
+		clazz.setNamespace(namespace);
+		clazz.setVersion(version);
+		return this.update(clazz);
 	}
 
 	public Class update(Class clazz) {
@@ -106,9 +106,9 @@ public class MemoryClassDao implements ClassDao {
 		return results;
 	}
 
-	public Class readClassByFullName(String fullClassName) {
+	public Class readClassByFullName(String classFullName) {
 		for (Class classEach : this.classes) {
-			if (fullClassName.equalsIgnoreCase(classEach.getFullName())) {
+			if (classFullName.equalsIgnoreCase(classEach.getFullName())) {
 				return (Class) SerializationUtils.clone(classEach);
 			}
 		}
@@ -119,11 +119,11 @@ public class MemoryClassDao implements ClassDao {
 		// TODO Auto-generated method stub
 	}
 
-	public void delete(Class entity) {
+	public void delete(Class clazz) {
 		for (int i = 0; i < this.classes.size(); i++) {
 			Class e = this.classes.get(i);
-			if (e.getName().equals(entity.getName())
-					&& e.getNamespace().equals(entity.getNamespace())) {
+			if (e.getName().equals(clazz.getName())
+					&& e.getNamespace().equals(clazz.getNamespace())) {
 				this.classes.remove(e);
 			}
 		}

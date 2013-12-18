@@ -102,53 +102,53 @@ public class AttributeServiceTest {
 	}
 
 	@Test
-	public void validateSeveralAttributesInTheSameEntity() {
+	public void validateSeveralAttributesInTheSameClass() {
 		this.createClass("abc", "a");
 		
 		this.createAndVerifyOneAttribute("abc.a", null, "pa", AttributeType.TEXT, "");
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullname("pa", "abc.a").getSequence());
+		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pa", "abc.a").getSequence());
 
 		this.createAndVerifyOneAttribute("abc.a", null, "pb", AttributeType.LONGTEXT, "");		
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullname("pb", "abc.a").getSequence());
+		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pb", "abc.a").getSequence());
 
 		this.createClass("", "b");
 		
 		this.createAndVerifyOneAttribute("b", new Integer(1), "pa", AttributeType.LONGTEXT, "");
 		this.createAndVerifyOneAttribute("b", new Integer(1), "pb",	AttributeType.LONGTEXT, "");
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullname("pa", "b").getSequence());
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullname("pb", "b").getSequence());
+		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pa", "b").getSequence());
+		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pb", "b").getSequence());
 		
 		this.createClass("", "c");
 		
 		this.createAndVerifyOneAttribute("c", new Integer(1), "pa", AttributeType.TEXT, "");
 		this.createAndVerifyOneAttribute("c", new Integer(2), "pb", AttributeType.LONGTEXT, "");
 		this.createAndVerifyOneAttribute("c", new Integer(2), "pc", AttributeType.LONGTEXT, "");
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullname("pa", "c").getSequence());
-		Assert.assertEquals(new Integer(3), this.attributeService.findAttributeByNameAndClassFullname("pb", "c").getSequence());
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullname("pc", "c").getSequence());
+		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pa", "c").getSequence());
+		Assert.assertEquals(new Integer(3), this.attributeService.findAttributeByNameAndClassFullName("pb", "c").getSequence());
+		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pc", "c").getSequence());
 	}
 
-	private void createAndVerifyOneAttribute(String fullClassName,
+	private void createAndVerifyOneAttribute(String classFullName,
 			Integer attributeSequence, String attributeName,
 			AttributeType attributeType, String attributeConfiguration) {
 
-		Attribute attributeCreated = this.createOneAttribute(fullClassName,
+		Attribute createdAttribute = this.createOneAttribute(classFullName,
 				attributeSequence, attributeName, attributeType,
 				attributeConfiguration);
 
-		Assert.assertNotNull(attributeCreated.getId());
-		Assert.assertEquals(new Integer(0), attributeCreated.getVersion());
-		Assert.assertEquals(attributeCreated, this.attributeService
-				.findAttributeById(attributeCreated.getId()));
+		Assert.assertNotNull(createdAttribute.getId());
+		Assert.assertEquals(new Integer(0), createdAttribute.getVersion());
+		Assert.assertEquals(createdAttribute, this.attributeService
+				.findAttributeById(createdAttribute.getId()));
 	}
 
-	private void expectExceptionOnCreateInvalidAttribute(String fullClassName,
+	private void expectExceptionOnCreateInvalidAttribute(String classFullName,
 			Integer attributeSequence, String attributeName,
 			AttributeType attributeType, String attributeConfiguration,
 			String exceptedMessage) {
 
 		try {
-			this.createOneAttribute(fullClassName, attributeSequence,
+			this.createOneAttribute(classFullName, attributeSequence,
 					attributeName, attributeType, attributeConfiguration);
 			fail();
 		} catch (MetadataException metadataException) {
@@ -165,11 +165,11 @@ public class AttributeServiceTest {
 		return clazz;
 	}
 
-	private Attribute createOneAttribute(String fullClassName,
+	private Attribute createOneAttribute(String classFullName,
 			Integer attributeSequence, String attributeName,
 			AttributeType attributeType, String attributeConfiguration) {
 
-		Class clazz = this.classService.readClass(fullClassName);
+		Class clazz = this.classService.readClass(classFullName);
 		Attribute attribute = new Attribute();
 		attribute.setName(attributeName);
 

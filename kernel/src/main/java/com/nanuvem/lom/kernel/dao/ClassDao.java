@@ -21,7 +21,7 @@ public interface ClassDao {
 	List<Class> listClassesByFragmentOfNameAndPackage(
 			String namespaceFragment, String nameFragment);
 
-	Class readClassByFullName(String fullClassName);
+	Class readClassByFullName(String classFullName);
 
 	void delete(String namespaceAndName);
 }

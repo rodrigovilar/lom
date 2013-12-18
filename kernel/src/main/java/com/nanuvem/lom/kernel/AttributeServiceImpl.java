@@ -9,21 +9,22 @@ import com.nanuvem.lom.kernel.dao.DaoFactory;
 
 public class AttributeServiceImpl {
 
-	private ClassDao clazzDao;
 	private AttributeDao attributeDao;
+	
+	private ClassServiceImpl classService;
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
-
+	
 	private final String TRUE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:true}";
 	private final String FALSE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:false}";
-
+	
 	public AttributeServiceImpl(DaoFactory dao) {
-		this.clazzDao = dao.createClassDao();
+		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 	}
 
 	private void validate(Attribute attribute) {
-		Class clazz = clazzDao.findClassById(attribute.getClazz().getId());
+		Class clazz = classService.findClassById(attribute.getClazz().getId());
 		int currentNumberOfAttributes = clazz.getAttributes().size();
 
 		if (attribute.getSequence() != null) {
@@ -75,8 +76,8 @@ public class AttributeServiceImpl {
 		this.attributeDao.create(attribute);
 	}
 
-	public List<Attribute> listAllAttributes(String fullClassName) {
-		return this.attributeDao.listAllAttributes(fullClassName);
+	public List<Attribute> listAllAttributes(String classFullName) {
+		return this.attributeDao.listAllAttributes(classFullName);
 	}
 
 	public Attribute findAttributeById(Long id) {
@@ -87,17 +88,17 @@ public class AttributeServiceImpl {
 		}
 	}
 
-	public Attribute findAttributeByNameAndClassFullname(String nameAttribute,
-			String fullnameClass) {
+	public Attribute findAttributeByNameAndClassFullName(String nameAttribute,
+			String classFullName) {
 
 		if ((nameAttribute != null && !nameAttribute.isEmpty())
-				&& (fullnameClass != null && !fullnameClass.isEmpty())) {
-			if (!fullnameClass.contains(".")) {
-				fullnameClass = "default." + fullnameClass;
+				&& (classFullName != null && !classFullName.isEmpty())) {
+			if (!classFullName.contains(".")) {
+				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME + "." + classFullName;
 			}
 
-			return this.attributeDao.findAttributeByNameAndFullnameClass(
-					nameAttribute, fullnameClass);
+			return this.attributeDao.findAttributeByNameAndClassFullName(
+					nameAttribute, classFullName);
 		}
 		return null;
 	}
