@@ -46,7 +46,7 @@ public class AttributeServiceImpl {
 			throw new MetadataException("The name of a Attribute is mandatory");
 		}
 
-		if (!Pattern.matches("[a-zA-Z1-9]", attribute.getName())) {
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", attribute.getName())) {
 			throw new MetadataException("Invalid value for Attribute name: "
 					+ attribute.getName());
 		}
