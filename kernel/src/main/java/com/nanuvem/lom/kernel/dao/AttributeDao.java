@@ -8,10 +8,10 @@ public interface AttributeDao {
 
 	void create(Attribute attribute);
 
-	List<Attribute> listAllAttributes(String fullClassName);
+	List<Attribute> listAllAttributes(String classFullName);
 
 	Attribute findAttributeById(Long id);
 
-	Attribute findAttributeByNameAndFullnameClass(String nameAttribute,	String fullnameClass);
+	Attribute findAttributeByNameAndClassFullName(String nameAttribute,	String classFullName);
 
 }
