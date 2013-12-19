@@ -4,28 +4,29 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.nanuvem.lom.kernel.dao.AttributeDao;
-import com.nanuvem.lom.kernel.dao.ClassDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 
 public class AttributeServiceImpl {
 
 	private AttributeDao attributeDao;
-	
+
 	private ClassServiceImpl classService;
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
-	
+
 	private final String TRUE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:true}";
 	private final String FALSE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:false}";
-	
+
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 	}
 
 	private void validate(Attribute attribute) {
-		Class clazz = classService.findClassById(attribute.getClazz().getId());
+		Class clazz = classService.findClassByFullName(attribute.getClazz()
+				.getFullName());
 		int currentNumberOfAttributes = clazz.getAttributes().size();
+		this.validateExistingAttributeNotInClass(clazz, attribute);
 
 		if (attribute.getSequence() != null) {
 			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
@@ -71,6 +72,19 @@ public class AttributeServiceImpl {
 
 	}
 
+	private void validateExistingAttributeNotInClass(Class clazz,
+			Attribute attribute) {
+
+		for (Attribute attrib : clazz.getAttributes()) {
+			if (attrib.getName().equalsIgnoreCase(attribute.getName())) {
+				throw new MetadataException("Attribute duplication on "
+						+ clazz.getFullName()
+						+ " Class. It already has an attribute "
+						+ attrib.getName() + ".");
+			}
+		}
+	}
+
 	public void create(Attribute attribute) {
 		this.validate(attribute);
 		this.attributeDao.create(attribute);
@@ -94,7 +108,8 @@ public class AttributeServiceImpl {
 		if ((nameAttribute != null && !nameAttribute.isEmpty())
 				&& (classFullName != null && !classFullName.isEmpty())) {
 			if (!classFullName.contains(".")) {
-				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME + "." + classFullName;
+				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
+						+ "." + classFullName;
 			}
 
 			return this.attributeDao.findAttributeByNameAndClassFullName(

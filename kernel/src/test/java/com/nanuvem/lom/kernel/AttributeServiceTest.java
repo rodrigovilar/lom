@@ -104,28 +104,54 @@ public class AttributeServiceTest {
 	@Test
 	public void validateSeveralAttributesInTheSameClass() {
 		this.createClass("abc", "a");
-		
-		this.createAndVerifyOneAttribute("abc.a", null, "pa", AttributeType.TEXT, "");
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pa", "abc.a").getSequence());
 
-		this.createAndVerifyOneAttribute("abc.a", null, "pb", AttributeType.LONGTEXT, "");		
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pb", "abc.a").getSequence());
+		this.createAndVerifyOneAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "");
+		Assert.assertEquals(new Integer(1), this.attributeService
+				.findAttributeByNameAndClassFullName("pa", "abc.a")
+				.getSequence());
+
+		this.createAndVerifyOneAttribute("abc.a", null, "pb",
+				AttributeType.LONGTEXT, "");
+		Assert.assertEquals(new Integer(2), this.attributeService
+				.findAttributeByNameAndClassFullName("pb", "abc.a")
+				.getSequence());
 
 		this.createClass("", "b");
-		
-		this.createAndVerifyOneAttribute("b", new Integer(1), "pa", AttributeType.LONGTEXT, "");
-		this.createAndVerifyOneAttribute("b", new Integer(1), "pb",	AttributeType.LONGTEXT, "");
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pa", "b").getSequence());
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pb", "b").getSequence());
-		
+
+		this.createAndVerifyOneAttribute("b", new Integer(1), "pa",
+				AttributeType.LONGTEXT, "");
+		this.createAndVerifyOneAttribute("b", new Integer(1), "pb",
+				AttributeType.LONGTEXT, "");
+		Assert.assertEquals(new Integer(2), this.attributeService
+				.findAttributeByNameAndClassFullName("pa", "b").getSequence());
+		Assert.assertEquals(new Integer(1), this.attributeService
+				.findAttributeByNameAndClassFullName("pb", "b").getSequence());
+
 		this.createClass("", "c");
+
+		this.createAndVerifyOneAttribute("c", new Integer(1), "pa",
+				AttributeType.TEXT, "");
+		this.createAndVerifyOneAttribute("c", new Integer(2), "pb",
+				AttributeType.LONGTEXT, "");
+		this.createAndVerifyOneAttribute("c", new Integer(2), "pc",
+				AttributeType.LONGTEXT, "");
+		Assert.assertEquals(new Integer(1), this.attributeService
+				.findAttributeByNameAndClassFullName("pa", "c").getSequence());
+		Assert.assertEquals(new Integer(3), this.attributeService
+				.findAttributeByNameAndClassFullName("pb", "c").getSequence());
+		Assert.assertEquals(new Integer(2), this.attributeService
+				.findAttributeByNameAndClassFullName("pc", "c").getSequence());
+	}
+	@Test
+	public void validateAttributeDuplicationInTheSameClass() {
+		this.createClass("abc", "a");
+		this.createAndVerifyOneAttribute("abc.a", null, "pa", AttributeType.TEXT, "");
 		
-		this.createAndVerifyOneAttribute("c", new Integer(1), "pa", AttributeType.TEXT, "");
-		this.createAndVerifyOneAttribute("c", new Integer(2), "pb", AttributeType.LONGTEXT, "");
-		this.createAndVerifyOneAttribute("c", new Integer(2), "pc", AttributeType.LONGTEXT, "");
-		Assert.assertEquals(new Integer(1), this.attributeService.findAttributeByNameAndClassFullName("pa", "c").getSequence());
-		Assert.assertEquals(new Integer(3), this.attributeService.findAttributeByNameAndClassFullName("pb", "c").getSequence());
-		Assert.assertEquals(new Integer(2), this.attributeService.findAttributeByNameAndClassFullName("pc", "c").getSequence());
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa", AttributeType.LONGTEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pA", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "PA", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");		
 	}
 
 	private void createAndVerifyOneAttribute(String classFullName,
@@ -138,8 +164,7 @@ public class AttributeServiceTest {
 
 		Assert.assertNotNull(createdAttribute.getId());
 		Assert.assertEquals(new Integer(0), createdAttribute.getVersion());
-		Assert.assertEquals(createdAttribute, this.attributeService
-				.findAttributeById(createdAttribute.getId()));
+		Assert.assertEquals(createdAttribute, this.attributeService.findAttributeById(createdAttribute.getId()));
 	}
 
 	private void expectExceptionOnCreateInvalidAttribute(String classFullName,
