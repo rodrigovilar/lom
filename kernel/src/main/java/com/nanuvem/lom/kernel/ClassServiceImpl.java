@@ -140,16 +140,13 @@ public class ClassServiceImpl {
 
 	// Validate name this method
 	private void formatStringAndThrowsExceptionInvalidKeyForClass(String value) {
-
-		String valueAux = value;
-
-		if (valueAux.startsWith(".")) {
-			valueAux = valueAux.substring(1);
+		if (value.startsWith(".")) {
+			value = value.substring(1);
 		}
-		if (valueAux.endsWith(".")) {
-			valueAux = valueAux.substring(0, value.length() - 1);
+		if (value.endsWith(".")) {
+			value = value.substring(0, value.length() - 1);
 		}
-		throw new MetadataException("Invalid key for Class: " + valueAux);
+		throw new MetadataException("Invalid key for Class: " + value);
 
 	}
 
@@ -194,5 +191,9 @@ public class ClassServiceImpl {
 
 	public Class findClassById(Long id) {
 		return this.dao.findClassById(id);
+	}
+
+	public Class findClassByFullName(String classFullName) {
+		return this.dao.readClassByFullName(classFullName);
 	}
 }
