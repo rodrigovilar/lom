@@ -105,7 +105,7 @@ public class ClassServiceImpl {
 			name = classFullName.substring(classFullName.lastIndexOf(".") + 1,
 					classFullName.length());
 		} else {
-			namespace = "default";
+			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
 			name = classFullName;
 		}
 
@@ -119,7 +119,7 @@ public class ClassServiceImpl {
 		}
 
 		if (namespace.isEmpty()) {
-			namespace = "default";
+			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
 		}
 
 		Class classByNamespaceAndName = this.dao.readClassByFullName(namespace
@@ -193,7 +193,5 @@ public class ClassServiceImpl {
 		return this.dao.findClassById(id);
 	}
 
-	public Class findClassByFullName(String classFullName) {
-		return this.dao.readClassByFullName(classFullName);
-	}
+	
 }

@@ -143,15 +143,47 @@ public class AttributeServiceTest {
 		Assert.assertEquals(new Integer(2), this.attributeService
 				.findAttributeByNameAndClassFullName("pc", "c").getSequence());
 	}
+
 	@Test
 	public void validateAttributeDuplicationInTheSameClass() {
 		this.createClass("abc", "a");
-		this.createAndVerifyOneAttribute("abc.a", null, "pa", AttributeType.TEXT, "");
-		
-		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa", AttributeType.LONGTEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
-		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
-		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pA", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");
-		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "PA", AttributeType.TEXT, "", "Attribute duplication on abc.a Class. It already has an attribute pa.");		
+		this.createAndVerifyOneAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "");
+
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa",
+				AttributeType.LONGTEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pA",
+				AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "PA",
+				AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+	}
+
+	@Test
+	public void invalidClass() {
+		this.expectExceptionOnCreateInvalidAttribute("a", null, "abc123",
+				AttributeType.TEXT, "", "Invalid Class: a");
+
+		this.createClass("abc", "a");
+
+		this.expectExceptionOnCreateInvalidAttribute("abca", null, "abc123",
+				AttributeType.TEXT, "", "Invalid Class: abca");
+		this.expectExceptionOnCreateInvalidAttribute("a", null, "abc123",
+				AttributeType.TEXT, "", "Invalid Class: a");
+		this.expectExceptionOnCreateInvalidAttribute("abc.b", null, "abc123",
+				AttributeType.TEXT, "", "Invalid Class: abc.b");
+
+		this.createClass("", "b");
+
+		this.expectExceptionOnCreateInvalidAttribute("a", null, "abc123", null,
+				"", "Invalid Class: a");
+		this.expectExceptionOnCreateInvalidAttribute("abc.b", null, "abc123",
+				null, "", "Invalid Class: abc.b");
 	}
 
 	private void createAndVerifyOneAttribute(String classFullName,
@@ -164,7 +196,8 @@ public class AttributeServiceTest {
 
 		Assert.assertNotNull(createdAttribute.getId());
 		Assert.assertEquals(new Integer(0), createdAttribute.getVersion());
-		Assert.assertEquals(createdAttribute, this.attributeService.findAttributeById(createdAttribute.getId()));
+		Assert.assertEquals(createdAttribute, this.attributeService
+				.findAttributeById(createdAttribute.getId()));
 	}
 
 	private void expectExceptionOnCreateInvalidAttribute(String classFullName,
@@ -194,7 +227,21 @@ public class AttributeServiceTest {
 			Integer attributeSequence, String attributeName,
 			AttributeType attributeType, String attributeConfiguration) {
 
-		Class clazz = this.classService.readClass(classFullName);
+		String namespace = null;
+		String name = null;
+
+		if (classFullName.contains(".")) {
+			namespace = classFullName.substring(0,
+					classFullName.lastIndexOf("."));
+			name = classFullName.substring(classFullName.lastIndexOf(".") + 1,
+					classFullName.length());
+		} else {
+			name = classFullName;
+		}
+
+		Class clazz = new Class();
+		clazz.setNamespace(namespace);
+		clazz.setName(name);
 		Attribute attribute = new Attribute();
 		attribute.setName(attributeName);
 
