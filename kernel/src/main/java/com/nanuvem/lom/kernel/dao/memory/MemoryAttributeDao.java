@@ -23,12 +23,13 @@ public class MemoryAttributeDao implements AttributeDao {
 		attribute.setId(id++);
 		attribute.setVersion(0);
 
-		Class clazz = this.classDao.findClassById(attribute.getClazz().getId());
+		Class clazz = attribute.getClazz();
 		attribute.setClazz(clazz);
-		
+
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
-			if (attribute.getSequence().equals(clazz.getAttributes().get(i).getSequence())) {
+			if (attribute.getSequence().equals(
+					clazz.getAttributes().get(i).getSequence())) {
 				break;
 			}
 		}

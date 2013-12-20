@@ -50,7 +50,11 @@ public class Class implements Serializable {
 	}
 
 	public String getFullName(){
-		return this.getNamespace()+"."+this.getName();
+		String fullName = "";
+		if(this.namespace != null && !this.namespace.isEmpty()){
+			fullName = this.namespace + ".";
+		}
+		return fullName + this.getName();
 	}
 	
 	public List<Attribute> getAttributes() {

@@ -107,9 +107,9 @@ public class MemoryClassDao implements ClassDao {
 	}
 
 	public Class readClassByFullName(String classFullName) {
-		for (Class classEach : this.classes) {
-			if (classFullName.equalsIgnoreCase(classEach.getFullName())) {
-				return (Class) SerializationUtils.clone(classEach);
+		for (Class clazz : this.classes) {
+			if (classFullName.equalsIgnoreCase(clazz.getFullName())) {
+				return (Class) SerializationUtils.clone(clazz);
 			}
 		}
 		return null;

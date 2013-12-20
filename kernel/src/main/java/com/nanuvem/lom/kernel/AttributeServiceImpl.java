@@ -22,9 +22,19 @@ public class AttributeServiceImpl {
 		this.attributeDao = dao.createAttributeDao();
 	}
 
-	private void validate(Attribute attribute) {
-		Class clazz = classService.findClassByFullName(attribute.getClazz()
-				.getFullName());
+	private Attribute validateAndObtainNonTransientProperties(
+			Attribute attribute) {
+
+		// Validate that this is the best way to implement this validation
+		Class clazz = null;
+		try {
+			clazz = classService.readClass(attribute.getClazz().getFullName());
+			attribute.setClazz(clazz);
+		} catch (MetadataException e) {
+			throw new MetadataException("Invalid Class: "
+					+ attribute.getClazz().getFullName());
+		}
+
 		int currentNumberOfAttributes = clazz.getAttributes().size();
 		this.validateExistingAttributeNotInClass(clazz, attribute);
 
@@ -38,9 +48,7 @@ public class AttributeServiceImpl {
 						"Invalid value for Attribute sequence: "
 								+ attribute.getSequence());
 			}
-		}
-
-		if (attribute.getSequence() == null) {
+		} else {
 			attribute.setSequence(currentNumberOfAttributes + 1);
 		}
 
@@ -70,6 +78,7 @@ public class AttributeServiceImpl {
 							+ attribute.getConfiguration());
 		}
 
+		return attribute;
 	}
 
 	private void validateExistingAttributeNotInClass(Class clazz,
@@ -86,7 +95,9 @@ public class AttributeServiceImpl {
 	}
 
 	public void create(Attribute attribute) {
-		this.validate(attribute);
+
+		// Validate modification of the method name
+		attribute = this.validateAndObtainNonTransientProperties(attribute);
 		this.attributeDao.create(attribute);
 	}
 
