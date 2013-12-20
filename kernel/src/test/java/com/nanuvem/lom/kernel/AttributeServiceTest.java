@@ -212,7 +212,6 @@ public class AttributeServiceTest {
 		} catch (MetadataException metadataException) {
 			Assert.assertEquals(exceptedMessage, metadataException.getMessage());
 		}
-
 	}
 
 	private Class createClass(String namespace, String name) {
