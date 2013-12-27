@@ -24,11 +24,11 @@ public class AttributeServiceTest {
 	public void validAttributeData() {
 		this.createClass("abc", "a");
 		this.createAndVerifyOneAttribute("abc.a", 1, "pa", AttributeType.TEXT,
-				"{mandatory:true}");
+				"{\"mandatory\":true}");
 
 		this.createClass("abc", "b");
 		this.createAndVerifyOneAttribute("abc.b", 1, "pe",
-				AttributeType.LONGTEXT, "{mandatory:false}");
+				AttributeType.LONGTEXT, "{\"mandatory\":false}");
 
 		this.createClass("abc", "c");
 		this.createAndVerifyOneAttribute("abc.c", 1, "pa", AttributeType.TEXT,
@@ -43,26 +43,26 @@ public class AttributeServiceTest {
 	public void invalidAttributeData() {
 		this.createClass("abc", "a");
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 0, "pa",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: 0");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", -1, "pa",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: -1");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 2, "pa",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: 2");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"The name of a Attribute is mandatory");
 
 		// It is impossible to make a test case with the AttributeType being
 		// equal to an empty String. Attribute.type is defined as enum
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "pa", null,
-				"{mandatory:true}", "The type of a Attribute is mandatory");
+				"{\"mandatory\":true}", "The type of a Attribute is mandatory");
 
 		// It is impossible to make a test case with the AttributeType being
 		// equal to String "ABC". Attribute.type is defined as enum
@@ -77,27 +77,27 @@ public class AttributeServiceTest {
 		this.createClass("abc", "a");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa$",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa$");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa#",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa#");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa=",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa=");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa'",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa'");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa.a",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa.a");
 
 		this.expectExceptionOnCreateInvalidAttribute("abc.a", 1, "aaa*",
-				AttributeType.TEXT, "{mandatory:true}",
+				AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa*");
 	}
 
@@ -165,7 +165,7 @@ public class AttributeServiceTest {
 	}
 
 	@Test
-	public void invalidClass() {
+	public void a() {
 		this.expectExceptionOnCreateInvalidAttribute("a", null, "abc123",
 				AttributeType.TEXT, "", "Invalid Class: a");
 
@@ -184,6 +184,41 @@ public class AttributeServiceTest {
 				"", "Invalid Class: a");
 		this.expectExceptionOnCreateInvalidAttribute("abc.b", null, "abc123",
 				null, "", "Invalid Class: abc.b");
+	}
+
+	@Test
+	public void validateConfigurationForTextAttributeType() {
+		this.createClass("abc", "a");
+
+		this.createAndVerifyOneAttribute("abc.a", 1, "pa", AttributeType.TEXT,
+				"{\"regex\":\"(\\\\w[-.\\\\w]*\\\\w@\\\\w[-.\\\\w]\\\\w.\\\\w{2,3})\"}");
+
+		this.createAndVerifyOneAttribute("abc.a", 1, "pb", AttributeType.TEXT,
+				"{\"minlength\":10}");
+
+		this.createAndVerifyOneAttribute("abc.a", 1, "pc", AttributeType.TEXT,
+				"{\"minlength\":100}");
+
+		this.createAndVerifyOneAttribute(
+				"abc.a",
+				1,
+				"pd",
+				AttributeType.TEXT,
+				"{\"mandatory\": true, \"regex\": \"(\\\\w[-._\\\\w]\\\\w@\\\\w[-.\\\\w]*\\\\w.\\\\w{2,3})\", \"minlength\": 5,\"maxlength\": 15}");
+
+		this.createAndVerifyOneAttribute("abc.a", 1, "pe", AttributeType.TEXT,
+				"");
+
+		this.createAndVerifyOneAttribute(
+				"abc.a",
+				1,
+				"pf",
+				AttributeType.TEXT,
+				"{\"default\": \"abc@abc.com\",\"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\",\"minlength\": 5,\"maxlength\": 15}");
+
+		this.createAndVerifyOneAttribute("abc.a", 1, "pg", AttributeType.TEXT,
+				"{\"default\":\"abc\"}");
+
 	}
 
 	private void createAndVerifyOneAttribute(String classFullName,

@@ -3,6 +3,9 @@ package com.nanuvem.lom.kernel;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 
@@ -14,15 +17,14 @@ public class AttributeServiceImpl {
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
 
-	private final String TRUE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:true}";
-	private final String FALSE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION = "{mandatory:false}";
-
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 	}
 
 	private void validate(Attribute attribute) {
+		this.validateConfigurationAttribute(attribute.getConfiguration());
+
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
 		this.validateExistingAttributeNotInClass(attribute.getClazz(),
@@ -54,18 +56,20 @@ public class AttributeServiceImpl {
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
+	}
 
-		boolean isValueValidForConfiguration = !(attribute.getConfiguration() == null
-				|| attribute.getConfiguration().isEmpty()
-				|| (attribute.getConfiguration()
-						.equals(TRUE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION)) || (attribute
-				.getConfiguration()
-				.equals(FALSE_VALUE_FOR_THE_ATTRIBUTE_CONFIGURATION)));
+	private void validateConfigurationAttribute(String configuration) {
+		if (configuration != null && !configuration.isEmpty()) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonFactory factory = objectMapper.getJsonFactory();
 
-		if (isValueValidForConfiguration) {
-			throw new MetadataException(
-					"Invalid value for Attribute configuration: "
-							+ attribute.getConfiguration());
+			try {
+				objectMapper.readTree(factory.createJsonParser(configuration));
+			} catch (Exception e) {
+				throw new MetadataException(
+						"Invalid value for Attribute configuration: "
+								+ configuration);
+			}
 		}
 	}
 
