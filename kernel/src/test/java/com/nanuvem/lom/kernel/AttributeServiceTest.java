@@ -165,7 +165,7 @@ public class AttributeServiceTest {
 	}
 
 	@Test
-	public void a() {
+	public void invalidClass() {
 		this.expectExceptionOnCreateInvalidAttribute("a", null, "abc123",
 				AttributeType.TEXT, "", "Invalid Class: a");
 
