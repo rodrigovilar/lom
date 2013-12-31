@@ -221,6 +221,107 @@ public class AttributeServiceTest {
 
 	}
 
+	@Test
+	public void invalidConfigurationForTextAttributeType() {
+		this.createClass("abc", "a");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"mandatory\":10}",
+				"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"mandatory\":\"true\"}",
+				"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
+
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "{\"default\":10}",
+				"Invalid configuration for attribute pa: the default value must be a string");
+
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "{\"regex\":10}",
+				"Invalid configuration for attribute pa: the regex value must be a string");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"minlength\":\"abc\"}",
+				"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"minlength\":10.0}",
+				"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"maxlength\":\"abc\"}",
+				"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"maxlength\":10.0}",
+				"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"default\":\"abc\", \"regex\":\"(\\\\w[-.\\\\w]*\\\\w@\\\\w[-.\\\\w]*\\\\w.\\\\w{2,3})\"}",
+				"Invalid configuration for attribute pa: the default value does not match regex configuration");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"default\":\"abc\", \"minlength\":5}",
+				"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+		this.expectExceptionOnCreateInvalidAttribute(
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"default\":\"abcabc\", \"maxlength\":5}",
+				"Invalid configuration for attribute pa: the default value is greater than maxlength");
+
+		this.expectExceptionOnCreateInvalidAttribute("abc.a", null, "pa",
+				AttributeType.TEXT, "{\"minlength\":50, \"maxlength\":10}",
+				"Invalid configuration for attribute pa: minlength is greater than maxlength");
+
+		// I think the message that validation should be 'Invalid configuration
+		// for pa attribute: the default value is smaller than minlength "as
+		// specified in a previous validations
+
+		// this.expectExceptionOnCreateInvalidAttribute(
+		// "abc.a",
+		// null,
+		// "pa",
+		// AttributeType.TEXT,
+		// "{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
+		// "Invalid configuration for attribute pa: the default value is lower than minlength");
+	}
+
 	private void createAndVerifyOneAttribute(String classFullName,
 			Integer attributeSequence, String attributeName,
 			AttributeType attributeType, String attributeConfiguration) {
