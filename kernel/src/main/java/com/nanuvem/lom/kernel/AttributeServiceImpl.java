@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.nanuvem.lom.kernel.dao.AttributeDao;
@@ -16,6 +17,12 @@ public class AttributeServiceImpl {
 	private ClassServiceImpl classService;
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
+	
+	private final String MANDATORY_CONFIGURATION_NAME = "mandatory";
+	private final String DEFAULT_CONFIGURATION_NAME = "default";
+	private final String REGEX_CONFIGURATION_NAME = "regex";
+	private final String MINLENGTH_CONFIGURATION_NAME = "minlength";
+	private final String MAXLENGTH_CONFIGURATION_NAME = "maxlength";
 
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
@@ -23,7 +30,7 @@ public class AttributeServiceImpl {
 	}
 
 	private void validate(Attribute attribute) {
-		this.validateConfigurationAttribute(attribute.getConfiguration());
+		this.validateConfigurationAttribute(attribute);
 
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
@@ -58,18 +65,115 @@ public class AttributeServiceImpl {
 		}
 	}
 
-	private void validateConfigurationAttribute(String configuration) {
-		if (configuration != null && !configuration.isEmpty()) {
+	private void validateConfigurationAttribute(Attribute attribute) {
+		if (attribute.getConfiguration() != null
+				&& !attribute.getConfiguration().isEmpty()) {
+
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonFactory factory = objectMapper.getJsonFactory();
+			JsonNode jsonNode = null;
 
 			try {
-				objectMapper.readTree(factory.createJsonParser(configuration));
+				jsonNode = objectMapper.readTree(factory
+						.createJsonParser(attribute.getConfiguration()));
 			} catch (Exception e) {
 				throw new MetadataException(
 						"Invalid value for Attribute configuration: "
-								+ configuration);
+								+ attribute.getConfiguration());
 			}
+
+			if (jsonNode.has(MANDATORY_CONFIGURATION_NAME)) {
+				this.validateConfigurationAndTypeOfConfiguration(
+						attribute.getName(), MANDATORY_CONFIGURATION_NAME,
+						jsonNode.get(MANDATORY_CONFIGURATION_NAME).isBoolean(),
+						"true or false literals");
+			}
+
+			if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
+				this.validateConfigurationAndTypeOfConfiguration(attribute
+						.getName(), DEFAULT_CONFIGURATION_NAME, jsonNode.get(DEFAULT_CONFIGURATION_NAME)
+						.isTextual(), "a string");
+			}
+
+			if (jsonNode.has(REGEX_CONFIGURATION_NAME)) {
+				this.validateConfigurationAndTypeOfConfiguration(attribute
+						.getName(), REGEX_CONFIGURATION_NAME, jsonNode.get(REGEX_CONFIGURATION_NAME).isTextual(),
+						"a string");
+
+				String regexValue = jsonNode.get(REGEX_CONFIGURATION_NAME).asText();
+				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
+					String defaultValue = jsonNode.get(DEFAULT_CONFIGURATION_NAME).asText();
+					if (!defaultValue.matches(regexValue)) {
+						throw new MetadataException(
+								"Invalid configuration for attribute "
+										+ attribute.getName()
+										+ ": the default value does not match regex configuration");
+					}
+				}
+			}
+
+			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME)) {
+				this.validateConfigurationAndTypeOfConfiguration(
+						attribute.getName(), MINLENGTH_CONFIGURATION_NAME,
+						jsonNode.get(MINLENGTH_CONFIGURATION_NAME).isIntegralNumber(),
+						"an integer number");
+
+				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
+					int minLengthValue = jsonNode.get(MINLENGTH_CONFIGURATION_NAME)
+							.getIntValue();
+					String defaultValue = jsonNode.get(DEFAULT_CONFIGURATION_NAME).asText();
+
+					if (defaultValue.length() < minLengthValue) {
+						throw new MetadataException(
+								"Invalid configuration for attribute "
+										+ attribute.getName()
+										+ ": the default value is smaller than minlength");
+					}
+				}
+			}
+
+			if (jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
+				this.validateConfigurationAndTypeOfConfiguration(
+						attribute.getName(), MAXLENGTH_CONFIGURATION_NAME,
+						jsonNode.get(MAXLENGTH_CONFIGURATION_NAME).isIntegralNumber(),
+						"an integer number");
+
+				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
+					int maxLengthValue = jsonNode.get(MAXLENGTH_CONFIGURATION_NAME)
+							.getIntValue();
+					String defaultValue = jsonNode.get(DEFAULT_CONFIGURATION_NAME).asText();
+
+					if (defaultValue.length() > maxLengthValue) {
+						throw new MetadataException(
+								"Invalid configuration for attribute "
+										+ attribute.getName()
+										+ ": the default value is greater than maxlength");
+					}
+				}
+			}
+
+			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME) && jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
+				int minLengthValue = jsonNode.get(MINLENGTH_CONFIGURATION_NAME).getIntValue();
+				int maxLengthValue = jsonNode.get(MAXLENGTH_CONFIGURATION_NAME).getIntValue();
+
+				if (minLengthValue > maxLengthValue) {
+					throw new MetadataException(
+							"Invalid configuration for attribute "
+									+ attribute.getName()
+									+ ": minlength is greater than maxlength");
+				}
+			}
+		}
+	}
+
+	private void validateConfigurationAndTypeOfConfiguration(
+			String attributeName, String configurationName, boolean validation,
+			String suffixExceptionMessage) {
+
+		if (!validation) {
+			throw new MetadataException("Invalid configuration for attribute "
+					+ attributeName + ": the " + configurationName
+					+ " value must be " + suffixExceptionMessage);
 		}
 	}
 
