@@ -261,4 +261,8 @@ public class AttributeServiceImpl {
 		}
 		return null;
 	}
+
+	public Attribute update(Attribute attribute) {
+		return null;
+	}
 }
