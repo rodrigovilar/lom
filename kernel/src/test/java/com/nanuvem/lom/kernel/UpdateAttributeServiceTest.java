@@ -118,6 +118,58 @@ public class UpdateAttributeServiceTest {
 				"Can not change the type of an attribute");
 	}
 
+	@Test
+	public void renamingConflicts() {
+		ClassHelper.createClass(classService, "abc", "a");
+		ClassHelper.createClass(classService, "abc", "b");
+
+		createOneAttribute(attributeService, "abc.a", null, "pa", TEXT, null);
+		
+		Attribute createdAttribute2 = createOneAttribute(attributeService,
+				"abc.b", null, "pb", TEXT, null);
+		Attribute createdAttribute3 = createOneAttribute(attributeService,
+				"abc.a", null, "pc", TEXT, null);
+
+		Attribute updatedAttribute2 = updateAttribute(attributeService,
+				"abc.b", createdAttribute2, 1, "pa", TEXT, null);
+		verifyUpdatedAttribute(createdAttribute2, updatedAttribute2);
+
+		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a",
+				createdAttribute3, 1, "pa", TEXT, null,
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+
+		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a",
+				createdAttribute3, 1, "pA", TEXT, null,
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+
+		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a",
+				createdAttribute3, 1, "PA", TEXT, null,
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+	}
+
+	@Test
+	public void genericChangeConfiguration() {
+		ClassHelper.createClass(classService, "abc", "a");
+		
+		Attribute createdAttribute1 = createOneAttribute(attributeService,
+				"abc.a", null, "pa", TEXT, "{\"mandatory\":true}");
+
+		Attribute createdAttribute2 = createOneAttribute(attributeService,
+				"abc.a", null, "pb", TEXT, null);
+
+		Attribute updatedAttribute11 = updateAttribute(attributeService,
+				"abc.a", createdAttribute1, 1, "pa", TEXT, "{\"mandatory\":false}");
+		verifyUpdatedAttribute(createdAttribute1, updatedAttribute11);
+
+		Attribute updatedAttribute12 = updateAttribute(attributeService,
+				"abc.a", updatedAttribute11, 1, "pa", TEXT, null);
+		verifyUpdatedAttribute(createdAttribute1, updatedAttribute12);
+
+		Attribute updatedAttribute2 = updateAttribute(attributeService,
+				"abc.a", createdAttribute2, 2, "pb", TEXT, "{\"mandatory\":true}");
+		verifyUpdatedAttribute(createdAttribute2, updatedAttribute2);
+	}
+
 	private void expectExceptionOnUpdateWithInvalidNewName(
 			Attribute createdAttribute, String invalidNewName,
 			String exceptedMessage) {
