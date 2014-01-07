@@ -1,12 +1,16 @@
 package com.nanuvem.lom.kernel;
 
+import static com.nanuvem.lom.kernel.AttributeHelper.LONGTEXT;
+import static com.nanuvem.lom.kernel.AttributeHelper.TEXT;
+import static com.nanuvem.lom.kernel.AttributeHelper.createOneAttribute;
+import static com.nanuvem.lom.kernel.AttributeHelper.expectExceptionOnUpdateInvalidAttribute;
+import static com.nanuvem.lom.kernel.AttributeHelper.updateAttribute;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
-
-import static com.nanuvem.lom.kernel.AttributeHelper.*;
 
 public class UpdateAttributeServiceTest {
 

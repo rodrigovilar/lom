@@ -4,19 +4,18 @@ import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
 
-public class StringAttributeConfigurationValidator extends
-		AttributeTypeConfigurationValidator {
-	
+public class IntegerAttributeConfigurationValidator extends	AttributeTypeConfigurationValidator {
 
-	public StringAttributeConfigurationValidator(String field){
-		super(field, "a string");
+	public IntegerAttributeConfigurationValidator(String field) {
+		super(field, "an integer number");
 	}
 
 	@Override
 	public boolean validate(Attribute attribute, JsonNode configuration) {
 		if (configuration.has(super.field)) {
-			return configuration.get(field).isTextual();
+			return configuration.get(field).isIntegralNumber();
 		}
 		return true;
 	}
+
 }

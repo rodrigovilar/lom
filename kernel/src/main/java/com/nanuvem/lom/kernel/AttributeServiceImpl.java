@@ -12,6 +12,9 @@ import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinimumLengthAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.RegexAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.StringAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
@@ -36,14 +39,19 @@ public class AttributeServiceImpl {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 
-		validators.add(new BooleanAttributeConfigurationValidator(
+		this.validators.add(new BooleanAttributeConfigurationValidator(
 				MANDATORY_CONFIGURATION_NAME));
-		
-		validators.add(new StringAttributeConfigurationValidator(
+		this.validators.add(new StringAttributeConfigurationValidator(
 				DEFAULT_CONFIGURATION_NAME));
-		
-		validators.add(new RegexAttributeConfigurationValidator(
+		this.validators.add(new RegexAttributeConfigurationValidator(
 				REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		this.validators.add(new MinimumLengthAttributeConfigurationValidator(
+				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		this.validators.add(new MaximumLengthAttributeConfigurationValidator(
+				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		this.validators.add(new MinAndMaxConfigurationValidator(
+				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
+
 	}
 
 	private void validate(Attribute attribute) {
@@ -86,20 +94,7 @@ public class AttributeServiceImpl {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			JsonNode jsonNode = null;
-
-			try {
-				jsonNode = objectMapper.readTree(factory
-						.createJsonParser(configuration));
-			} catch (Exception e) {
-				throw new MetadataException(
-						"Invalid value for Attribute configuration: "
-								+ configuration);
-			}
-
-			String attributeName = attribute.getName();
+			JsonNode jsonNode = validateJson(configuration);
 			List<ValidationError> errors = new ArrayList<ValidationError>();
 			for (AttributeConfigurationValidator validator : this.validators) {
 				validator.validate(errors, attribute, jsonNode);
@@ -113,94 +108,22 @@ public class AttributeServiceImpl {
 				throw new MetadataException(errorMessage);
 			}
 
-			// if (jsonNode.has(REGEX_CONFIGURATION_NAME)) {
-			// this.validateConfigurationAndTypeOfConfiguration(attributeName,
-			// REGEX_CONFIGURATION_NAME,
-			// jsonNode.get(REGEX_CONFIGURATION_NAME).isTextual(),
-			// "a string");
-			//
-			// String regexValue = jsonNode.get(REGEX_CONFIGURATION_NAME)
-			// .asText();
-			// if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-			// String defaultValue = jsonNode.get(
-			// DEFAULT_CONFIGURATION_NAME).asText();
-			// if (!defaultValue.matches(regexValue)) {
-			// throw new MetadataException(
-			// "Invalid configuration for attribute "
-			// + attributeName
-			// + ": the default value does not match regex configuration");
-			// }
-			// }
-			// }
-
-			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME)) {
-				this.validateConfigurationAndTypeOfConfiguration(attributeName,
-						MINLENGTH_CONFIGURATION_NAME,
-						jsonNode.get(MINLENGTH_CONFIGURATION_NAME)
-								.isIntegralNumber(), "an integer number");
-
-				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-					int minLengthValue = jsonNode.get(
-							MINLENGTH_CONFIGURATION_NAME).getIntValue();
-					String defaultValue = jsonNode.get(
-							DEFAULT_CONFIGURATION_NAME).asText();
-
-					if (defaultValue.length() < minLengthValue) {
-						throw new MetadataException(
-								"Invalid configuration for attribute "
-										+ attributeName
-										+ ": the default value is smaller than minlength");
-					}
-				}
-			}
-
-			if (jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
-				this.validateConfigurationAndTypeOfConfiguration(attributeName,
-						MAXLENGTH_CONFIGURATION_NAME,
-						jsonNode.get(MAXLENGTH_CONFIGURATION_NAME)
-								.isIntegralNumber(), "an integer number");
-
-				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-					int maxLengthValue = jsonNode.get(
-							MAXLENGTH_CONFIGURATION_NAME).getIntValue();
-					String defaultValue = jsonNode.get(
-							DEFAULT_CONFIGURATION_NAME).asText();
-
-					if (defaultValue.length() > maxLengthValue) {
-						throw new MetadataException(
-								"Invalid configuration for attribute "
-										+ attributeName
-										+ ": the default value is greater than maxlength");
-					}
-				}
-			}
-
-			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME)
-					&& jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
-				int minLengthValue = jsonNode.get(MINLENGTH_CONFIGURATION_NAME)
-						.getIntValue();
-				int maxLengthValue = jsonNode.get(MAXLENGTH_CONFIGURATION_NAME)
-						.getIntValue();
-
-				if (minLengthValue > maxLengthValue) {
-					throw new MetadataException(
-							"Invalid configuration for attribute "
-									+ attributeName
-									+ ": minlength is greater than maxlength");
-				}
-			}
 		}
 	}
 
-	private void validateConfigurationAndTypeOfConfiguration(
-			String attributeName, String configurationName, boolean validation,
-			String suffixExceptionMessage) {
-
-		if (!validation) {
-			throw new MetadataException("Invalid configuration for attribute "
-					+ attributeName + ": the " + configurationName
-					+ " value must be " + suffixExceptionMessage);
+	public JsonNode validateJson(String configuration) {
+		JsonNode jsonNode = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonFactory factory = objectMapper.getJsonFactory();
+			jsonNode = objectMapper.readTree(factory
+					.createJsonParser(configuration));
+		} catch (Exception e) {
+			throw new MetadataException(
+					"Invalid value for Attribute configuration: "
+							+ configuration);
 		}
+		return jsonNode;
 	}
 
 	private Class validateExistingClassForAttribute(Attribute attribute) {

@@ -6,23 +6,27 @@ import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
 
-public abstract class AttributeConfigurationValidatorWithDefault extends
-		StringAttributeConfigurationValidator {
+public abstract class AttributeConfigurationValidatorWithDefault implements
+		AttributeConfigurationValidator {
 
+	protected AttributeConfigurationValidator validator;
 	protected String defaultField;
+	protected String field;
 
 	public AttributeConfigurationValidatorWithDefault(String field,
 			String defaultField) {
-		super(field);
-
+		this.field = field;
 		this.defaultField = defaultField;
+		this.validator = createFieldValidator(field);
 	}
+
+	protected abstract AttributeConfigurationValidator createFieldValidator(
+			String field);
 
 	public void validate(List<ValidationError> errors, Attribute attribute,
 			JsonNode configuration) {
 
-		super.validate(errors, attribute, configuration);
-
+		this.validator.validate(errors, attribute, configuration);
 		if (configuration.has(field)) {
 			if (configuration.has(defaultField)) {
 				String defaultValue = configuration.get(defaultField).asText();
