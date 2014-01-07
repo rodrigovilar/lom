@@ -1,7 +1,9 @@
 package com.nanuvem.lom.kernel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonFactory;
@@ -33,30 +35,34 @@ public class AttributeServiceImpl {
 	private final String MINLENGTH_CONFIGURATION_NAME = "minlength";
 	private final String MAXLENGTH_CONFIGURATION_NAME = "maxlength";
 
-	private List<AttributeConfigurationValidator> validators = new ArrayList<AttributeConfigurationValidator>();
+	private Map<String, List<AttributeConfigurationValidator>> validators = new HashMap<String, List<AttributeConfigurationValidator>>();
 
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 
-		this.validators.add(new BooleanAttributeConfigurationValidator(
+		List<AttributeConfigurationValidator> textValidators = new ArrayList<AttributeConfigurationValidator>();
+		this.validators.put("TEXT", textValidators);
+		
+		List<AttributeConfigurationValidator> longTextValidators = new ArrayList<AttributeConfigurationValidator>();
+		this.validators.put("LONGTEXT", longTextValidators);
+
+		textValidators.add(new BooleanAttributeConfigurationValidator(
 				MANDATORY_CONFIGURATION_NAME));
-		this.validators.add(new StringAttributeConfigurationValidator(
+		textValidators.add(new StringAttributeConfigurationValidator(
 				DEFAULT_CONFIGURATION_NAME));
-		this.validators.add(new RegexAttributeConfigurationValidator(
+		textValidators.add(new RegexAttributeConfigurationValidator(
 				REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		this.validators.add(new MinimumLengthAttributeConfigurationValidator(
+		textValidators.add(new MinimumLengthAttributeConfigurationValidator(
 				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		this.validators.add(new MaximumLengthAttributeConfigurationValidator(
+		textValidators.add(new MaximumLengthAttributeConfigurationValidator(
 				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		this.validators.add(new MinAndMaxConfigurationValidator(
+		textValidators.add(new MinAndMaxConfigurationValidator(
 				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
 
 	}
 
 	private void validate(Attribute attribute) {
-		this.validateConfigurationAttribute(attribute);
-
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
 		this.validateExistingAttributeNotInClass(attribute.getClazz(),
@@ -88,6 +94,8 @@ public class AttributeServiceImpl {
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
+		
+		this.validateConfigurationAttribute(attribute);
 	}
 
 	private void validateConfigurationAttribute(Attribute attribute) {
@@ -96,7 +104,9 @@ public class AttributeServiceImpl {
 
 			JsonNode jsonNode = validateJson(configuration);
 			List<ValidationError> errors = new ArrayList<ValidationError>();
-			for (AttributeConfigurationValidator validator : this.validators) {
+			List<AttributeConfigurationValidator> attributeValidators = this.validators
+					.get(attribute.getType().toString());
+			for (AttributeConfigurationValidator validator : attributeValidators) {
 				validator.validate(errors, attribute, jsonNode);
 			}
 
