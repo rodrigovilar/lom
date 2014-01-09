@@ -1,7 +1,7 @@
 (function() {
 
   $(function() {
-    return alert("Deu certo!");
+    return $.getScript('rest/widget/root', function(data, textStatus, jqxhr) {});
   });
 
 }).call(this);
