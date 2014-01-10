@@ -7,13 +7,16 @@ LOM.emptyPage = ->
     body.append page
     page
 
-LOM.loadScript = (url) ->
-    $.getScript url, (data, textStatus, jqxhr) ->   
+LOM.loadScript = (url, conf) ->
+    $.get url, (data, textStatus, jqxhr) ->
+        x = eval data
+        x.init conf
+    , "text"
 
 LOM.getJSON = (url, callback) ->
     $.getJSON url, (jsonObj) =>
         callback(jsonObj)
 
 $ -> 
-    LOM.loadScript 'rest/widget/root'
+    LOM.loadScript 'rest/widget/root', {}
     

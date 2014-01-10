@@ -11,8 +11,12 @@
     return page;
   };
 
-  LOM.loadScript = function(url) {
-    return $.getScript(url, function(data, textStatus, jqxhr) {});
+  LOM.loadScript = function(url, conf) {
+    return $.get(url, function(data, textStatus, jqxhr) {
+      var x;
+      x = eval(data);
+      return x.init(conf);
+    }, "text");
   };
 
   LOM.getJSON = function(url, callback) {
@@ -23,7 +27,7 @@
   };
 
   $(function() {
-    return LOM.loadScript('rest/widget/root');
+    return LOM.loadScript('rest/widget/root', {});
   });
 
 }).call(this);

@@ -1,5 +1,6 @@
 class UlRootWidget
-    constructor: ->
+
+    init: (conf) ->
         @page = LOM.emptyPage()
         LOM.getJSON 'rest/data/class', (jsonObj) =>
             @drawList(jsonObj)
@@ -14,9 +15,7 @@ class UlRootWidget
         li = $("<li>" + clazz.name + "</li>")
         ul.append li
         li.click => 
-            alert "Loading widget for #{clazz.name}"
-###        
-            LOM.loadScript 'rest/widget/clazz/'+ clazz.fullName   
-###
+            LOM.loadScript 'rest/widget/class/'+ clazz.fullName,
+                classFullName: clazz.fullName
 
-new UlRootWidget
+return new UlRootWidget

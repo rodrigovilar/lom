@@ -3,13 +3,15 @@
 
   UlRootWidget = (function() {
 
-    function UlRootWidget() {
+    function UlRootWidget() {}
+
+    UlRootWidget.prototype.init = function(conf) {
       var _this = this;
       this.page = LOM.emptyPage();
-      LOM.getJSON('rest/data/class', function(jsonObj) {
+      return LOM.getJSON('rest/data/class', function(jsonObj) {
         return _this.drawList(jsonObj);
       });
-    }
+    };
 
     UlRootWidget.prototype.drawList = function(jsonObj) {
       var ul,
@@ -27,7 +29,9 @@
       li = $("<li>" + clazz.name + "</li>");
       ul.append(li);
       return li.click(function() {
-        return alert("Loading widget for " + clazz.name);
+        return LOM.loadScript('rest/widget/class/' + clazz.fullName, {
+          classFullName: clazz.fullName
+        });
       });
     };
 
@@ -35,11 +39,6 @@
 
   })();
 
-  /*        
-              LOM.loadScript 'rest/widget/clazz/'+ clazz.fullName
-  */
-
-
-  new UlRootWidget;
+  return new UlRootWidget;
 
 }).call(this);
