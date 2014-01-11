@@ -27,6 +27,7 @@
       var li,
         _this = this;
       li = $("<li>" + clazz.name + "</li>");
+      li.attr("id", "class_" + clazz.fullName);
       ul.append(li);
       return li.click(function() {
         return LOM.loadScript('rest/widget/class/' + clazz.fullName, {

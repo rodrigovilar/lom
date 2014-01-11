@@ -12,7 +12,8 @@ class UlRootWidget
             @drawLine(ul, clazz)
 
     drawLine: (ul, clazz) ->
-        li = $("<li>" + clazz.name + "</li>")
+        li = $("<li>#{clazz.name}</li>")
+        li.attr "id", "class_" + clazz.fullName
         ul.append li
         li.click => 
             LOM.loadScript 'rest/widget/class/'+ clazz.fullName,
