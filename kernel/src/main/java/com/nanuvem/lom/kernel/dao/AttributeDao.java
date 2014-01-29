@@ -14,4 +14,6 @@ public interface AttributeDao {
 
 	Attribute findAttributeByNameAndClassFullName(String nameAttribute,	String classFullName);
 
+	Attribute update(Attribute attribute);
+
 }

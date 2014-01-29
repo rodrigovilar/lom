@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
 
-public class AttributeServiceTest {
+public class CreateAttributeServiceTest {
 
 	private ClassServiceImpl classService;
 	private AttributeServiceImpl attributeService;

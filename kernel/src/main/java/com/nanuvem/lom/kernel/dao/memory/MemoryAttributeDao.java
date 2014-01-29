@@ -93,4 +93,26 @@ public class MemoryAttributeDao implements AttributeDao {
 		}
 		return null;
 	}
+
+	public Attribute update(Attribute attribute) {
+		Class clazz = this.classDao.readClassByFullName(attribute.getClazz().getFullName());
+		
+		Attribute attributeInClass = null;
+		for (int i = 0; i < clazz.getAttributes().size(); i++) {
+			if (attribute.getId().equals(clazz.getAttributes().get(i).getId())) {
+				
+				Attribute attributeClonable = (Attribute) SerializationUtils.clone(attribute);
+
+				attributeInClass = clazz.getAttributes().get(i);
+				attributeInClass.setClazz(clazz);
+				attributeInClass.setName(attributeClonable.getName());
+				attributeInClass.setType(attributeClonable.getType());
+				attributeInClass.setVersion(attributeInClass.getVersion() + 1);
+				this.classDao.update(clazz);
+				break;
+			}
+		}
+		return (Attribute) SerializationUtils.clone(attributeInClass);
+
+	}
 }

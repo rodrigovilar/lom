@@ -43,7 +43,7 @@ public class AttributeServiceImpl {
 
 		List<AttributeConfigurationValidator> textValidators = new ArrayList<AttributeConfigurationValidator>();
 		this.validators.put("TEXT", textValidators);
-		
+
 		List<AttributeConfigurationValidator> longTextValidators = new ArrayList<AttributeConfigurationValidator>();
 		this.validators.put("LONGTEXT", longTextValidators);
 
@@ -86,16 +86,24 @@ public class AttributeServiceImpl {
 			throw new MetadataException("The name of a Attribute is mandatory");
 		}
 
-		if (!Pattern.matches("[a-zA-Z1-9]{1,}", attribute.getName())) {
-			throw new MetadataException("Invalid value for Attribute name: "
-					+ attribute.getName());
-		}
+		this.validateNameAttribute(attribute);
 
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
-		
+
 		this.validateConfigurationAttribute(attribute);
+	}
+
+	private void validateNameAttribute(Attribute attribute) {
+		if (attribute.getName() == null || attribute.getName().isEmpty()) {
+			throw new MetadataException("The name of an Attribute is mandatory");
+		}
+
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", attribute.getName())) {
+			throw new MetadataException("Invalid value for Attribute name: "
+					+ attribute.getName());
+		}
 	}
 
 	private void validateConfigurationAttribute(Attribute attribute) {
@@ -196,6 +204,7 @@ public class AttributeServiceImpl {
 	}
 
 	public Attribute update(Attribute attribute) {
-		return null;
+		this.validateNameAttribute(attribute);
+		return this.attributeDao.update(attribute);
 	}
 }
