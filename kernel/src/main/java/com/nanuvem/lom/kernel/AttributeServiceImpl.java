@@ -63,11 +63,10 @@ public class AttributeServiceImpl {
 	}
 
 	private void validate(Attribute attribute) {
-		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
-				.size();
 		this.validateExistingAttributeNotInClass(attribute.getClazz(),
 				attribute);
-
+		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
+				.size();
 		if (attribute.getSequence() != null) {
 			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
 			boolean maxValueForSequence = currentNumberOfAttributes + 1 < attribute
@@ -205,6 +204,28 @@ public class AttributeServiceImpl {
 
 	public Attribute update(Attribute attribute) {
 		this.validateNameAttribute(attribute);
+		this.validateUpdateSequence(attribute);
+
 		return this.attributeDao.update(attribute);
+	}
+
+	private void validateUpdateSequence(Attribute attribute) {
+		Class clazz = this.classService.readClass(attribute.getClazz()
+				.getFullName());
+		int currentNumberOfAttributes = clazz.getAttributes()
+				.get(clazz.getAttributes().size() - 1).getSequence();
+
+		if (attribute.getSequence() != null) {
+			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
+			boolean maxValueForSequence = currentNumberOfAttributes < attribute
+					.getSequence();
+
+			if (!(minValueForSequence || maxValueForSequence)) {
+				return;
+			}
+		}
+
+		throw new MetadataException("Invalid value for Attribute sequence: "
+				+ attribute.getSequence());
 	}
 }
