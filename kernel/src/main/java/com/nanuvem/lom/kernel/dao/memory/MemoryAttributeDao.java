@@ -26,6 +26,11 @@ public class MemoryAttributeDao implements AttributeDao {
 		Class clazz = attribute.getClazz();
 		attribute.setClazz(clazz);
 
+		this.shiftSequence(attribute, clazz);
+		this.classDao.update(clazz);
+	}
+
+	private void shiftSequence(Attribute attribute, Class clazz) {
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
 			if (attribute.getSequence().equals(
@@ -38,7 +43,11 @@ public class MemoryAttributeDao implements AttributeDao {
 		if (i == 0) {
 			clazz.getAttributes().add(i, attribute);
 		} else {
-			clazz.getAttributes().add(i - 1, attribute);
+			if (attribute.getSequence().equals(new Integer(1))) {
+				clazz.getAttributes().add(0, attribute);
+			} else {
+				clazz.getAttributes().add(i - 1, attribute);
+			}
 		}
 
 		for (; i < clazz.getAttributes().size(); i++) {
@@ -54,7 +63,6 @@ public class MemoryAttributeDao implements AttributeDao {
 				attributeNext.setSequence(attributeNext.getSequence() + 1);
 			}
 		}
-		this.classDao.update(clazz);
 	}
 
 	public List<Attribute> listAllAttributes(String classFullName) {
@@ -92,5 +100,52 @@ public class MemoryAttributeDao implements AttributeDao {
 			}
 		}
 		return null;
+	}
+
+	public Attribute update(Attribute attribute) {
+		Class clazz = this.classDao.readClassByFullName(attribute.getClazz()
+				.getFullName());
+
+		Attribute attributeInClass = null;
+		boolean modificarSequence = false;
+
+		for (int i = 0; i < clazz.getAttributes().size(); i++) {
+			if (attribute.getId().equals(clazz.getAttributes().get(i).getId())) {
+				attributeInClass = clazz.getAttributes().get(i);
+
+				if (!attribute.getSequence().equals(
+						attributeInClass.getSequence())) {
+					modificarSequence = true;
+				}
+
+				Attribute attributeClonable = (Attribute) SerializationUtils
+						.clone(attribute);
+				attributeInClass.setClazz(clazz);
+				attributeInClass.setName(attributeClonable.getName());
+				attributeInClass.setType(attributeClonable.getType());
+				attributeInClass.setConfiguration(attributeClonable.getConfiguration());
+				attributeInClass.setVersion(attributeInClass.getVersion() + 1);
+				break;
+			}
+		}
+
+		if (modificarSequence) {
+			Attribute attributeRemovidoTemporariamente = null;
+			for (Attribute at : clazz.getAttributes()) {
+				if (attribute.getId().equals(at.getId())) {
+					attributeRemovidoTemporariamente = at;
+					clazz.getAttributes().remove(at);
+					attributeRemovidoTemporariamente.setSequence(attribute
+							.getSequence());
+
+					this.shiftSequence(attributeRemovidoTemporariamente, clazz);
+					break;
+				}
+			}
+		}
+
+		this.classDao.update(clazz);
+		return (Attribute) SerializationUtils.clone(attributeInClass);
+
 	}
 }

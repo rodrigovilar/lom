@@ -5,7 +5,7 @@ import org.codehaus.jackson.JsonNode;
 import com.nanuvem.lom.kernel.Attribute;
 
 public class BooleanAttributeConfigurationValidator extends
-		AbstractAttributeConfigurationValidator {
+		AttributeTypeConfigurationValidator {
 	
 
 	public BooleanAttributeConfigurationValidator(String field){

@@ -6,13 +6,13 @@ import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
 
-public abstract class AbstractAttributeConfigurationValidator implements
+public abstract class AttributeTypeConfigurationValidator implements
 		AttributeConfigurationValidator {
 
 	protected String field;
 	private String suffixExceptionMessage;
 
-	public AbstractAttributeConfigurationValidator(String field,
+	public AttributeTypeConfigurationValidator(String field,
 			String suffixExceptionMessage) {
 		this.field = field;
 		this.suffixExceptionMessage = suffixExceptionMessage;
@@ -25,12 +25,12 @@ public abstract class AbstractAttributeConfigurationValidator implements
 			addError(
 					errors,
 					"Invalid configuration for attribute "
-							+ attribute.getName() + ": the " + field
+							+ attribute.getName() + ": the " + this.field
 							+ " value must be " + this.suffixExceptionMessage);
 		}
 	}
 
-	protected void addError(List<ValidationError> errors, String message) {
+	protected static void addError(List<ValidationError> errors, String message) {
 		ValidationError validationError = new ValidationError(message);
 		errors.add(validationError);
 	}

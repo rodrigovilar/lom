@@ -2,15 +2,16 @@ package com.nanuvem.lom.kernel.validator;
 
 import java.util.List;
 
+import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
+
 import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
-import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
 
-public class RegexAttributeConfigurationValidator extends
+public class MaximumLengthAttributeConfigurationValidator extends
 		AttributeConfigurationValidatorWithDefault {
 
-	public RegexAttributeConfigurationValidator(String field,
+	public MaximumLengthAttributeConfigurationValidator(String field,
 			String defaultField) {
 		super(field, defaultField);
 	}
@@ -18,19 +19,19 @@ public class RegexAttributeConfigurationValidator extends
 	@Override
 	protected void validateDefault(List<ValidationError> errors,
 			Attribute attribute, JsonNode configuration, String defaultValue) {
-
-		String regexValue = configuration.get(field).asText();
-		if (!defaultValue.matches(regexValue)) {
+		if (defaultValue.length() > configuration.get(field).asInt()) {
 			addError(
 					errors,
 					"Invalid configuration for attribute "
 							+ attribute.getName()
-							+ ": the default value does not match regex configuration");
+							+ ": the default value is greater than maxlength");
 		}
+
 	}
 
 	@Override
 	protected AttributeConfigurationValidator createFieldValidator(String field) {
-		return new StringAttributeConfigurationValidator(field);
+		return new IntegerAttributeConfigurationValidator(field);
 	}
+
 }

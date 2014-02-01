@@ -1,9 +1,12 @@
 package com.nanuvem.lom.kernel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -12,6 +15,9 @@ import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinimumLengthAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.RegexAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.StringAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
@@ -30,30 +36,36 @@ public class AttributeServiceImpl {
 	private final String MINLENGTH_CONFIGURATION_NAME = "minlength";
 	private final String MAXLENGTH_CONFIGURATION_NAME = "maxlength";
 
-	private List<AttributeConfigurationValidator> validators = new ArrayList<AttributeConfigurationValidator>();
+	private Map<String, List<AttributeConfigurationValidator>> validators = new HashMap<String, List<AttributeConfigurationValidator>>();
 
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 
-		validators.add(new BooleanAttributeConfigurationValidator(
+		List<AttributeConfigurationValidator> textValidators = new ArrayList<AttributeConfigurationValidator>();
+		this.validators.put("TEXT", textValidators);
+
+		List<AttributeConfigurationValidator> longTextValidators = new ArrayList<AttributeConfigurationValidator>();
+		this.validators.put("LONGTEXT", longTextValidators);
+
+		textValidators.add(new BooleanAttributeConfigurationValidator(
 				MANDATORY_CONFIGURATION_NAME));
-		
-		validators.add(new StringAttributeConfigurationValidator(
+		textValidators.add(new StringAttributeConfigurationValidator(
 				DEFAULT_CONFIGURATION_NAME));
-		
-		validators.add(new RegexAttributeConfigurationValidator(
+		textValidators.add(new RegexAttributeConfigurationValidator(
 				REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		textValidators.add(new MinimumLengthAttributeConfigurationValidator(
+				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		textValidators.add(new MaximumLengthAttributeConfigurationValidator(
+				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+		textValidators.add(new MinAndMaxConfigurationValidator(
+				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
 	}
 
-	private void validate(Attribute attribute) {
-		this.validateConfigurationAttribute(attribute);
-
+	private void validateCreate(Attribute attribute) {
+		this.validateExistingAttributeNotInClass(attribute);
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
-		this.validateExistingAttributeNotInClass(attribute.getClazz(),
-				attribute);
-
 		if (attribute.getSequence() != null) {
 			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
 			boolean maxValueForSequence = currentNumberOfAttributes + 1 < attribute
@@ -72,36 +84,45 @@ public class AttributeServiceImpl {
 			throw new MetadataException("The name of a Attribute is mandatory");
 		}
 
-		if (!Pattern.matches("[a-zA-Z1-9]{1,}", attribute.getName())) {
-			throw new MetadataException("Invalid value for Attribute name: "
-					+ attribute.getName());
-		}
+		this.validateNameAttribute(attribute);
 
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
+		this.validateConfigurationAttribute(attribute);
+	}
+
+	private void validateNameAttribute(Attribute attribute) {
+		if (attribute.getName() == null || attribute.getName().isEmpty()) {
+			throw new MetadataException("The name of an Attribute is mandatory");
+		}
+
+		if (!Pattern.matches("[a-zA-Z1-9]{1,}", attribute.getName())) {
+			throw new MetadataException("Invalid value for Attribute name: "
+					+ attribute.getName());
+		}
+	}
+
+	private List<Attribute> findAllAttributeForClass(Class clazz) {
+		if (clazz != null && !clazz.getFullName().isEmpty()) {
+			Class classFoud = this.classService.readClass(clazz.getFullName());
+			if (classFoud != null && classFoud.getAttributes() != null
+					&& classFoud.getAttributes().size() > 0) {
+				return classFoud.getAttributes();
+			}
+		}
+		return null;
 	}
 
 	private void validateConfigurationAttribute(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			JsonNode jsonNode = null;
-
-			try {
-				jsonNode = objectMapper.readTree(factory
-						.createJsonParser(configuration));
-			} catch (Exception e) {
-				throw new MetadataException(
-						"Invalid value for Attribute configuration: "
-								+ configuration);
-			}
-
-			String attributeName = attribute.getName();
+			JsonNode jsonNode = validateJson(configuration);
 			List<ValidationError> errors = new ArrayList<ValidationError>();
-			for (AttributeConfigurationValidator validator : this.validators) {
+			List<AttributeConfigurationValidator> attributeValidators = this.validators
+					.get(attribute.getType().toString());
+			for (AttributeConfigurationValidator validator : attributeValidators) {
 				validator.validate(errors, attribute, jsonNode);
 			}
 
@@ -112,95 +133,22 @@ public class AttributeServiceImpl {
 				}
 				throw new MetadataException(errorMessage);
 			}
-
-			// if (jsonNode.has(REGEX_CONFIGURATION_NAME)) {
-			// this.validateConfigurationAndTypeOfConfiguration(attributeName,
-			// REGEX_CONFIGURATION_NAME,
-			// jsonNode.get(REGEX_CONFIGURATION_NAME).isTextual(),
-			// "a string");
-			//
-			// String regexValue = jsonNode.get(REGEX_CONFIGURATION_NAME)
-			// .asText();
-			// if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-			// String defaultValue = jsonNode.get(
-			// DEFAULT_CONFIGURATION_NAME).asText();
-			// if (!defaultValue.matches(regexValue)) {
-			// throw new MetadataException(
-			// "Invalid configuration for attribute "
-			// + attributeName
-			// + ": the default value does not match regex configuration");
-			// }
-			// }
-			// }
-
-			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME)) {
-				this.validateConfigurationAndTypeOfConfiguration(attributeName,
-						MINLENGTH_CONFIGURATION_NAME,
-						jsonNode.get(MINLENGTH_CONFIGURATION_NAME)
-								.isIntegralNumber(), "an integer number");
-
-				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-					int minLengthValue = jsonNode.get(
-							MINLENGTH_CONFIGURATION_NAME).getIntValue();
-					String defaultValue = jsonNode.get(
-							DEFAULT_CONFIGURATION_NAME).asText();
-
-					if (defaultValue.length() < minLengthValue) {
-						throw new MetadataException(
-								"Invalid configuration for attribute "
-										+ attributeName
-										+ ": the default value is smaller than minlength");
-					}
-				}
-			}
-
-			if (jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
-				this.validateConfigurationAndTypeOfConfiguration(attributeName,
-						MAXLENGTH_CONFIGURATION_NAME,
-						jsonNode.get(MAXLENGTH_CONFIGURATION_NAME)
-								.isIntegralNumber(), "an integer number");
-
-				if (jsonNode.has(DEFAULT_CONFIGURATION_NAME)) {
-					int maxLengthValue = jsonNode.get(
-							MAXLENGTH_CONFIGURATION_NAME).getIntValue();
-					String defaultValue = jsonNode.get(
-							DEFAULT_CONFIGURATION_NAME).asText();
-
-					if (defaultValue.length() > maxLengthValue) {
-						throw new MetadataException(
-								"Invalid configuration for attribute "
-										+ attributeName
-										+ ": the default value is greater than maxlength");
-					}
-				}
-			}
-
-			if (jsonNode.has(MINLENGTH_CONFIGURATION_NAME)
-					&& jsonNode.has(MAXLENGTH_CONFIGURATION_NAME)) {
-				int minLengthValue = jsonNode.get(MINLENGTH_CONFIGURATION_NAME)
-						.getIntValue();
-				int maxLengthValue = jsonNode.get(MAXLENGTH_CONFIGURATION_NAME)
-						.getIntValue();
-
-				if (minLengthValue > maxLengthValue) {
-					throw new MetadataException(
-							"Invalid configuration for attribute "
-									+ attributeName
-									+ ": minlength is greater than maxlength");
-				}
-			}
 		}
 	}
 
-	private void validateConfigurationAndTypeOfConfiguration(
-			String attributeName, String configurationName, boolean validation,
-			String suffixExceptionMessage) {
-
-		if (!validation) {
-			throw new MetadataException("Invalid configuration for attribute "
-					+ attributeName + ": the " + configurationName
-					+ " value must be " + suffixExceptionMessage);
+	private JsonNode validateJson(String configuration) {
+		JsonNode jsonNode = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonFactory factory = objectMapper.getJsonFactory();
+			jsonNode = objectMapper.readTree(factory
+					.createJsonParser(configuration));
+		} catch (Exception e) {
+			throw new MetadataException(
+					"Invalid value for Attribute configuration: "
+							+ configuration);
 		}
+		return jsonNode;
 	}
 
 	private Class validateExistingClassForAttribute(Attribute attribute) {
@@ -214,23 +162,43 @@ public class AttributeServiceImpl {
 		return clazz;
 	}
 
-	private void validateExistingAttributeNotInClass(Class clazz,
-			Attribute attribute) {
-
-		for (Attribute attrib : clazz.getAttributes()) {
-			if (attrib.getName().equalsIgnoreCase(attribute.getName())) {
-				throw new MetadataException("Attribute duplication on "
-						+ clazz.getFullName()
-						+ " Class. It already has an attribute "
-						+ attrib.getName() + ".");
+	private void validateExistingAttributeNotInClass(Attribute attribute) {
+		List<Attribute> attributesFound = this
+				.findAllAttributeForClass(attribute.getClazz());
+		if (attributesFound != null) {
+			for (Attribute at : attributesFound) {
+				if (at.getName().equalsIgnoreCase(attribute.getName())) {
+					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+				}
 			}
 		}
+	}
+
+	private void validateExistingAttributeNotInClassInUpdate(Attribute attribute) {
+		if (attribute.getId() != null) {
+			Attribute attributeFound = this
+					.findAttributeByNameAndClassFullName(attribute.getName(),
+							attribute.getClazz().getFullName());
+			if (attributeFound != null) {
+				if (!attribute.getId().equals(attributeFound.getId())) {
+					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+				}
+			}
+		}
+	}
+
+	private void throwMetadataExceptionInDuplicationAnAttribute(
+			Attribute attribute) {
+		throw new MetadataException("Attribute duplication on "
+				+ attribute.getClazz().getFullName()
+				+ " Class. It already has an attribute "
+				+ StringUtils.lowerCase(attribute.getName() + "."));
 	}
 
 	public void create(Attribute attribute) {
 		Class clazz = validateExistingClassForAttribute(attribute);
 		attribute.setClazz(clazz);
-		this.validate(attribute);
+		this.validateCreate(attribute);
 		this.attributeDao.create(attribute);
 	}
 
@@ -255,10 +223,47 @@ public class AttributeServiceImpl {
 				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
 						+ "." + classFullName;
 			}
-
 			return this.attributeDao.findAttributeByNameAndClassFullName(
 					nameAttribute, classFullName);
 		}
 		return null;
+	}
+
+	public Attribute update(Attribute attribute) {
+		this.validateNameAttribute(attribute);
+		this.validateUpdateSequence(attribute);
+		this.validateUpdateType(attribute);
+		this.validateExistingAttributeNotInClassInUpdate(attribute);
+		this.validateConfigurationAttribute(attribute);
+
+		return this.attributeDao.update(attribute);
+	}
+
+	private void validateUpdateType(Attribute attribute) {
+		Attribute attributeFound = this.findAttributeById(attribute.getId());
+
+		if (!attributeFound.getType().equals(attribute.getType())) {
+			throw new MetadataException(
+					"Can not change the type of an attribute");
+		}
+	}
+
+	private void validateUpdateSequence(Attribute attribute) {
+		Class clazz = this.classService.readClass(attribute.getClazz()
+				.getFullName());
+		int currentNumberOfAttributes = clazz.getAttributes()
+				.get(clazz.getAttributes().size() - 1).getSequence();
+
+		if (attribute.getSequence() != null) {
+			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
+			boolean maxValueForSequence = currentNumberOfAttributes < attribute
+					.getSequence();
+
+			if (!(minValueForSequence || maxValueForSequence)) {
+				return;
+			}
+		}
+		throw new MetadataException("Invalid value for Attribute sequence: "
+				+ attribute.getSequence());
 	}
 }
