@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -59,12 +60,10 @@ public class AttributeServiceImpl {
 				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
 		textValidators.add(new MinAndMaxConfigurationValidator(
 				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
-
 	}
 
-	private void validate(Attribute attribute) {
-		this.validateExistingAttributeNotInClass(attribute.getClazz(),
-				attribute);
+	private void validateCreate(Attribute attribute) {
+		this.validateExistingAttributeNotInClass(attribute);
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
 		if (attribute.getSequence() != null) {
@@ -90,7 +89,6 @@ public class AttributeServiceImpl {
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
-
 		this.validateConfigurationAttribute(attribute);
 	}
 
@@ -103,6 +101,17 @@ public class AttributeServiceImpl {
 			throw new MetadataException("Invalid value for Attribute name: "
 					+ attribute.getName());
 		}
+	}
+
+	private List<Attribute> findAllAttributeForClass(Class clazz) {
+		if (clazz != null && !clazz.getFullName().isEmpty()) {
+			Class classFoud = this.classService.readClass(clazz.getFullName());
+			if (classFoud != null && classFoud.getAttributes() != null
+					&& classFoud.getAttributes().size() > 0) {
+				return classFoud.getAttributes();
+			}
+		}
+		return null;
 	}
 
 	private void validateConfigurationAttribute(Attribute attribute) {
@@ -124,11 +133,10 @@ public class AttributeServiceImpl {
 				}
 				throw new MetadataException(errorMessage);
 			}
-
 		}
 	}
 
-	public JsonNode validateJson(String configuration) {
+	private JsonNode validateJson(String configuration) {
 		JsonNode jsonNode = null;
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -154,23 +162,43 @@ public class AttributeServiceImpl {
 		return clazz;
 	}
 
-	private void validateExistingAttributeNotInClass(Class clazz,
-			Attribute attribute) {
-
-		for (Attribute attrib : clazz.getAttributes()) {
-			if (attrib.getName().equalsIgnoreCase(attribute.getName())) {
-				throw new MetadataException("Attribute duplication on "
-						+ clazz.getFullName()
-						+ " Class. It already has an attribute "
-						+ attrib.getName() + ".");
+	private void validateExistingAttributeNotInClass(Attribute attribute) {
+		List<Attribute> attributesFound = this
+				.findAllAttributeForClass(attribute.getClazz());
+		if (attributesFound != null) {
+			for (Attribute at : attributesFound) {
+				if (at.getName().equalsIgnoreCase(attribute.getName())) {
+					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+				}
 			}
 		}
+	}
+
+	private void validateExistingAttributeNotInClassInUpdate(Attribute attribute) {
+		if (attribute.getId() != null) {
+			Attribute attributeFound = this
+					.findAttributeByNameAndClassFullName(attribute.getName(),
+							attribute.getClazz().getFullName());
+			if (attributeFound != null) {
+				if (!attribute.getId().equals(attributeFound.getId())) {
+					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+				}
+			}
+		}
+	}
+
+	private void throwMetadataExceptionInDuplicationAnAttribute(
+			Attribute attribute) {
+		throw new MetadataException("Attribute duplication on "
+				+ attribute.getClazz().getFullName()
+				+ " Class. It already has an attribute "
+				+ StringUtils.lowerCase(attribute.getName() + "."));
 	}
 
 	public void create(Attribute attribute) {
 		Class clazz = validateExistingClassForAttribute(attribute);
 		attribute.setClazz(clazz);
-		this.validate(attribute);
+		this.validateCreate(attribute);
 		this.attributeDao.create(attribute);
 	}
 
@@ -195,7 +223,6 @@ public class AttributeServiceImpl {
 				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
 						+ "." + classFullName;
 			}
-
 			return this.attributeDao.findAttributeByNameAndClassFullName(
 					nameAttribute, classFullName);
 		}
@@ -205,8 +232,20 @@ public class AttributeServiceImpl {
 	public Attribute update(Attribute attribute) {
 		this.validateNameAttribute(attribute);
 		this.validateUpdateSequence(attribute);
+		this.validateUpdateType(attribute);
+		this.validateExistingAttributeNotInClassInUpdate(attribute);
+		this.validateConfigurationAttribute(attribute);
 
 		return this.attributeDao.update(attribute);
+	}
+
+	private void validateUpdateType(Attribute attribute) {
+		Attribute attributeFound = this.findAttributeById(attribute.getId());
+
+		if (!attributeFound.getType().equals(attribute.getType())) {
+			throw new MetadataException(
+					"Can not change the type of an attribute");
+		}
 	}
 
 	private void validateUpdateSequence(Attribute attribute) {
@@ -224,7 +263,6 @@ public class AttributeServiceImpl {
 				return;
 			}
 		}
-
 		throw new MetadataException("Invalid value for Attribute sequence: "
 				+ attribute.getSequence());
 	}

@@ -123,6 +123,7 @@ public class MemoryAttributeDao implements AttributeDao {
 				attributeInClass.setClazz(clazz);
 				attributeInClass.setName(attributeClonable.getName());
 				attributeInClass.setType(attributeClonable.getType());
+				attributeInClass.setConfiguration(attributeClonable.getConfiguration());
 				attributeInClass.setVersion(attributeInClass.getVersion() + 1);
 				break;
 			}

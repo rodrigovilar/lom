@@ -81,15 +81,15 @@ public class UpdateAttributeServiceTest {
 				"abc.a", null, "pb", TEXT, null);
 
 		Attribute updatedAttribute1 = updateAttribute(attributeService,
-				"abc.a", createdAttribute1, 2, "pa", LONGTEXT, null);
+				"abc.a", createdAttribute1, 2, "pa", TEXT, null);
 		verifyUpdatedAttribute(createdAttribute1, updatedAttribute1);
 
 		Attribute updatedAttribute2 = updateAttribute(attributeService,
-				"abc.a", createdAttribute2, 2, "pb", LONGTEXT, null);
+				"abc.a", createdAttribute2, 2, "pb", TEXT, null);
 		verifyUpdatedAttribute(createdAttribute2, updatedAttribute2);
 
 		Attribute updatedAttribute3 = updateAttribute(attributeService,
-				"abc.a", updatedAttribute2, 1, "pb", LONGTEXT, null);
+				"abc.a", updatedAttribute2, 1, "pb", TEXT, null);
 		verifyUpdatedAttribute(updatedAttribute2, updatedAttribute3);
 	}
 
@@ -175,8 +175,8 @@ public class UpdateAttributeServiceTest {
 		verifyUpdatedAttribute(createdAttribute1, updatedAttribute11);
 
 		Attribute updatedAttribute12 = updateAttribute(attributeService,
-				"abc.a", updatedAttribute11, 1, "pa", TEXT, null);
-		verifyUpdatedAttribute(createdAttribute1, updatedAttribute12);
+				"abc.a", updatedAttribute11, 2, "pa", TEXT, null);
+		verifyUpdatedAttribute(updatedAttribute11, updatedAttribute12);
 
 		Attribute updatedAttribute2 = updateAttribute(attributeService,
 				"abc.a", createdAttribute2, 2, "pb", TEXT,
@@ -340,23 +340,25 @@ public class UpdateAttributeServiceTest {
 				exceptedMessage);
 	}
 
-	private void verifyUpdatedAttribute(Attribute createdAttribute,
+	private void verifyUpdatedAttribute(Attribute attributeBeforeUpgrade,
 			Attribute updatedAttribute) {
 
 		Assert.assertNotNull("updatedAttribute.id should not be null",
 				updatedAttribute.getId());
 
+		int versionIncrementedInCreateAttribute = attributeBeforeUpgrade
+				.getVersion() + 1;
 		Assert.assertEquals("updatedAttribute.version should be "
-				+ createdAttribute.getVersion() + 1,
-				createdAttribute.getVersion() + 1,
+				+ versionIncrementedInCreateAttribute,
+				versionIncrementedInCreateAttribute,
 				(int) updatedAttribute.getVersion());
 
 		Attribute listedAttribute = attributeService
-				.findAttributeById(createdAttribute.getId());
+				.findAttributeById(attributeBeforeUpgrade.getId());
 		Assert.assertEquals("listedAttribute should be to updatedAttribute",
 				updatedAttribute, listedAttribute);
 
 		Assert.assertFalse("listedAttribute should be to createdAttribute",
-				createdAttribute.equals(listedAttribute));
+				attributeBeforeUpgrade.equals(listedAttribute));
 	}
 }
