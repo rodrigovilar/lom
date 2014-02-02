@@ -103,12 +103,12 @@ public class AttributeServiceImpl {
 		}
 	}
 
-	private List<Attribute> findAllAttributeForClass(Class clazz) {
+	private List<Attribute> findAllAttributesForClass(Class clazz) {
 		if (clazz != null && !clazz.getFullName().isEmpty()) {
-			Class classFoud = this.classService.readClass(clazz.getFullName());
-			if (classFoud != null && classFoud.getAttributes() != null
-					&& classFoud.getAttributes().size() > 0) {
-				return classFoud.getAttributes();
+			Class foundClass = this.classService.readClass(clazz.getFullName());
+			if (foundClass != null && foundClass.getAttributes() != null
+					&& foundClass.getAttributes().size() > 0) {
+				return foundClass.getAttributes();
 			}
 		}
 		return null;
@@ -163,31 +163,31 @@ public class AttributeServiceImpl {
 	}
 
 	private void validateExistingAttributeNotInClass(Attribute attribute) {
-		List<Attribute> attributesFound = this
-				.findAllAttributeForClass(attribute.getClazz());
-		if (attributesFound != null) {
-			for (Attribute at : attributesFound) {
+		List<Attribute> foundAttributes = this
+				.findAllAttributesForClass(attribute.getClazz());
+		if (foundAttributes != null) {
+			for (Attribute at : foundAttributes) {
 				if (at.getName().equalsIgnoreCase(attribute.getName())) {
-					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+					this.throwMetadataExceptionOnAttributeDuplication(attribute);
 				}
 			}
 		}
 	}
 
-	private void validateExistingAttributeNotInClassInUpdate(Attribute attribute) {
+	private void validateExistingAttributeNotInClassOnUpdate(Attribute attribute) {
 		if (attribute.getId() != null) {
-			Attribute attributeFound = this
+			Attribute foundAttributes = this
 					.findAttributeByNameAndClassFullName(attribute.getName(),
 							attribute.getClazz().getFullName());
-			if (attributeFound != null) {
-				if (!attribute.getId().equals(attributeFound.getId())) {
-					this.throwMetadataExceptionInDuplicationAnAttribute(attribute);
+			if (foundAttributes != null) {
+				if (!attribute.getId().equals(foundAttributes.getId())) {
+					this.throwMetadataExceptionOnAttributeDuplication(attribute);
 				}
 			}
 		}
 	}
 
-	private void throwMetadataExceptionInDuplicationAnAttribute(
+	private void throwMetadataExceptionOnAttributeDuplication(
 			Attribute attribute) {
 		throw new MetadataException("Attribute duplication on "
 				+ attribute.getClazz().getFullName()
@@ -233,7 +233,7 @@ public class AttributeServiceImpl {
 		this.validateNameAttribute(attribute);
 		this.validateUpdateSequence(attribute);
 		this.validateUpdateType(attribute);
-		this.validateExistingAttributeNotInClassInUpdate(attribute);
+		this.validateExistingAttributeNotInClassOnUpdate(attribute);
 		this.validateConfigurationAttribute(attribute);
 
 		return this.attributeDao.update(attribute);
@@ -249,15 +249,12 @@ public class AttributeServiceImpl {
 	}
 
 	private void validateUpdateSequence(Attribute attribute) {
-		Class clazz = this.classService.readClass(attribute.getClazz()
-				.getFullName());
-		int currentNumberOfAttributes = clazz.getAttributes()
-				.get(clazz.getAttributes().size() - 1).getSequence();
+		Class clazz = this.classService.readClass(attribute.getClazz().getFullName());
+		int currentNumberOfAttributes = clazz.getAttributes().get(clazz.getAttributes().size() - 1).getSequence();
 
 		if (attribute.getSequence() != null) {
 			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
-			boolean maxValueForSequence = currentNumberOfAttributes < attribute
-					.getSequence();
+			boolean maxValueForSequence = currentNumberOfAttributes < attribute.getSequence();
 
 			if (!(minValueForSequence || maxValueForSequence)) {
 				return;

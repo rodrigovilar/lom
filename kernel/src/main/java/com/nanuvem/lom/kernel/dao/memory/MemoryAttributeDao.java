@@ -33,22 +33,13 @@ public class MemoryAttributeDao implements AttributeDao {
 	private void shiftSequence(Attribute attribute, Class clazz) {
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
-			if (attribute.getSequence().equals(
-					clazz.getAttributes().get(i).getSequence())) {
+			if (attribute.getSequence().equals(clazz.getAttributes().get(i).getSequence())) {
 				break;
 			}
 		}
 
 		i++;
-		if (i == 0) {
-			clazz.getAttributes().add(i, attribute);
-		} else {
-			if (attribute.getSequence().equals(new Integer(1))) {
-				clazz.getAttributes().add(0, attribute);
-			} else {
-				clazz.getAttributes().add(i - 1, attribute);
-			}
-		}
+		clazz.getAttributes().add(i - 1, attribute);
 
 		for (; i < clazz.getAttributes().size(); i++) {
 			Attribute attributeNext = null;
@@ -107,7 +98,7 @@ public class MemoryAttributeDao implements AttributeDao {
 				.getFullName());
 
 		Attribute attributeInClass = null;
-		boolean modificarSequence = false;
+		boolean chageSequence = false;
 
 		for (int i = 0; i < clazz.getAttributes().size(); i++) {
 			if (attribute.getId().equals(clazz.getAttributes().get(i).getId())) {
@@ -115,30 +106,31 @@ public class MemoryAttributeDao implements AttributeDao {
 
 				if (!attribute.getSequence().equals(
 						attributeInClass.getSequence())) {
-					modificarSequence = true;
+					chageSequence = true;
 				}
 
-				Attribute attributeClonable = (Attribute) SerializationUtils
+				Attribute attributeClone = (Attribute) SerializationUtils
 						.clone(attribute);
 				attributeInClass.setClazz(clazz);
-				attributeInClass.setName(attributeClonable.getName());
-				attributeInClass.setType(attributeClonable.getType());
-				attributeInClass.setConfiguration(attributeClonable.getConfiguration());
+				attributeInClass.setName(attributeClone.getName());
+				attributeInClass.setType(attributeClone.getType());
+				attributeInClass.setConfiguration(attributeClone
+						.getConfiguration());
 				attributeInClass.setVersion(attributeInClass.getVersion() + 1);
 				break;
 			}
 		}
 
-		if (modificarSequence) {
-			Attribute attributeRemovidoTemporariamente = null;
+		if (chageSequence) {
+			Attribute temp = null;
 			for (Attribute at : clazz.getAttributes()) {
 				if (attribute.getId().equals(at.getId())) {
-					attributeRemovidoTemporariamente = at;
+					temp = at;
 					clazz.getAttributes().remove(at);
-					attributeRemovidoTemporariamente.setSequence(attribute
+					temp.setSequence(attribute
 							.getSequence());
 
-					this.shiftSequence(attributeRemovidoTemporariamente, clazz);
+					this.shiftSequence(temp, clazz);
 					break;
 				}
 			}
