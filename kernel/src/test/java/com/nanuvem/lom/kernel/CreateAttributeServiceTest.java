@@ -370,4 +370,115 @@ public class CreateAttributeServiceTest {
 		// "{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 		// "Invalid configuration for attribute pa: the default value is lower than minlength");
 	}
+
+	@Test
+	public void validConfigurationForLongTextAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p1", AttributeType.LONGTEXT, "{\"minlength\":10}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p2", AttributeType.LONGTEXT, "{\"maxlength\":100000}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"p3",
+						AttributeType.LONGTEXT,
+						"{\"mandatory\":true, \"default\":\"long text\", \"minlength\":5, \"maxlength\":150000}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p4", AttributeType.LONGTEXT, "");
+	}
+
+	@Test
+	public void invalidConfigurationForLongTextAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+						"{\"default\":10}",
+						"Invalid configuration for attribute pa: the default value must be a string");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"minlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"minlength\":10.0}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"maxlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"maxlength\":10.0}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abc\", \"minlength\":5}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abcabc\", \"maxlength\":5}",
+						"Invalid configuration for attribute pa: the default value is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+						"{\"minlength\":50, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abc\",\"minlength\":9, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+	}
 }

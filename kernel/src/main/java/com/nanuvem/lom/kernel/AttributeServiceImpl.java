@@ -41,25 +41,24 @@ public class AttributeServiceImpl {
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
-
-		List<AttributeConfigurationValidator> textValidators = new ArrayList<AttributeConfigurationValidator>();
-		this.validators.put("TEXT", textValidators);
-
-		List<AttributeConfigurationValidator> longTextValidators = new ArrayList<AttributeConfigurationValidator>();
-		this.validators.put("LONGTEXT", longTextValidators);
-
-		textValidators.add(new BooleanAttributeConfigurationValidator(
-				MANDATORY_CONFIGURATION_NAME));
-		textValidators.add(new StringAttributeConfigurationValidator(
-				DEFAULT_CONFIGURATION_NAME));
-		textValidators.add(new RegexAttributeConfigurationValidator(
-				REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		textValidators.add(new MinimumLengthAttributeConfigurationValidator(
-				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		textValidators.add(new MaximumLengthAttributeConfigurationValidator(
-				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-		textValidators.add(new MinAndMaxConfigurationValidator(
-				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
+		
+		for(AttributeType attributeType : AttributeType.getList()){
+			List<AttributeConfigurationValidator> listValidators = new ArrayList<AttributeConfigurationValidator>();
+			this.validators.put(attributeType.toString(), listValidators);
+			
+			listValidators.add(new BooleanAttributeConfigurationValidator(
+					MANDATORY_CONFIGURATION_NAME));
+			listValidators.add(new StringAttributeConfigurationValidator(
+					DEFAULT_CONFIGURATION_NAME));
+			listValidators.add(new RegexAttributeConfigurationValidator(
+					REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+			listValidators.add(new MinimumLengthAttributeConfigurationValidator(
+					MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+			listValidators.add(new MaximumLengthAttributeConfigurationValidator(
+					MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+			listValidators.add(new MinAndMaxConfigurationValidator(
+					MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
+		}
 	}
 
 	private void validateCreate(Attribute attribute) {
