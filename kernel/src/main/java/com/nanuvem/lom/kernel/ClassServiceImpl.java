@@ -10,17 +10,19 @@ public class ClassServiceImpl {
 
 	private ClassDao dao;
 
+	static final String PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME = "default";
+
 	public ClassServiceImpl(DaoFactory factory) {
 		this.dao = factory.createClassDao();
 	}
 
-	private void validateEntity(Class clazz) {
+	private void validateClass(Class clazz) {
 		if (clazz.getName() == null || clazz.getName().equals("")) {
 			throw new MetadataException("The name of an Class is mandatory");
 		}
 
 		if (clazz.getNamespace() == null || clazz.getNamespace().equals("")) {
-			clazz.setNamespace("default");
+			clazz.setNamespace(PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME);
 		}
 
 		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", clazz.getNamespace())) {
@@ -33,10 +35,10 @@ public class ClassServiceImpl {
 					+ clazz.getName());
 		}
 
-		String readEntityQuery = clazz.getNamespace() + "." + clazz.getName();
+		String readClassQuery = clazz.getNamespace() + "." + clazz.getName();
 		Class found = null;
 		try {
-			found = this.readClass(readEntityQuery);
+			found = this.readClass(readClassQuery);
 		} catch (MetadataException me) {
 			found = null;
 		}
@@ -45,7 +47,8 @@ public class ClassServiceImpl {
 				&& found.getNamespace().equals(clazz.getNamespace())) {
 			StringBuilder message = new StringBuilder();
 			message.append("The ");
-			if (!clazz.getNamespace().equals("default")) {
+			if (!clazz.getNamespace().equals(
+					PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME)) {
 				message.append(clazz.getNamespace());
 				message.append(".");
 			}
@@ -56,7 +59,7 @@ public class ClassServiceImpl {
 	}
 
 	public void create(Class clazz) {
-		this.validateEntity(clazz);
+		this.validateClass(clazz);
 		this.dao.create(clazz);
 	}
 
@@ -90,57 +93,61 @@ public class ClassServiceImpl {
 				namespaceFragment, nameFragment);
 	}
 
-	public Class readClass(String fullname) {
+	// There is no test case for classFullName = null. How should the message
+	// being thrown exception in this case?
+	public Class readClass(String classFullName) {
 		String namespace = null;
 		String name = null;
 
-		if (fullname.contains(".")) {
-			namespace = fullname.substring(0, fullname.lastIndexOf("."));
-			name = fullname.substring(fullname.lastIndexOf(".") + 1,
-					fullname.length());
+		if (classFullName.contains(".")) {
+			namespace = classFullName.substring(0,
+					classFullName.lastIndexOf("."));
+			name = classFullName.substring(classFullName.lastIndexOf(".") + 1,
+					classFullName.length());
 		} else {
-			namespace = "default";
-			name = fullname;
+			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
+			name = classFullName;
 		}
 
 		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", namespace)
 				&& !namespace.isEmpty()) {
-			if (fullname.startsWith(".")) {
-				fullname = fullname.substring(1);
-			}
-			if (fullname.endsWith(".")) {
-				fullname = fullname.substring(0, fullname.length() - 1);
-			}
-			throw new MetadataException("Invalid key for Class: " + fullname);
+			this.formatStringAndThrowsExceptionInvalidKeyForClass(classFullName);
 		}
 
 		if (!Pattern.matches("[a-zA-Z1-9]{1,}", name) && !name.isEmpty()) {
-			if (fullname.startsWith(".")) {
-				fullname = fullname.substring(1);
-			}
-			if (fullname.endsWith(".")) {
-				fullname = fullname.substring(0, fullname.length() - 1);
-			}
-			throw new MetadataException("Invalid key for Class: " + fullname);
+			this.formatStringAndThrowsExceptionInvalidKeyForClass(classFullName);
 		}
 
 		if (namespace.isEmpty()) {
-			namespace = "default";
+			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
 		}
 
-		Class entityByNamespaceAndName = this.dao.readClassByFullName(namespace
+		Class classByNamespaceAndName = this.dao.readClassByFullName(namespace
 				+ "." + name);
 
-		if (entityByNamespaceAndName == null) {
-			if (fullname.startsWith(".")) {
-				fullname = fullname.substring(1);
+		if (classByNamespaceAndName == null) {
+			if (classFullName.startsWith(".")) {
+				classFullName = classFullName.substring(1);
 			}
-			if (fullname.endsWith(".")) {
-				fullname = fullname.substring(0, fullname.length() - 1);
+			if (classFullName.endsWith(".")) {
+				classFullName = classFullName.substring(0,
+						classFullName.length() - 1);
 			}
-			throw new MetadataException("Class not found: " + fullname);
+			throw new MetadataException("Class not found: " + classFullName);
 		}
-		return entityByNamespaceAndName;
+		return classByNamespaceAndName;
+	}
+
+	// Validate name this method
+	private void formatStringAndThrowsExceptionInvalidKeyForClass(String value) {
+		if (value.startsWith(".")) {
+			value = value.substring(1);
+		}
+		if (value.endsWith(".")) {
+			value = value.substring(0, value.length() - 1);
+		}
+		throw new MetadataException("Invalid key for Class: " + value);
+
 	}
 
 	public void delete(String string) {
@@ -150,7 +157,7 @@ public class ClassServiceImpl {
 
 	public Class update(Class updateClass) {
 		this.validateClassOnUpdate(updateClass);
-		this.validateEntity(updateClass);
+		this.validateClass(updateClass);
 		return this.dao.update(updateClass);
 	}
 
@@ -165,7 +172,7 @@ public class ClassServiceImpl {
 		updateClass.setNamespace(namespace);
 		updateClass.setVersion(version);
 		this.validateClassOnUpdate(updateClass);
-		this.validateEntity(updateClass);
+		this.validateClass(updateClass);
 		return this.dao.update(namespace, name, id, version);
 	}
 
@@ -186,4 +193,5 @@ public class ClassServiceImpl {
 		return this.dao.findClassById(id);
 	}
 
+	
 }

@@ -23,37 +23,23 @@ public class MemoryAttributeDao implements AttributeDao {
 		attribute.setId(id++);
 		attribute.setVersion(0);
 
-		Class clazz = this.classDao.findClassById(attribute.getClazz().getId());
+		Class clazz = attribute.getClazz();
 		attribute.setClazz(clazz);
 
-		if (attribute.getSequence() == null) {
-			if (clazz.getAttributes().isEmpty()) {
-				attribute.setSequence(1);
-			} else {
-				int size = clazz.getAttributes().size();
-				int ultimoSequence = clazz.getAttributes().get(size - 1)
-						.getSequence();
-				attribute.setSequence(ultimoSequence + 1);
-			}
-			clazz.getAttributes().add(attribute);
-			this.classDao.update(clazz);
-			return;
-		}
+		this.shiftSequence(attribute, clazz);
+		this.classDao.update(clazz);
+	}
 
+	private void shiftSequence(Attribute attribute, Class clazz) {
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
-			if (attribute.getSequence().equals(
-					clazz.getAttributes().get(i).getSequence())) {
+			if (attribute.getSequence().equals(clazz.getAttributes().get(i).getSequence())) {
 				break;
 			}
 		}
 
 		i++;
-		if (i == 0) {
-			clazz.getAttributes().add(i, attribute);
-		} else {
-			clazz.getAttributes().add(i - 1, attribute);
-		}
+		clazz.getAttributes().add(i - 1, attribute);
 
 		for (; i < clazz.getAttributes().size(); i++) {
 			Attribute attributeNext = null;
@@ -68,11 +54,10 @@ public class MemoryAttributeDao implements AttributeDao {
 				attributeNext.setSequence(attributeNext.getSequence() + 1);
 			}
 		}
-		this.classDao.update(clazz);
 	}
 
-	public List<Attribute> listAllAttributes(String fullClassName) {
-		Class clazz = this.classDao.readClassByFullName(fullClassName);
+	public List<Attribute> listAllAttributes(String classFullName) {
+		Class clazz = this.classDao.readClassByFullName(classFullName);
 
 		List<Attribute> cloneAttributes = new ArrayList<Attribute>();
 		for (Attribute at : clazz.getAttributes()) {
@@ -94,10 +79,10 @@ public class MemoryAttributeDao implements AttributeDao {
 		return null;
 	}
 
-	public Attribute findAttributeByNameAndFullnameClass(String nameAttribute,
-			String fullNameClass) {
+	public Attribute findAttributeByNameAndClassFullName(String nameAttribute,
+			String classFullName) {
 
-		Class clazzFound = this.classDao.readClassByFullName(fullNameClass);
+		Class clazzFound = this.classDao.readClassByFullName(classFullName);
 		if (clazzFound.getAttributes() != null) {
 			for (Attribute attributeEach : clazzFound.getAttributes()) {
 				if (attributeEach.getName().equalsIgnoreCase(nameAttribute)) {
@@ -106,5 +91,53 @@ public class MemoryAttributeDao implements AttributeDao {
 			}
 		}
 		return null;
+	}
+
+	public Attribute update(Attribute attribute) {
+		Class clazz = this.classDao.readClassByFullName(attribute.getClazz()
+				.getFullName());
+
+		Attribute attributeInClass = null;
+		boolean chageSequence = false;
+
+		for (int i = 0; i < clazz.getAttributes().size(); i++) {
+			if (attribute.getId().equals(clazz.getAttributes().get(i).getId())) {
+				attributeInClass = clazz.getAttributes().get(i);
+
+				if (!attribute.getSequence().equals(
+						attributeInClass.getSequence())) {
+					chageSequence = true;
+				}
+
+				Attribute attributeClone = (Attribute) SerializationUtils
+						.clone(attribute);
+				attributeInClass.setClazz(clazz);
+				attributeInClass.setName(attributeClone.getName());
+				attributeInClass.setType(attributeClone.getType());
+				attributeInClass.setConfiguration(attributeClone
+						.getConfiguration());
+				attributeInClass.setVersion(attributeInClass.getVersion() + 1);
+				break;
+			}
+		}
+
+		if (chageSequence) {
+			Attribute temp = null;
+			for (Attribute at : clazz.getAttributes()) {
+				if (attribute.getId().equals(at.getId())) {
+					temp = at;
+					clazz.getAttributes().remove(at);
+					temp.setSequence(attribute
+							.getSequence());
+
+					this.shiftSequence(temp, clazz);
+					break;
+				}
+			}
+		}
+
+		this.classDao.update(clazz);
+		return (Attribute) SerializationUtils.clone(attributeInClass);
+
 	}
 }
