@@ -3,5 +3,4 @@
 /guirenderer/home/
 /kernel/target/
 /business/target
-/business/.settings/
-/business/nbproject/private/
+/business/generated/
