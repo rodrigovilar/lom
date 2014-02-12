@@ -22,11 +22,8 @@ public abstract class AttributeTypeConfigurationValidator implements
 			JsonNode configuration) {
 
 		if (!this.validate(attribute, configuration)) {
-			addError(
-					errors,
-					"Invalid configuration for attribute "
-							+ attribute.getName() + ": the " + this.field
-							+ " value must be " + this.suffixExceptionMessage);
+			addError(errors, "the " + this.field + " value must be "
+					+ this.suffixExceptionMessage);
 		}
 	}
 

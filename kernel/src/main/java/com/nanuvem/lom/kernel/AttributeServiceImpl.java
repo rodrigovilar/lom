@@ -16,8 +16,12 @@ import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MaximumRepeatAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MinimumLengthAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinimumNumbersAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinimumSymbolsAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.MinimumUppersAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.RegexAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.StringAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
@@ -36,28 +40,69 @@ public class AttributeServiceImpl {
 	private final String MINLENGTH_CONFIGURATION_NAME = "minlength";
 	private final String MAXLENGTH_CONFIGURATION_NAME = "maxlength";
 
+	private final String MINUPPERS_CONFIGURATION_NAME = "minUppers";
+	private final String MINNUMBERS_CONFIGURATION_NAME = "minNumbers";
+	private final String MINSYMBOLS_CONFIGURATION_NAME = "minSymbols";
+	private final String MAXREPEAT_CONFIGURATION_NAME = "maxRepeat";
+
+	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
+
 	private Map<String, List<AttributeConfigurationValidator>> validators = new HashMap<String, List<AttributeConfigurationValidator>>();
 
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
-		
-		for(AttributeType attributeType : AttributeType.getList()){
+
+		for (AttributeType attributeType : AttributeType.getList()) {
 			List<AttributeConfigurationValidator> listValidators = new ArrayList<AttributeConfigurationValidator>();
 			this.validators.put(attributeType.toString(), listValidators);
-			
+
+			if (attributeType.equals(AttributeType.TEXT)
+					|| attributeType.equals(AttributeType.LONGTEXT)) {
+				
+				listValidators.add(new RegexAttributeConfigurationValidator(
+						REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
+			}
+
+			if (attributeType.equals(AttributeType.PASSWORD)) {
+				
+				listValidators
+						.add(new MinimumUppersAttributeConfigurationValidator(
+								MINUPPERS_CONFIGURATION_NAME,
+								DEFAULT_CONFIGURATION_NAME));
+
+				listValidators
+						.add(new MinimumNumbersAttributeConfigurationValidator(
+								MINNUMBERS_CONFIGURATION_NAME,
+								DEFAULT_CONFIGURATION_NAME));
+
+				listValidators
+						.add(new MinimumSymbolsAttributeConfigurationValidator(
+								MINSYMBOLS_CONFIGURATION_NAME,
+								DEFAULT_CONFIGURATION_NAME));
+
+				listValidators
+						.add(new MaximumRepeatAttributeConfigurationValidator(
+								MAXREPEAT_CONFIGURATION_NAME,
+								DEFAULT_CONFIGURATION_NAME));
+			}
+
 			listValidators.add(new BooleanAttributeConfigurationValidator(
 					MANDATORY_CONFIGURATION_NAME));
 			listValidators.add(new StringAttributeConfigurationValidator(
 					DEFAULT_CONFIGURATION_NAME));
-			listValidators.add(new RegexAttributeConfigurationValidator(
-					REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-			listValidators.add(new MinimumLengthAttributeConfigurationValidator(
-					MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-			listValidators.add(new MaximumLengthAttributeConfigurationValidator(
-					MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-			listValidators.add(new MinAndMaxConfigurationValidator(
-					MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
+			listValidators
+					.add(new MinimumLengthAttributeConfigurationValidator(
+							MINLENGTH_CONFIGURATION_NAME,
+							DEFAULT_CONFIGURATION_NAME));
+			listValidators
+					.add(new MaximumLengthAttributeConfigurationValidator(
+							MAXLENGTH_CONFIGURATION_NAME,
+							DEFAULT_CONFIGURATION_NAME));
+			listValidators
+					.add(new MinAndMaxConfigurationValidator(
+							MAXLENGTH_CONFIGURATION_NAME,
+							MINLENGTH_CONFIGURATION_NAME));
 		}
 	}
 
@@ -128,7 +173,13 @@ public class AttributeServiceImpl {
 			if (!errors.isEmpty()) {
 				String errorMessage = "";
 				for (ValidationError error : errors) {
-					errorMessage += error.getMessage();
+					if (errorMessage.isEmpty()) {
+						errorMessage += PREFIX_EXCEPTION_MESSAGE_CONFIGURATION
+								+ " " + attribute.getName() + ": "
+								+ error.getMessage();
+					} else {
+						errorMessage += ", " + error.getMessage();
+					}
 				}
 				throw new MetadataException(errorMessage);
 			}
@@ -248,12 +299,15 @@ public class AttributeServiceImpl {
 	}
 
 	private void validateUpdateSequence(Attribute attribute) {
-		Class clazz = this.classService.readClass(attribute.getClazz().getFullName());
-		int currentNumberOfAttributes = clazz.getAttributes().get(clazz.getAttributes().size() - 1).getSequence();
+		Class clazz = this.classService.readClass(attribute.getClazz()
+				.getFullName());
+		int currentNumberOfAttributes = clazz.getAttributes()
+				.get(clazz.getAttributes().size() - 1).getSequence();
 
 		if (attribute.getSequence() != null) {
 			boolean minValueForSequence = attribute.getSequence() < MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE;
-			boolean maxValueForSequence = currentNumberOfAttributes < attribute.getSequence();
+			boolean maxValueForSequence = currentNumberOfAttributes < attribute
+					.getSequence();
 
 			if (!(minValueForSequence || maxValueForSequence)) {
 				return;

@@ -20,11 +20,8 @@ public class MinimumLengthAttributeConfigurationValidator extends
 	protected void validateDefault(List<ValidationError> errors,
 			Attribute attribute, JsonNode configuration, String defaultValue) {
 		if (defaultValue.length() < configuration.get(field).asInt()) {
-			addError(
-					errors,
-					"Invalid configuration for attribute "
-							+ attribute.getName()
-							+ ": the default value is smaller than minlength");
+
+			addError(errors, "the default value is smaller than minlength");
 		}
 
 	}

@@ -1,11 +1,12 @@
 package com.nanuvem.lom.kernel.validator;
 
+import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
+
 import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
-import com.nanuvem.lom.kernel.MetadataException;
 
 public class MinAndMaxConfigurationValidator implements
 		AttributeConfigurationValidator {
@@ -27,10 +28,7 @@ public class MinAndMaxConfigurationValidator implements
 			int maxLengthValue = configuration.get(maxField).getIntValue();
 
 			if (minLengthValue > maxLengthValue) {
-				throw new MetadataException(
-						"Invalid configuration for attribute "
-								+ attribute.getName() + ": " + minField
-								+ " is greater than " + maxField);
+				addError(errors, minField + " is greater than " + maxField);
 			}
 		}
 
