@@ -33,7 +33,6 @@ public abstract class AttributeConfigurationValidatorWithDefault implements
 				validateDefault(errors, attribute, configuration, defaultValue);
 			}
 		}
-
 	}
 
 	protected abstract void validateDefault(List<ValidationError> errors,

@@ -370,4 +370,451 @@ public class CreateAttributeServiceTest {
 		// "{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 		// "Invalid configuration for attribute pa: the default value is lower than minlength");
 	}
+
+	@Test
+	public void validConfigurationForLongTextAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p1", AttributeType.LONGTEXT, "{\"minlength\":10}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p2", AttributeType.LONGTEXT, "{\"maxlength\":100000}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"p3",
+						AttributeType.LONGTEXT,
+						"{\"mandatory\":true, \"default\":\"long text\", \"minlength\":5, \"maxlength\":150000}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p4", AttributeType.LONGTEXT, "");
+	}
+
+	@Test
+	public void invalidConfigurationForLongTextAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+						"{\"default\":10}",
+						"Invalid configuration for attribute pa: the default value must be a string");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"minlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"minlength\":10.0}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"maxlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"maxlength\":10.0}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abc\", \"minlength\":5}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abcabc\", \"maxlength\":5}",
+						"Invalid configuration for attribute pa: the default value is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+						"{\"minlength\":50, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
+						"{\"default\":\"abc\",\"minlength\":9, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+	}
+
+	@Test
+	public void validConfigurationForPasswordAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pa", AttributeType.PASSWORD, "{\"minlength\":10}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pb", AttributeType.PASSWORD, "{\"maxlength\":100000}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pc", AttributeType.PASSWORD, "{\"maxlength\":100000}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pd", AttributeType.PASSWORD, "{\"minUppers:\":1}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pe", AttributeType.PASSWORD, "{\"minNumbers\":2}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pf", AttributeType.PASSWORD, "{\"minSymbols\":3}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pg", AttributeType.PASSWORD, "{\"maxRepeat\":2}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"ph",
+						AttributeType.PASSWORD,
+						"{\"mandatory\":true, \"minlength\":5, \"maxlength\":12, "
+								+ "\"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3, "
+								+ "\"maxRepeat\":2}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pi", AttributeType.PASSWORD, "");
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pj", AttributeType.PASSWORD,
+				"{\"default\":\"Abcdef\", \"minUppers\":1}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pk", AttributeType.PASSWORD,
+				"{\"default\":\"abcdef10\", \"minNumbers\":2}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pl", AttributeType.PASSWORD,
+				"{\"default\":\"abcdef!@#\", \"minSymbols\":3}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pm", AttributeType.PASSWORD,
+				"{\"default\":\"aabcdef\", \"maxRepeat\":2}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pn",
+						AttributeType.PASSWORD,
+						"{\"default\":\"Abbcdef12!@#\", \"minUppers\":1, "
+								+ "\"minNumbers\":2, \"minSymbols\":3, \"maxRepeat\":2}");
+	}
+
+	@Test
+	public void invalidConfigurationForPasswordAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.PASSWORD,
+						"{\"default\":10}",
+						"Invalid configuration for attribute pa: the default value must be a string");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minlength\":10.0}",
+						"Invalid configuration for attribute pa: the minlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"maxlength\":\"abc\"}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"maxlength\":10.0}",
+						"Invalid configuration for attribute pa: the maxlength value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minUppers\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minUppers value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minUppers\":10.0}",
+						"Invalid configuration for attribute pa: the minUppers value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minNumbers\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minNumbers value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minNumbers\":10.0}",
+						"Invalid configuration for attribute pa: the minNumbers value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minSymbols\":\"abc\"}",
+						"Invalid configuration for attribute pa: the minSymbols value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"minSymbols\":10.0}",
+						"Invalid configuration for attribute pa: the minSymbols value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"maxRepeat\":\"abc\"}",
+						"Invalid configuration for attribute pa: the maxRepeat value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"maxRepeat\":10.0}",
+						"Invalid configuration for attribute pa: the maxRepeat value must be an integer number");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abc\", \"minlength\":5}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcabc\", \"maxlength\":5}",
+						"Invalid configuration for attribute pa: the default value is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", 1, "pa", AttributeType.PASSWORD,
+						"{\"minlength\":50, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abc\", \"minlength\":9, \"maxlength\":10}",
+						"Invalid configuration for attribute pa: the default value is smaller than minlength");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcdef\", \"minUppers\":1}",
+						"Invalid configuration for attribute pa: the default value must have at least 1 upper case character");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcDef\", \"minUppers\":2}",
+						"Invalid configuration for attribute pa: the default value must have at least 2 upper case characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcdef\", \"minNumbers\":1}",
+						"Invalid configuration for attribute pa: the default value must have at least 1 numerical character");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abc1\", \"minNumbers\":2}",
+						"Invalid configuration for attribute pa: the default value must have at least 2 numerical characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcdef\", \"minSymbols\":1}",
+						"Invalid configuration for attribute pa: the default value must have at least 1 symbol character");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"!abc\", \"minSymbols\":2}",
+						"Invalid configuration for attribute pa: the default value must have at least 2 symbol characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"aabcdef\", \"maxRepeat\":0}",
+						"Invalid configuration for attribute pa: the default value must not have repeated characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abcccd\", \"maxRepeat\":1}",
+						"Invalid configuration for attribute pa: the default value must not have more than 2 repeated characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"Abcdef1!@\", \"minUppers\":1, \"minNumbers\":1, \"minSymbols\":3,\"maxRepeat\":1}",
+						"Invalid configuration for attribute pa: the default value must have at least 3 symbol characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
+						"{\"default\":\"abccc\", \"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3,\"maxRepeat\":1}",
+						"Invalid configuration for attribute pa: "
+								+ "the default value must have at least 1 upper case character, "
+								+ "the default value must have at least 2 numerical characters, "
+								+ "the default value must have at least 3 symbol characters, "
+								+ "the default value must not have more than 2 repeated characters");
+
+	}
 }

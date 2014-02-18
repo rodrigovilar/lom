@@ -21,11 +21,8 @@ public class RegexAttributeConfigurationValidator extends
 
 		String regexValue = configuration.get(field).asText();
 		if (!defaultValue.matches(regexValue)) {
-			addError(
-					errors,
-					"Invalid configuration for attribute "
-							+ attribute.getName()
-							+ ": the default value does not match regex configuration");
+			addError(errors,
+					"the default value does not match regex configuration");
 		}
 	}
 
