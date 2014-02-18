@@ -28,9 +28,11 @@ public class MaximumRepeatAttributeConfigurationValidator extends
 				}
 			}
 		}
-		if (repeatedCharacterCounter > configuration.get(field).asInt()) {
-			String messagePlural = repeatedCharacterCounter > 1 ? " more than 2 "
-					: " ";
+
+		int maxRepeat = configuration.get(field).asInt();
+		if (repeatedCharacterCounter > maxRepeat) {
+			String messagePlural = repeatedCharacterCounter > 1 ? " more than "
+					+ (maxRepeat + 1) + " " : " ";
 
 			addError(errors, "the default value must not have" + messagePlural
 					+ "repeated characters");
