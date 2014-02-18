@@ -53,19 +53,19 @@ public class AttributeServiceImpl {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 
-		for (AttributeType attributeType : AttributeType.getList()) {
+		for (AttributeType attributeType : AttributeType.values()) {
 			List<AttributeConfigurationValidator> listValidators = new ArrayList<AttributeConfigurationValidator>();
 			this.validators.put(attributeType.toString(), listValidators);
 
 			if (attributeType.equals(AttributeType.TEXT)
 					|| attributeType.equals(AttributeType.LONGTEXT)) {
-				
+
 				listValidators.add(new RegexAttributeConfigurationValidator(
 						REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
 			}
 
 			if (attributeType.equals(AttributeType.PASSWORD)) {
-				
+
 				listValidators
 						.add(new MinimumUppersAttributeConfigurationValidator(
 								MINUPPERS_CONFIGURATION_NAME,
