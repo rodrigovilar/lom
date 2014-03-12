@@ -2,7 +2,9 @@ package com.nanuvem.lom.kernel.validator;
 
 import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -20,18 +22,27 @@ public class MaximumRepeatAttributeConfigurationValidator extends
 	protected void validateDefault(List<ValidationError> errors,
 			Attribute attribute, JsonNode configuration, String defaultValue) {
 
-		int repeatedCharacterCounter = 0;
-		for (int i = 0; i < defaultValue.length(); i++) {
-			for (int j = i + 1; j < defaultValue.length(); j++) {
-				if (defaultValue.toCharArray()[i] == defaultValue.toCharArray()[j]) {
-					repeatedCharacterCounter++;
-				}
+		Map<String, Integer> mapCounter = new HashMap<String, Integer>();
+		int characterCounter = 0;
+		
+		for (int i = 0; i < defaultValue.toCharArray().length; i++) {
+			System.out.println(String.valueOf(defaultValue.toCharArray()[i]));
+			Integer count = mapCounter.get(String.valueOf(defaultValue.toCharArray()[i]));
+			if (count == null) {
+				count = new Integer(-1);
+			}
+			count++;
+			mapCounter.put(String.valueOf(defaultValue.toCharArray()[i]), count);
+
+			if (characterCounter < count) {
+				characterCounter = count;
 			}
 		}
-		if (repeatedCharacterCounter > configuration.get(field).asInt()) {
-			String messagePlural = repeatedCharacterCounter > 1 ? " more than 2 "
-					: " ";
 
+		int maxRepeat = configuration.get(field).asInt();
+		if (characterCounter > maxRepeat) {
+			String messagePlural = characterCounter > 1 ? " more than "
+					+ (maxRepeat + 1) + " " : " ";
 			addError(errors, "the default value must not have" + messagePlural
 					+ "repeated characters");
 		}

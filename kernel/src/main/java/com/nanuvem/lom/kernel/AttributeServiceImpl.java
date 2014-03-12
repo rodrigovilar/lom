@@ -2,6 +2,7 @@ package com.nanuvem.lom.kernel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -34,16 +35,20 @@ public class AttributeServiceImpl {
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
 
-	private final String MANDATORY_CONFIGURATION_NAME = "mandatory";
-	private final String DEFAULT_CONFIGURATION_NAME = "default";
-	private final String REGEX_CONFIGURATION_NAME = "regex";
-	private final String MINLENGTH_CONFIGURATION_NAME = "minlength";
-	private final String MAXLENGTH_CONFIGURATION_NAME = "maxlength";
+	private String[] fieldsValidators = { "mandatory", "default", "regex",
+			"minlength", "maxlength", "minUppers", "minNumbers", "minSymbols",
+			"maxRepeat" };
 
-	private final String MINUPPERS_CONFIGURATION_NAME = "minUppers";
-	private final String MINNUMBERS_CONFIGURATION_NAME = "minNumbers";
-	private final String MINSYMBOLS_CONFIGURATION_NAME = "minSymbols";
-	private final String MAXREPEAT_CONFIGURATION_NAME = "maxRepeat";
+	private final String MANDATORY_CONFIGURATION_NAME = fieldsValidators[0];
+	private final String DEFAULT_CONFIGURATION_NAME = fieldsValidators[1];
+	private final String REGEX_CONFIGURATION_NAME = fieldsValidators[2];
+	private final String MINLENGTH_CONFIGURATION_NAME = fieldsValidators[3];
+	private final String MAXLENGTH_CONFIGURATION_NAME = fieldsValidators[4];
+
+	private final String MINUPPERS_CONFIGURATION_NAME = fieldsValidators[5];
+	private final String MINNUMBERS_CONFIGURATION_NAME = fieldsValidators[6];
+	private final String MINSYMBOLS_CONFIGURATION_NAME = fieldsValidators[7];
+	private final String MAXREPEAT_CONFIGURATION_NAME = fieldsValidators[8];
 
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
@@ -161,11 +166,14 @@ public class AttributeServiceImpl {
 	private void validateConfigurationAttribute(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
-
 			JsonNode jsonNode = validateJson(configuration);
 			List<ValidationError> errors = new ArrayList<ValidationError>();
 			List<AttributeConfigurationValidator> attributeValidators = this.validators
 					.get(attribute.getType().toString());
+
+			this.validateExistingFieldValidator(jsonNode.getFieldNames(),
+					attribute);
+
 			for (AttributeConfigurationValidator validator : attributeValidators) {
 				validator.validate(errors, attribute, jsonNode);
 			}
@@ -183,6 +191,22 @@ public class AttributeServiceImpl {
 				}
 				throw new MetadataException(errorMessage);
 			}
+		}
+	}
+
+	private void validateExistingFieldValidator(Iterator<String> iterator,
+			Attribute attribute) {
+
+		while (iterator.hasNext()) {
+			String nextIterator = iterator.next();
+			for (int i = 0; i < this.fieldsValidators.length; i++) {
+				if (nextIterator.equals(this.fieldsValidators[i])) {
+					return;
+				}
+			}
+			throw new MetadataException("Invalid configuration for attribute "
+					+ attribute.getName()
+					+ ": the anyconf configuration attribute is unknown");
 		}
 	}
 

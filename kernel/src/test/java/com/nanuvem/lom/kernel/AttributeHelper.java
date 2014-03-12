@@ -7,6 +7,7 @@ public class AttributeHelper {
 	
 	public static final AttributeType TEXT = AttributeType.TEXT;
 	public static final AttributeType LONGTEXT = AttributeType.LONGTEXT;
+	public static final AttributeType PASSWORD = AttributeType.PASSWORD;
 	
 	
 

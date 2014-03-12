@@ -3,6 +3,7 @@ package com.nanuvem.lom.kernel;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
@@ -495,7 +496,7 @@ public class CreateAttributeServiceTest {
 				1, "pc", AttributeType.PASSWORD, "{\"maxlength\":100000}");
 
 		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pd", AttributeType.PASSWORD, "{\"minUppers:\":1}");
+				1, "pd", AttributeType.PASSWORD, "{\"minUppers\":1}");
 
 		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
 				1, "pe", AttributeType.PASSWORD, "{\"minNumbers\":2}");
@@ -799,6 +800,16 @@ public class CreateAttributeServiceTest {
 						1,
 						"pa",
 						AttributeType.PASSWORD,
+						"{\"default\":\"abccccd\", \"maxRepeat\":2}",
+						"Invalid configuration for attribute pa: the default value must not have more than 3 repeated characters");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
 						"{\"default\":\"Abcdef1!@\", \"minUppers\":1, \"minNumbers\":1, \"minSymbols\":3,\"maxRepeat\":1}",
 						"Invalid configuration for attribute pa: the default value must have at least 3 symbol characters");
 
@@ -815,6 +826,113 @@ public class CreateAttributeServiceTest {
 								+ "the default value must have at least 2 numerical characters, "
 								+ "the default value must have at least 3 symbol characters, "
 								+ "the default value must not have more than 2 repeated characters");
+	}
+
+	@Test
+	@Ignore
+	public void validConfigurationForObjectAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pa", AttributeType.OBJECT,
+				"{\"schema\":OBJECT WITH ONE ATTRIBUTE}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pb", AttributeType.OBJECT,
+				"{\"schema\":OBJECT WITH TWO ATTRIBUTE}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pc", AttributeType.OBJECT,
+				"{\"schema\":ARRAY OF OBJECTS WITH TWO ATTRIBUTES}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "pd", AttributeType.OBJECT,
+				"{\"schema\":OBJECT WITH ONE SUB OBJECT}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(attributeService, "abc.a", 1,
+						"pa", AttributeType.OBJECT,
+						"{\"default\":OBJECT WITH ONE ATTRIBUTE, \"schema\":OBJECT WITH ONE ATTRIBUTE}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pb",
+						AttributeType.OBJECT,
+						"{\"default\":OBJECT WITH TWO ATTRIBUTES, \"schema\":OBJECT WITH TWO ATTRIBUTE}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pc",
+						AttributeType.OBJECT,
+						"{\"default\":ARRAY OF OBJECTS WITH TWO ATTRIBUTES, \"schema\":ARRAY OF OBJECTS WITH TWO ATTRIBUTES}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pd",
+						AttributeType.OBJECT,
+						"{\"default\":OBJECT WITH ONE SUB OBJECT, \"schema\":OBJECT WITH ONE SUB OBJECT}");
+
+	}
+
+	@Test
+	@Ignore
+	public void invalidConfigurationForObjectAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(attributeService,
+						"abc.a", null, "pa", AttributeType.OBJECT,
+						"{\"default\":10}",
+						"Invalid configuration for attribute pa: the default value must be a string");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.OBJECT,
+						"{\"default\":'ABC'}",
+						"Invalid configuration for attribute pa: the default value must use JSON format");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.OBJECT,
+						"{\"default\":'{}', \"schema\":OBJECT WITH ONE ATTRIBUTE}",
+						"Invalid configuration for attribute pa: the default value must match the JSON schema");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.OBJECT,
+						"{\"default\":OBJECT WITH A WRONG ATTRIBUTE NAME, \"schema\":OBJECT WITH ONE ATTRIBUTE}",
+						"Invalid configuration for attribute pa: the default value must match the JSON schema");
+
+		AttributeHelper
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.OBJECT,
+						"{\"default\":OBJECT WITH A WRONG ATTRIBUTE TYPE, \"schema\":OBJECT WITH ONE ATTRIBUTE}",
+						"Invalid configuration for attribute pa: the default value must match the JSON schema");
 
 	}
 }
