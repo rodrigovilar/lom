@@ -496,7 +496,7 @@ public class CreateAttributeServiceTest {
 				1, "pc", AttributeType.PASSWORD, "{\"maxlength\":100000}");
 
 		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pd", AttributeType.PASSWORD, "{\"minUppers:\":1}");
+				1, "pd", AttributeType.PASSWORD, "{\"minUppers\":1}");
 
 		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
 				1, "pe", AttributeType.PASSWORD, "{\"minNumbers\":2}");

@@ -28,10 +28,20 @@ public class UpdateAttributeServiceTest {
 
 	private static final String PASSWORD_CONFIGURATION_PARTIAL = "{\"minlength\": 5,\"maxlength\": 15}";
 
+//	private static final String PASSWORD_CONFIGURATION_COMPLETE =
+//			"{\"mandatory\": false, \"default\": \"abc@abc.com\", "
+//					+ "\"minUppers\": 1, \"minNumbers\": 2, \"minSymbols\": 1, \"maxRepeat\": 1"
+//					+ "\"minlength\": 5,\"maxlength\": 15}";
+	
 	private static final String PASSWORD_CONFIGURATION_COMPLETE =
-			"{\"mandatory\": false, \"default\": \"abc@abc.com\", "
-					+ "\"minUppers\": 1, \"minNumbers\": 2, \"minSymbols\": 1, \"maxRepeat\": 1"
-					+ "\"minlength\": 5,\"maxlength\": 15}";
+			"{\"mandatory\": false, " +
+			"\"default\": \"Abc12@abd.com\", " +
+			"\"minUppers\": 1, " +
+			"\"minNumbers\": 2, " +
+			"\"minSymbols\": 1, " +
+			"\"maxRepeat\": 1," +
+			"\"minlength\": 5," +
+			"\"maxlength\": 15}";
 
 	private static final String CONFIGURATION_MANDATORY_TRUE = "{\"mandatory\":true}";
 
@@ -411,24 +421,24 @@ public class UpdateAttributeServiceTest {
 				"{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 				"Invalid configuration for attribute pa: the default value is smaller than minlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{minUppers:'abc'}", "Invalid configuration for attribute pa: minUppers must be an integer number");
+				"{\"minUppers\":\"abc\"}", "Invalid configuration for attribute pa: the minUppers value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"minUppers\":10,0}", "Invalid configuration for attribute pa: minUppers must be an integer number");
+				"{\"minUppers\":10.0}", "Invalid configuration for attribute pa: the minUppers value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"minNumbers\":\"abc\"}",
-				"Invalid configuration for attribute pa: minNumbers must be an integer number");
+				"Invalid configuration for attribute pa: the minNumbers value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"minNumbers\":10,0}", "Invalid configuration for attribute pa: minNumbers must be an integer number");
+				"{\"minNumbers\":10.0}", "Invalid configuration for attribute pa: the minNumbers value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"minSymbols\":\"abc\"}",
-				"Invalid configuration for attribute pa: minSymbols must be an integer number");
+				"Invalid configuration for attribute pa: the minSymbols value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"minSymbols\":10,0}", "Invalid configuration for attribute pa: minSymbols must be an integer number");
+				"{\"minSymbols\":10.0}", "Invalid configuration for attribute pa: the minSymbols value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"maxRepeats\":\"abc\"}",
-				"Invalid configuration for attribute pa: maxRepeats must be an integer number");
+				"{\"maxRepeat\":\"abc\"}",
+				"Invalid configuration for attribute pa: the maxRepeat value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"maxRepeats\":10,0}", "Invalid configuration for attribute pa: maxRepeats must be an integer number");
+				"{\"maxRepeat\":10.0}", "Invalid configuration for attribute pa: the maxRepeat value must be an integer number");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"default\":\"abcdef\", \"minUppers\":1}",
 				"Invalid configuration for attribute pa: the default value must have at least 1 upper case character");
@@ -454,7 +464,7 @@ public class UpdateAttributeServiceTest {
 				"{\"default\":\"abcccd\", \"maxRepeat\":1}",
 				"Invalid configuration for attribute pa: the default value must not have more than 2 repeated characters");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
-				"{\"default\":\"Abcdef1!@#\", \"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3, \"maxRepeat\":1}",
+				"{\"default\":\"Abcdef12!@b\", \"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3, \"maxRepeat\":1}",
 				"Invalid configuration for attribute pa: the default value must have at least 3 symbol characters");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"default\":\"abccc\", \"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3, \"maxRepeat\":1}",
