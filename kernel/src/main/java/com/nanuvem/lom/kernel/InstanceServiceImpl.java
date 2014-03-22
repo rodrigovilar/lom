@@ -15,6 +15,13 @@ public class InstanceServiceImpl {
 		this.dao = factory.createInstanceDao();
 	}
 
+	public void create(Instance instance) {
 
+	}
+
+	public Instance findInstanceById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

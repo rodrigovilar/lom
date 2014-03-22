@@ -29,7 +29,7 @@ public class AttributeHelper {
 		return attribute;
 	}
 
-	private static Class newClass(String classFullName) {
+	public static Class newClass(String classFullName) {
 		String namespace = null;
 		String name = null;
 

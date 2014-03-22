@@ -1,8 +1,5 @@
 package com.nanuvem.lom.kernel;
 
-import static org.junit.Assert.fail;
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,10 +18,40 @@ public class InstanceServiceTest {
 		this.attributeService = new AttributeServiceImpl(daoFactory);
 		this.instanceService = new InstanceServiceImpl(daoFactory);
 	}
+
 	@Test
-	public void classWithoutAttributes(){
-		
+	public void classWithoutAttributes() {
+		ClassHelper.createClass(classService, "abc", "a");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "abc.a");
+
+		ClassHelper.createClass(classService, "abc", "b");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "abc.b");
+
+		ClassHelper.createClass(classService, "", "a");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "a");
+
+		ClassHelper.createClass(classService, "", "b");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "b");
 	}
 
-	
+	@Test
+	public void classWithoutAttributesUnknownAttributes() {
+		ClassHelper.createClass(classService, "system", "Client");
+
+		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
+				"system.Client", "Unknown attribute for system.Client: age",
+				attributeValue("age", 30));
+
+	}
+
+	private static AttributeValue attributeValue(String attributeName,
+			Object objValue) {
+		Attribute attribute = new Attribute();
+		attribute.setName(attributeName);
+		AttributeValue value = new AttributeValue();
+		value.setValue(objValue);
+		value.setAttribute(attribute);
+		return value;
+	}
+
 }

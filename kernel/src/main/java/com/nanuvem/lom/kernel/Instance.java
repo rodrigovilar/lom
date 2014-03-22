@@ -6,15 +6,13 @@ import java.util.List;
 
 public class Instance implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
 	private Integer version;
 	private Class clazz;
-	
+	private List<AttributeValue> values = new LinkedList<AttributeValue>();	
+
 
 	public Long getId() {
 		return id;
@@ -22,6 +20,14 @@ public class Instance implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public List<AttributeValue> getValues() {
+		return values;
+	}
+
+	public void setValues(List<AttributeValue> values) {
+		this.values = values;
 	}
 
 	public Integer getVersion() {
