@@ -26,7 +26,6 @@ public class MaximumRepeatAttributeConfigurationValidator extends
 		int characterCounter = 0;
 		
 		for (int i = 0; i < defaultValue.toCharArray().length; i++) {
-			System.out.println(String.valueOf(defaultValue.toCharArray()[i]));
 			Integer count = mapCounter.get(String.valueOf(defaultValue.toCharArray()[i]));
 			if (count == null) {
 				count = new Integer(-1);
