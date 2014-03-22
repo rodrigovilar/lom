@@ -15,17 +15,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MaximumRepeatAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MinimumLengthAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MinimumNumbersAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MinimumSymbolsAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.MinimumUppersAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.RegexAttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.StringAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
+import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.IntegerAttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.LongTextAttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.PasswordAttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.TextAttributeTypeDeployer;
 
 public class AttributeServiceImpl {
 
@@ -35,80 +30,22 @@ public class AttributeServiceImpl {
 
 	private final Integer MINIMUM_VALUE_FOR_THE_ATTRIBUTE_SEQUENCE = 1;
 
-	private String[] fieldsValidators = { "mandatory", "default", "regex",
-			"minlength", "maxlength", "minUppers", "minNumbers", "minSymbols",
-			"maxRepeat" };
-
-	private final String MANDATORY_CONFIGURATION_NAME = fieldsValidators[0];
-	private final String DEFAULT_CONFIGURATION_NAME = fieldsValidators[1];
-	private final String REGEX_CONFIGURATION_NAME = fieldsValidators[2];
-	private final String MINLENGTH_CONFIGURATION_NAME = fieldsValidators[3];
-	private final String MAXLENGTH_CONFIGURATION_NAME = fieldsValidators[4];
-
-	private final String MINUPPERS_CONFIGURATION_NAME = fieldsValidators[5];
-	private final String MINNUMBERS_CONFIGURATION_NAME = fieldsValidators[6];
-	private final String MINSYMBOLS_CONFIGURATION_NAME = fieldsValidators[7];
-	private final String MAXREPEAT_CONFIGURATION_NAME = fieldsValidators[8];
-
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
-	private Map<String, List<AttributeConfigurationValidator>> validators = new HashMap<String, List<AttributeConfigurationValidator>>();
+	private Map<String, AttributeTypeDeployer> deployers = new HashMap<String, AttributeTypeDeployer>();
 
 	public AttributeServiceImpl(DaoFactory dao) {
 		this.classService = new ClassServiceImpl(dao);
 		this.attributeDao = dao.createAttributeDao();
 
-		for (AttributeType attributeType : AttributeType.values()) {
-			List<AttributeConfigurationValidator> listValidators = new ArrayList<AttributeConfigurationValidator>();
-			this.validators.put(attributeType.toString(), listValidators);
-
-			if (attributeType.equals(AttributeType.TEXT)
-					|| attributeType.equals(AttributeType.LONGTEXT)) {
-
-				listValidators.add(new RegexAttributeConfigurationValidator(
-						REGEX_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME));
-			}
-
-			if (attributeType.equals(AttributeType.PASSWORD)) {
-
-				listValidators
-						.add(new MinimumUppersAttributeConfigurationValidator(
-								MINUPPERS_CONFIGURATION_NAME,
-								DEFAULT_CONFIGURATION_NAME));
-
-				listValidators
-						.add(new MinimumNumbersAttributeConfigurationValidator(
-								MINNUMBERS_CONFIGURATION_NAME,
-								DEFAULT_CONFIGURATION_NAME));
-
-				listValidators
-						.add(new MinimumSymbolsAttributeConfigurationValidator(
-								MINSYMBOLS_CONFIGURATION_NAME,
-								DEFAULT_CONFIGURATION_NAME));
-
-				listValidators
-						.add(new MaximumRepeatAttributeConfigurationValidator(
-								MAXREPEAT_CONFIGURATION_NAME,
-								DEFAULT_CONFIGURATION_NAME));
-			}
-
-			listValidators.add(new BooleanAttributeConfigurationValidator(
-					MANDATORY_CONFIGURATION_NAME));
-			listValidators.add(new StringAttributeConfigurationValidator(
-					DEFAULT_CONFIGURATION_NAME));
-			listValidators
-					.add(new MinimumLengthAttributeConfigurationValidator(
-							MINLENGTH_CONFIGURATION_NAME,
-							DEFAULT_CONFIGURATION_NAME));
-			listValidators
-					.add(new MaximumLengthAttributeConfigurationValidator(
-							MAXLENGTH_CONFIGURATION_NAME,
-							DEFAULT_CONFIGURATION_NAME));
-			listValidators
-					.add(new MinAndMaxConfigurationValidator(
-							MAXLENGTH_CONFIGURATION_NAME,
-							MINLENGTH_CONFIGURATION_NAME));
-		}
+		deployers.put(AttributeType.TEXT.name(),
+				new TextAttributeTypeDeployer());
+		deployers.put(AttributeType.LONGTEXT.name(),
+				new LongTextAttributeTypeDeployer());
+		deployers.put(AttributeType.PASSWORD.name(),
+				new PasswordAttributeTypeDeployer());
+		deployers.put(AttributeType.INTEGER.name(),
+				new IntegerAttributeTypeDeployer());
 	}
 
 	private void validateCreate(Attribute attribute) {
@@ -167,46 +104,8 @@ public class AttributeServiceImpl {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
 			JsonNode jsonNode = validateJson(configuration);
-			List<ValidationError> errors = new ArrayList<ValidationError>();
-			List<AttributeConfigurationValidator> attributeValidators = this.validators
-					.get(attribute.getType().toString());
-
-			this.validateExistingFieldValidator(jsonNode.getFieldNames(),
-					attribute);
-
-			for (AttributeConfigurationValidator validator : attributeValidators) {
-				validator.validate(errors, attribute, jsonNode);
-			}
-
-			if (!errors.isEmpty()) {
-				String errorMessage = "";
-				for (ValidationError error : errors) {
-					if (errorMessage.isEmpty()) {
-						errorMessage += PREFIX_EXCEPTION_MESSAGE_CONFIGURATION
-								+ " " + attribute.getName() + ": "
-								+ error.getMessage();
-					} else {
-						errorMessage += ", " + error.getMessage();
-					}
-				}
-				throw new MetadataException(errorMessage);
-			}
-		}
-	}
-
-	private void validateExistingFieldValidator(Iterator<String> nextField,
-			Attribute attribute) {
-
-		while (nextField.hasNext()) {
-			String nextIterator = nextField.next();
-			for (int i = 0; i < this.fieldsValidators.length; i++) {
-				if (nextIterator.equals(this.fieldsValidators[i])) {
-					return;
-				}
-			}
-			throw new MetadataException("Invalid configuration for attribute "
-					+ attribute.getName()
-					+ ": the anyconf configuration attribute is unknown");
+			validateFieldNames(attribute, jsonNode);
+			validateFieldValues(attribute, jsonNode);
 		}
 	}
 
@@ -224,7 +123,45 @@ public class AttributeServiceImpl {
 		}
 		return jsonNode;
 	}
+	
+	private void validateFieldNames(Attribute attribute, JsonNode jsonNode) {
+		Iterator<String> fieldNames = jsonNode.getFieldNames();
+		while (fieldNames.hasNext()) {
+			String fieldName = fieldNames.next();
+		
+			if (!this.deployers.get(attribute.getType().name()).containsConfigurationField(fieldName)) {
+		
+				throw new MetadataException(
+						"Invalid configuration for attribute "
+								+ attribute.getName()
+								+ ": the " + fieldName + " configuration attribute is unknown");
+			}
+		}
+	}
 
+	private void validateFieldValues(Attribute attribute, JsonNode jsonNode) {
+		List<ValidationError> errors = new ArrayList<ValidationError>();
+		AttributeTypeDeployer deployer = this.deployers.get(attribute
+				.getType().name());
+		for (AttributeConfigurationValidator validator : deployer.getValidators()) {
+			validator.validate(errors, attribute, jsonNode);
+		}
+		
+		if (!errors.isEmpty()) {
+			String errorMessage = "";
+			for (ValidationError error : errors) {
+				if (errorMessage.isEmpty()) {
+					errorMessage += PREFIX_EXCEPTION_MESSAGE_CONFIGURATION
+							+ " " + attribute.getName() + ": "
+							+ error.getMessage();
+				} else {
+					errorMessage += ", " + error.getMessage();
+				}
+			}
+			throw new MetadataException(errorMessage);
+		}
+	}
+	
 	private Class validateExistingClassForAttribute(Attribute attribute) {
 		Class clazz = null;
 		try {
