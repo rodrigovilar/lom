@@ -194,11 +194,11 @@ public class AttributeServiceImpl {
 		}
 	}
 
-	private void validateExistingFieldValidator(Iterator<String> iterator,
+	private void validateExistingFieldValidator(Iterator<String> nextField,
 			Attribute attribute) {
 
-		while (iterator.hasNext()) {
-			String nextIterator = iterator.next();
+		while (nextField.hasNext()) {
+			String nextIterator = nextField.next();
 			for (int i = 0; i < this.fieldsValidators.length; i++) {
 				if (nextIterator.equals(this.fieldsValidators[i])) {
 					return;
