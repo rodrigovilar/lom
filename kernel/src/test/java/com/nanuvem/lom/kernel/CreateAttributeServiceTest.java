@@ -829,6 +829,23 @@ public class CreateAttributeServiceTest {
 	}
 
 	@Test
+	public void validConfigurationForIntegerAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p1", AttributeType.INTEGER, "{\"minvalue\":-5}");
+		
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p2", AttributeType.INTEGER, "{\"maxvalue\":100000000000}");
+		
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p3", AttributeType.INTEGER, "{\"mandatory\":true, \"default\":10, \"minvalue\":5, \"maxvalue\":150000}");
+
+		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
+				1, "p4", AttributeType.INTEGER, "");
+	}
+
+	@Test
 	@Ignore
 	public void validConfigurationForObjectAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
