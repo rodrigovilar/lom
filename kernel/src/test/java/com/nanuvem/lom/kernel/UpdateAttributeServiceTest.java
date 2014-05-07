@@ -251,7 +251,7 @@ public class UpdateAttributeServiceTest {
 				"Invalid configuration for attribute pa: the default value is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", TEXT,
 				"{\"minlength\":50, \"maxlength\":10}",
-				"Invalid configuration for attribute pa: minlength is greater than maxlength");
+				"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", TEXT,
 				"{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 				"Invalid configuration for attribute pa: the default value is smaller than minlength");
@@ -334,7 +334,7 @@ public class UpdateAttributeServiceTest {
 				"Invalid configuration for attribute pa: the default value is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", LONGTEXT,
 				"{\"minlength\":50, \"maxlength\":10}",
-				"Invalid configuration for attribute pa: minlength is greater than maxlength");
+				"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", LONGTEXT,
 				"{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 				"Invalid configuration for attribute pa: the default value is smaller than minlength");
@@ -416,7 +416,7 @@ public class UpdateAttributeServiceTest {
 				"Invalid configuration for attribute pa: the default value is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"minlength\":50, \"maxlength\":10}",
-				"Invalid configuration for attribute pa: minlength is greater than maxlength");
+				"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 		expectExceptionOnUpdateInvalidAttribute(attributeService, "abc.a", createdAttribute, 1, "pa", PASSWORD,
 				"{\"default\":\"abc\", \"minlength\":9, \"maxlength\":50}",
 				"Invalid configuration for attribute pa: the default value is smaller than minlength");

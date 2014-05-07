@@ -28,7 +28,7 @@ public class MinAndMaxConfigurationValidator implements
 			int maxLengthValue = configuration.get(maxField).getIntValue();
 
 			if (minLengthValue > maxLengthValue) {
-				addError(errors, minField + " is greater than " + maxField);
+				addError(errors, "the " + minField + " is greater than " + maxField);
 			}
 		}
 
