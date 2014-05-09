@@ -35,10 +35,11 @@ public class InstanceHelper {
 	}
 
 	public static void createAndVerifyOneInstance(
-			InstanceServiceImpl instanceService, String classFullName) {
+			InstanceServiceImpl instanceService, String classFullName,
+			AttributeValue... values) {
 
 		Instance createdInstance = createOneInstance(instanceService,
-				classFullName);
+				classFullName, values);
 
 		Assert.assertNotNull(createdInstance.getId());
 		Assert.assertEquals(new Integer(0), createdInstance.getVersion());
@@ -46,6 +47,23 @@ public class InstanceHelper {
 				instanceService.findInstanceById(createdInstance.getId()));
 		Assert.assertEquals(classFullName, createdInstance.getClazz()
 				.getFullName());
+
+		// Assert.assertTrue(createdInstance.getValues().contains(values));
+		boolean containsAllAttributesValues = false;
+		if (values != null && values.length > 0) {
+			containsAllAttributesValues = false;
+			for (AttributeValue value : createdInstance.getValues()) {
+				for (int i = 0; i < values.length; i++) {
+					if (value.getAttribute().equals(values[i].getAttribute())
+							&& value.getValue().equals(values[i].getValue())) {
+						containsAllAttributesValues = true;
+						break;
+					}
+				}
+
+			}
+			Assert.assertTrue(containsAllAttributesValues);
+		}
 	}
 
 	// public static Attribute updateAttribute(
