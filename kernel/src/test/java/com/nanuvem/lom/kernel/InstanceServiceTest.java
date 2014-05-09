@@ -15,7 +15,7 @@ public class InstanceServiceTest {
 	public void init() {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
-		
+
 		this.classService = serviceFactory.getClassService();
 		this.attributeService = serviceFactory.getAttributeService();
 		this.instanceService = serviceFactory.getInstanceService();
@@ -24,7 +24,8 @@ public class InstanceServiceTest {
 	@Test
 	public void unknownClass() {
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"a", "Unknown class: a", attributeValue("age", 30));
+				"default.a", "Unknown class: a",
+				attributeValue("age", 30));
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
 				"abc.a", "Unknown class: abc.a", attributeValue("age", 30));
@@ -188,10 +189,9 @@ public class InstanceServiceTest {
 				"abc.g", value7);
 
 		ClassHelper.createClass(classService, "abc", "i");
-		AttributeHelper
-				.createOneAttribute(this.attributeService, "abc.i", null,
-						"name", AttributeType.TEXT,
-						"{\"mandatory\": true, \"minlength\": 6, \"maxlength\" : 6}");
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.i",
+				null, "name", AttributeType.TEXT,
+				"{\"mandatory\": true, \"minlength\": 6, \"maxlength\" : 6}");
 		AttributeValue value8 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.i", "Johson");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -212,10 +212,9 @@ public class InstanceServiceTest {
 				"abc.j", value9);
 
 		ClassHelper.createClass(classService, "abc", "k");
-		AttributeHelper
-				.createOneAttribute(this.attributeService, "abc.k", null,
-						"name", AttributeType.TEXT,
-						"{\"mandatory\": true, \"minlength\": 3, \"maxlength\" : 8}");
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.k",
+				null, "name", AttributeType.TEXT,
+				"{\"mandatory\": true, \"minlength\": 3, \"maxlength\" : 8}");
 		AttributeValue value10 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.k", "Johnson");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
