@@ -7,12 +7,11 @@ import java.util.List;
 public class Instance implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private Integer version;
 	private Class clazz;
-	private List<AttributeValue> values = new LinkedList<AttributeValue>();	
-
+	private List<AttributeValue> values = new LinkedList<AttributeValue>();
 
 	public Long getId() {
 		return id;
@@ -38,7 +37,6 @@ public class Instance implements Serializable {
 		this.version = version;
 	}
 
-	
 	public Class getClazz() {
 		return clazz;
 	}
@@ -84,5 +82,4 @@ public class Instance implements Serializable {
 		return true;
 	}
 
-	
 }

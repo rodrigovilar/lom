@@ -6,9 +6,8 @@ import com.nanuvem.lom.kernel.Attribute;
 
 public class BooleanAttributeConfigurationValidator extends
 		AttributeTypeConfigurationValidator {
-	
 
-	public BooleanAttributeConfigurationValidator(String field){
+	public BooleanAttributeConfigurationValidator(String field) {
 		super(field, "true or false literals");
 	}
 

@@ -39,8 +39,8 @@ public class InstanceServiceTest {
 		ClassHelper.createClass(classService, "system", "Client");
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"system.Client", "Unknown attribute for system.Client: age", attributeValue("age", 30));
-
+				"system.Client", "Unknown attribute for system.Client: age",
+				attributeValue("age", 30));
 	}
 
 	private static AttributeValue attributeValue(String attributeName,

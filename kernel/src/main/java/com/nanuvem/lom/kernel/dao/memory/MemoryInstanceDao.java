@@ -55,13 +55,12 @@ public class MemoryInstanceDao implements InstanceDao {
 
 	public void delete(Instance instance) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public Instance update(Instance instance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

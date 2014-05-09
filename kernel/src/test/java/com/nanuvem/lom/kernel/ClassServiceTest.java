@@ -356,9 +356,8 @@ public class ClassServiceTest {
 	public void listClassesByValidFragmentOfNameAndPackage() {
 		String namespaceFragment = "ns";
 		String nameFragment = "n";
-		List<Class> allClasses = service
-				.listClassesByFragmentOfNameAndPackage(namespaceFragment,
-						nameFragment);
+		List<Class> allClasses = service.listClassesByFragmentOfNameAndPackage(
+				namespaceFragment, nameFragment);
 
 		Assert.assertEquals(0, allClasses.size());
 		Class clazz1 = this.createAndSaveOneClass("ns1", "n1");
@@ -383,8 +382,8 @@ public class ClassServiceTest {
 
 	@Test
 	public void listClassesByEmptyNameAndPackage() {
-		List<Class> allClasses = service
-				.listClassesByFragmentOfNameAndPackage("", "");
+		List<Class> allClasses = service.listClassesByFragmentOfNameAndPackage(
+				"", "");
 		Assert.assertEquals(0, allClasses.size());
 
 		allClasses = service.listClassesByFragmentOfNameAndPackage("ns", "");
@@ -416,8 +415,8 @@ public class ClassServiceTest {
 		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
 				expectedClasses, "", "n");
 
-		allClasses = service.listClassesByFragmentOfNameAndPackage("nspace",
-				"");
+		allClasses = service
+				.listClassesByFragmentOfNameAndPackage("nspace", "");
 		Assert.assertEquals(0, allClasses.size());
 
 		for (Class clazz : expectedClasses) {
@@ -446,12 +445,12 @@ public class ClassServiceTest {
 		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
 				expectedClasses, null, null);
 
-		List<Class> allClasses = service
-				.listClassesByFragmentOfNameAndPackage(null, "nspace");
+		List<Class> allClasses = service.listClassesByFragmentOfNameAndPackage(
+				null, "nspace");
 		Assert.assertEquals(0, allClasses.size());
 
-		allClasses = service.listClassesByFragmentOfNameAndPackage(null,
-				"name");
+		allClasses = service
+				.listClassesByFragmentOfNameAndPackage(null, "name");
 		Assert.assertEquals(0, allClasses.size());
 
 		listClassesByFragmentOfNamespaceAndNamesAndVerifyThatClassesWhereListed(
@@ -737,9 +736,8 @@ public class ClassServiceTest {
 			List<Class> expectedListedClasses, String namespaceFragment,
 			String nameFragment) {
 
-		List<Class> allClasses = service
-				.listClassesByFragmentOfNameAndPackage(namespaceFragment,
-						nameFragment);
+		List<Class> allClasses = service.listClassesByFragmentOfNameAndPackage(
+				namespaceFragment, nameFragment);
 		Assert.assertEquals(expectedListedClasses.size(), allClasses.size());
 		int index = 0;
 		for (Class expected : expectedListedClasses) {

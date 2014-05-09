@@ -3,7 +3,7 @@ package com.nanuvem.lom.kernel;
 import java.io.Serializable;
 
 public class Attribute implements Serializable {
-	
+
 	private Long id;
 
 	private Integer version;
@@ -17,7 +17,7 @@ public class Attribute implements Serializable {
 	private String configuration;
 
 	private Class clazz;
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

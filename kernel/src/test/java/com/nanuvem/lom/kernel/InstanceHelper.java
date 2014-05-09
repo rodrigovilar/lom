@@ -37,12 +37,15 @@ public class InstanceHelper {
 	public static void createAndVerifyOneInstance(
 			InstanceServiceImpl instanceService, String classFullName) {
 
-		Instance createdInstance = createOneInstance(instanceService, classFullName);
+		Instance createdInstance = createOneInstance(instanceService,
+				classFullName);
 
 		Assert.assertNotNull(createdInstance.getId());
 		Assert.assertEquals(new Integer(0), createdInstance.getVersion());
-		Assert.assertEquals(createdInstance, instanceService.findInstanceById(createdInstance.getId()));
-		Assert.assertEquals(classFullName, createdInstance.getClazz().getFullName());
+		Assert.assertEquals(createdInstance,
+				instanceService.findInstanceById(createdInstance.getId()));
+		Assert.assertEquals(classFullName, createdInstance.getClazz()
+				.getFullName());
 	}
 
 	// public static Attribute updateAttribute(

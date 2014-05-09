@@ -19,7 +19,7 @@ public class MinimumValueAttributeConfigurationValidator extends
 	@Override
 	protected void validateDefault(List<ValidationError> errors,
 			Attribute attribute, JsonNode configuration, String defaultValue) {
-		
+
 		Integer intDefaultValue = Integer.parseInt(defaultValue);
 		if (intDefaultValue < configuration.get(field).asInt()) {
 

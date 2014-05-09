@@ -26,8 +26,8 @@ public class MemoryClassDao implements ClassDao {
 
 	public List<Class> listAll() {
 		List<Class> classesReturn = new ArrayList<Class>();
-		
-		for(Class clazz : this.classes){
+
+		for (Class clazz : this.classes) {
 			classesReturn.add((Class) SerializationUtils.clone(clazz));
 		}
 		return classesReturn;
