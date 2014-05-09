@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.SerializationUtils;
 
-import com.nanuvem.lom.kernel.Attribute;
 import com.nanuvem.lom.kernel.Class;
 import com.nanuvem.lom.kernel.Instance;
 import com.nanuvem.lom.kernel.dao.ClassDao;

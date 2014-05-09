@@ -28,10 +28,10 @@ public class InstanceServiceTest {
 		InstanceHelper.createAndVerifyOneInstance(instanceService, "abc.b");
 
 		ClassHelper.createClass(classService, "", "a");
-		InstanceHelper.createAndVerifyOneInstance(instanceService, "a");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "default.a");
 
 		ClassHelper.createClass(classService, "", "b");
-		InstanceHelper.createAndVerifyOneInstance(instanceService, "b");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "default.b");
 	}
 
 	@Test
@@ -39,8 +39,7 @@ public class InstanceServiceTest {
 		ClassHelper.createClass(classService, "system", "Client");
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"system.Client", "Unknown attribute for system.Client: age",
-				attributeValue("age", 30));
+				"system.Client", "Unknown attribute for system.Client: age", attributeValue("age", 30));
 
 	}
 

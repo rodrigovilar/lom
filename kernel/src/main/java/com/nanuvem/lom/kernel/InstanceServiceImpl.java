@@ -1,27 +1,27 @@
 package com.nanuvem.lom.kernel;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
 import com.nanuvem.lom.kernel.dao.DaoFactory;
-import com.nanuvem.lom.kernel.dao.ClassDao;
 import com.nanuvem.lom.kernel.dao.InstanceDao;
 
 public class InstanceServiceImpl {
 
 	private InstanceDao dao;
-
-	public InstanceServiceImpl(DaoFactory factory) {
-		this.dao = factory.createInstanceDao();
+	private ClassServiceImpl classService;
+	
+	public InstanceServiceImpl(DaoFactory daoFactory) {
+		this.classService = new ClassServiceImpl(daoFactory);
+		this.dao = daoFactory.createInstanceDao();
 	}
 
 	public void create(Instance instance) {
-
+		Class clazz = this.classService.readClass(instance.getClazz().getFullName());
+		if(clazz != null){
+			instance.setClazz(clazz);
+			this.dao.create(instance);			
+		}
 	}
 
 	public Instance findInstanceById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.dao.findInstanceById(id);
 	}
-
 }
