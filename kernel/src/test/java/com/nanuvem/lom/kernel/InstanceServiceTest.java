@@ -8,8 +8,8 @@ import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
 public class InstanceServiceTest {
 
 	private ClassServiceImpl classService;
-	private InstanceServiceImpl instanceService;
 	private AttributeServiceImpl attributeService;
+	private InstanceServiceImpl instanceService;
 
 	@Before
 	public void init() {
@@ -23,9 +23,6 @@ public class InstanceServiceTest {
 
 	@Test
 	public void unknownClass() {
-		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"a", "Unknown class: a", attributeValue("age", 30));
-
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
 				"abc.a", "Unknown class: abc.a", attributeValue("age", 30));
 	}

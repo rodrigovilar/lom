@@ -95,7 +95,6 @@ public class InstanceHelper {
 				allWereValidatedAttributesValues = allWereValidatedAttributesValues
 						&& valueParameterOfTheInteractionWasValidated;
 			}
-
 		}
 		Assert.assertTrue("There has been no validated AttributeValue",
 				allWereValidatedAttributesValues);
@@ -139,6 +138,5 @@ public class InstanceHelper {
 		String defaultField = jsonNode.get(
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
-
 	}
 }
