@@ -18,8 +18,8 @@ public interface ClassDao {
 
 	Class findClassById(Long id);
 
-	List<Class> listClassesByFragmentOfNameAndPackage(
-			String namespaceFragment, String nameFragment);
+	List<Class> listClassesByFragmentOfNameAndPackage(String namespaceFragment,
+			String nameFragment);
 
 	Class readClassByFullName(String classFullName);
 

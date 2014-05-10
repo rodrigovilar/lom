@@ -123,30 +123,32 @@ public class AttributeServiceImpl {
 		}
 		return jsonNode;
 	}
-	
+
 	private void validateFieldNames(Attribute attribute, JsonNode jsonNode) {
 		Iterator<String> fieldNames = jsonNode.getFieldNames();
 		while (fieldNames.hasNext()) {
 			String fieldName = fieldNames.next();
-		
-			if (!this.deployers.get(attribute.getType().name()).containsConfigurationField(fieldName)) {
-		
+
+			if (!this.deployers.get(attribute.getType().name())
+					.containsConfigurationField(fieldName)) {
+
 				throw new MetadataException(
 						"Invalid configuration for attribute "
-								+ attribute.getName()
-								+ ": the " + fieldName + " configuration attribute is unknown");
+								+ attribute.getName() + ": the " + fieldName
+								+ " configuration attribute is unknown");
 			}
 		}
 	}
 
 	private void validateFieldValues(Attribute attribute, JsonNode jsonNode) {
 		List<ValidationError> errors = new ArrayList<ValidationError>();
-		AttributeTypeDeployer deployer = this.deployers.get(attribute
-				.getType().name());
-		for (AttributeConfigurationValidator validator : deployer.getValidators()) {
+		AttributeTypeDeployer deployer = this.deployers.get(attribute.getType()
+				.name());
+		for (AttributeConfigurationValidator validator : deployer
+				.getValidators()) {
 			validator.validate(errors, attribute, jsonNode);
 		}
-		
+
 		if (!errors.isEmpty()) {
 			String errorMessage = "";
 			for (ValidationError error : errors) {
@@ -161,7 +163,7 @@ public class AttributeServiceImpl {
 			throw new MetadataException(errorMessage);
 		}
 	}
-	
+
 	private Class validateExistingClassForAttribute(Attribute attribute) {
 		Class clazz = null;
 		try {

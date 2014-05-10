@@ -11,7 +11,6 @@ public class MemoryDaoFactory implements DaoFactory {
 	private MemoryAttributeDao attributeDao;
 	private MemoryInstanceDao instanceDao;
 
-
 	public ClassDao createClassDao() {
 		if (classDao == null) {
 			this.classDao = new MemoryClassDao();
@@ -31,7 +30,7 @@ public class MemoryDaoFactory implements DaoFactory {
 			this.instanceDao = new MemoryInstanceDao(this.createClassDao());
 		}
 		return this.instanceDao;
-		
+
 	}
 
 }

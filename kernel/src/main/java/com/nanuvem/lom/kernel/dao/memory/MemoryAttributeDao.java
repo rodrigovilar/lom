@@ -33,7 +33,8 @@ public class MemoryAttributeDao implements AttributeDao {
 	private void shiftSequence(Attribute attribute, Class clazz) {
 		int i = 0;
 		for (; i < clazz.getAttributes().size(); i++) {
-			if (attribute.getSequence().equals(clazz.getAttributes().get(i).getSequence())) {
+			if (attribute.getSequence().equals(
+					clazz.getAttributes().get(i).getSequence())) {
 				break;
 			}
 		}
@@ -127,8 +128,7 @@ public class MemoryAttributeDao implements AttributeDao {
 				if (attribute.getId().equals(at.getId())) {
 					temp = at;
 					clazz.getAttributes().remove(at);
-					temp.setSequence(attribute
-							.getSequence());
+					temp.setSequence(attribute.getSequence());
 
 					this.shiftSequence(temp, clazz);
 					break;

@@ -24,14 +24,16 @@ public class MaximumRepeatAttributeConfigurationValidator extends
 
 		Map<String, Integer> mapCounter = new HashMap<String, Integer>();
 		int characterCounter = 0;
-		
+
 		for (int i = 0; i < defaultValue.toCharArray().length; i++) {
-			Integer count = mapCounter.get(String.valueOf(defaultValue.toCharArray()[i]));
+			Integer count = mapCounter.get(String.valueOf(defaultValue
+					.toCharArray()[i]));
 			if (count == null) {
 				count = new Integer(-1);
 			}
 			count++;
-			mapCounter.put(String.valueOf(defaultValue.toCharArray()[i]), count);
+			mapCounter
+					.put(String.valueOf(defaultValue.toCharArray()[i]), count);
 
 			if (characterCounter < count) {
 				characterCounter = count;

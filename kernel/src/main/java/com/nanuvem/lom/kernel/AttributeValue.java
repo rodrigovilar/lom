@@ -3,10 +3,9 @@ package com.nanuvem.lom.kernel;
 import java.io.Serializable;
 
 public class AttributeValue implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	
 	private Long id;
 	private Integer version;
 
@@ -54,6 +53,5 @@ public class AttributeValue implements Serializable {
 	public void setValue(Object value) {
 		this.value = value;
 	}
-	
-	
+
 }

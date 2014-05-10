@@ -32,10 +32,10 @@ public class IntegerAttributeTypeDeployer implements AttributeTypeDeployer {
 	}
 
 	public boolean containsConfigurationField(String fieldName) {
-		return MANDATORY_CONFIGURATION_NAME.equals(fieldName) ||
-				DEFAULT_CONFIGURATION_NAME.equals(fieldName) ||
-				MINVALUE_CONFIGURATION_NAME.equals(fieldName) ||
-				MAXVALUE_CONFIGURATION_NAME.equals(fieldName);
+		return MANDATORY_CONFIGURATION_NAME.equals(fieldName)
+				|| DEFAULT_CONFIGURATION_NAME.equals(fieldName)
+				|| MINVALUE_CONFIGURATION_NAME.equals(fieldName)
+				|| MAXVALUE_CONFIGURATION_NAME.equals(fieldName);
 	}
 
 }

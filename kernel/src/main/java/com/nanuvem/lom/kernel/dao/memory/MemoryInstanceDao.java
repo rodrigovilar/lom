@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.SerializationUtils;
 
-import com.nanuvem.lom.kernel.Attribute;
 import com.nanuvem.lom.kernel.Class;
 import com.nanuvem.lom.kernel.Instance;
 import com.nanuvem.lom.kernel.dao.ClassDao;
@@ -56,13 +55,12 @@ public class MemoryInstanceDao implements InstanceDao {
 
 	public void delete(Instance instance) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public Instance update(Instance instance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

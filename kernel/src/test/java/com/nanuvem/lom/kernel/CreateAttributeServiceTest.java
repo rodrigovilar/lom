@@ -335,10 +335,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "pa", AttributeType.TEXT,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.TEXT,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		// I think the message that validation should be 'Invalid configuration
 		// for pa attribute: the default value is smaller than minlength "as
@@ -447,10 +451,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		AttributeHelper
 				.expectExceptionOnCreateInvalidAttribute(
@@ -679,10 +687,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", 1, "pa", AttributeType.PASSWORD,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		AttributeHelper
 				.expectExceptionOnCreateInvalidAttribute(
@@ -848,7 +860,7 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"minvalue\":\"abc\"}",
-				"Invalid configuration for attribute pa: the minvalue must be an integer number");
+				"Invalid configuration for attribute pa: the minvalue value must be an integer number");
 
 		expectExceptionOnCreateInvalidAttribute(
 				attributeService,
@@ -857,7 +869,7 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"minvalue\":10.0}",
-				"Invalid configuration for attribute pa: the minvalue must be an integer number");
+				"Invalid configuration for attribute pa: the minvalue value must be an integer number");
 
 		expectExceptionOnCreateInvalidAttribute(
 				attributeService,
@@ -866,7 +878,7 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"maxvalue\":\"abc\"}",
-				"Invalid configuration for attribute pa: the maxvalue must be an integer number");
+				"Invalid configuration for attribute pa: the maxvalue value must be an integer number");
 
 		expectExceptionOnCreateInvalidAttribute(
 				attributeService,
@@ -875,8 +887,8 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"maxvalue\":10.0}",
-				"Invalid configuration for attribute pa: the maxvalue must be an integer number");
-		
+				"Invalid configuration for attribute pa: the maxvalue value must be an integer number");
+
 		expectExceptionOnCreateInvalidAttribute(
 				attributeService,
 				"abc.a",
@@ -884,7 +896,7 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"default\":3, \"minvalue\":5}",
-				"Invalid configuration for attribute pa: the default value is lower than minvalue");
+				"Invalid configuration for attribute pa: the default value is smaller than minvalue");
 
 		expectExceptionOnCreateInvalidAttribute(
 				attributeService,
@@ -895,12 +907,8 @@ public class CreateAttributeServiceTest {
 				"{\"default\":12, \"maxvalue\":10}",
 				"Invalid configuration for attribute pa: the default value is greater than maxvalue");
 
-		expectExceptionOnCreateInvalidAttribute(
-				attributeService,
-				"abc.a",
-				null,
-				"pa",
-				AttributeType.INTEGER,
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "pa", AttributeType.INTEGER,
 				"{\"minvalue\":50, \"maxvalue\":10}",
 				"Invalid configuration for attribute pa: the minvalue is greater than maxvalue");
 
@@ -911,7 +919,7 @@ public class CreateAttributeServiceTest {
 				"pa",
 				AttributeType.INTEGER,
 				"{\"default\":7, \"minvalue\":9, \"maxvalue\":10}",
-				"Invalid configuration for attribute pa: the default value is lower than minvalue");
+				"Invalid configuration for attribute pa: the default value is smaller than minvalue");
 	}
 
 	@Test

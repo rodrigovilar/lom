@@ -4,7 +4,8 @@ import org.codehaus.jackson.JsonNode;
 
 import com.nanuvem.lom.kernel.Attribute;
 
-public class IntegerAttributeConfigurationValidator extends	AttributeTypeConfigurationValidator {
+public class IntegerAttributeConfigurationValidator extends
+		AttributeTypeConfigurationValidator {
 
 	public IntegerAttributeConfigurationValidator(String field) {
 		super(field, "an integer number");

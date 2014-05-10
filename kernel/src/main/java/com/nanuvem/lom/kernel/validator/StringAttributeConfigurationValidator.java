@@ -6,9 +6,8 @@ import com.nanuvem.lom.kernel.Attribute;
 
 public class StringAttributeConfigurationValidator extends
 		AttributeTypeConfigurationValidator {
-	
 
-	public StringAttributeConfigurationValidator(String field){
+	public StringAttributeConfigurationValidator(String field) {
 		super(field, "a string");
 	}
 

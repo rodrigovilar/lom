@@ -4,12 +4,10 @@ import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
 public class AttributeHelper {
-	
+
 	public static final AttributeType TEXT = AttributeType.TEXT;
 	public static final AttributeType LONGTEXT = AttributeType.LONGTEXT;
 	public static final AttributeType PASSWORD = AttributeType.PASSWORD;
-	
-	
 
 	public static Attribute createOneAttribute(
 			AttributeServiceImpl attributeService, String classFullName,
@@ -85,7 +83,8 @@ public class AttributeHelper {
 			AttributeType newType, String newConfiguration) {
 
 		Attribute attribute = attributeService
-				.findAttributeByNameAndClassFullName(oldAttribute.getName(), fullClassName);
+				.findAttributeByNameAndClassFullName(oldAttribute.getName(),
+						fullClassName);
 
 		attribute.setSequence(newSequence);
 		attribute.setName(newName);
@@ -98,9 +97,10 @@ public class AttributeHelper {
 	}
 
 	public static void expectExceptionOnUpdateInvalidAttribute(
-			AttributeServiceImpl attributeService, String classFullName, Attribute oldAttribute,
-			Integer newSequence, String newName,
-			AttributeType newType, String newConfiguration, String exceptedMessage) {
+			AttributeServiceImpl attributeService, String classFullName,
+			Attribute oldAttribute, Integer newSequence, String newName,
+			AttributeType newType, String newConfiguration,
+			String exceptedMessage) {
 
 		try {
 			updateAttribute(attributeService, classFullName, oldAttribute,
