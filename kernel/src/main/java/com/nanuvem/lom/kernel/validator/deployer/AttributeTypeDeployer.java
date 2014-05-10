@@ -21,6 +21,6 @@ public interface AttributeTypeDeployer {
 	final String MAXVALUE_CONFIGURATION_NAME = "maxvalue";
 
 	List<AttributeConfigurationValidator> getValidators();
-	
+
 	boolean containsConfigurationField(String fieldName);
 }

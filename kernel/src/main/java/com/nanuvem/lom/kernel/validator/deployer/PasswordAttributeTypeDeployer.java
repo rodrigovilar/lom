@@ -47,14 +47,14 @@ public class PasswordAttributeTypeDeployer implements AttributeTypeDeployer {
 	}
 
 	public boolean containsConfigurationField(String fieldName) {
-		return MANDATORY_CONFIGURATION_NAME.equals(fieldName) ||
-				DEFAULT_CONFIGURATION_NAME.equals(fieldName) ||
-				MINLENGTH_CONFIGURATION_NAME.equals(fieldName) ||
-				MAXLENGTH_CONFIGURATION_NAME.equals(fieldName) ||
-				MINUPPERS_CONFIGURATION_NAME.equals(fieldName) ||
-				MINNUMBERS_CONFIGURATION_NAME.equals(fieldName) ||
-				MINSYMBOLS_CONFIGURATION_NAME.equals(fieldName) ||
-				MAXREPEAT_CONFIGURATION_NAME.equals(fieldName);
+		return MANDATORY_CONFIGURATION_NAME.equals(fieldName)
+				|| DEFAULT_CONFIGURATION_NAME.equals(fieldName)
+				|| MINLENGTH_CONFIGURATION_NAME.equals(fieldName)
+				|| MAXLENGTH_CONFIGURATION_NAME.equals(fieldName)
+				|| MINUPPERS_CONFIGURATION_NAME.equals(fieldName)
+				|| MINNUMBERS_CONFIGURATION_NAME.equals(fieldName)
+				|| MINSYMBOLS_CONFIGURATION_NAME.equals(fieldName)
+				|| MAXREPEAT_CONFIGURATION_NAME.equals(fieldName);
 	}
 
 }

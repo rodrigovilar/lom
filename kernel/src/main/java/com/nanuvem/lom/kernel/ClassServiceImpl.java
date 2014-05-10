@@ -193,5 +193,4 @@ public class ClassServiceImpl {
 		return this.dao.findClassById(id);
 	}
 
-	
 }

@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
 
+import static com.nanuvem.lom.kernel.AttributeHelper.*;
+
 public class CreateAttributeServiceTest {
 
 	private ClassServiceImpl classService;
@@ -23,56 +25,53 @@ public class CreateAttributeServiceTest {
 	@Test
 	public void validAttributeData() {
 		ClassHelper.createClass(classService, "abc", "a");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pa", AttributeType.TEXT, "{\"mandatory\":true}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pa",
+				AttributeType.TEXT, "{\"mandatory\":true}");
 
 		ClassHelper.createClass(classService, "abc", "b");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.b",
-				1, "pe", AttributeType.LONGTEXT, "{\"mandatory\":false}");
+		createAndVerifyOneAttribute(attributeService, "abc.b", 1, "pe",
+				AttributeType.LONGTEXT, "{\"mandatory\":false}");
 
 		ClassHelper.createClass(classService, "abc", "c");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.c",
-				1, "pa", AttributeType.TEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.c", 1, "pa",
+				AttributeType.TEXT, "");
 
 		ClassHelper.createClass(classService, "abc", "d");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.d",
-				1, "pa", AttributeType.TEXT, null);
+		createAndVerifyOneAttribute(attributeService, "abc.d", 1, "pa",
+				AttributeType.TEXT, null);
 	}
 
 	@Test
 	public void invalidAttributeData() {
 		ClassHelper.createClass(classService, "abc", "a");
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 0, "pa", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 0,
+				"pa", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: 0");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", -1, "pa", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", -1,
+				"pa", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: -1");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 2, "pa", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 2,
+				"pa", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute sequence: 2");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "", AttributeType.TEXT,
-				"{\"mandatory\":true}", "The name of a Attribute is mandatory");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"", AttributeType.TEXT, "{\"mandatory\":true}",
+				"The name of a Attribute is mandatory");
 
 		// It is impossible to make a test case with the AttributeType being
 		// equal to an empty String. Attribute.type is defined as enum
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "pa", null,
-				"{\"mandatory\":true}", "The type of a Attribute is mandatory");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"pa", null, "{\"mandatory\":true}",
+				"The type of a Attribute is mandatory");
 
 		// It is impossible to make a test case with the AttributeType being
 		// equal to String "ABC". Attribute.type is defined as enum
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "pa", AttributeType.TEXT, "ABC",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"pa", AttributeType.TEXT, "ABC",
 				"Invalid value for Attribute configuration: ABC");
 	}
 
@@ -80,34 +79,28 @@ public class CreateAttributeServiceTest {
 	public void invalidAttributeName() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa$", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa$", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa$");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa#", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa#", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa#");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa=", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa=", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa=");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa'", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa'", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa'");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa.a", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa.a", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa.a");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.a", 1, "aaa*", AttributeType.TEXT,
-				"{\"mandatory\":true}",
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
+				"aaa*", AttributeType.TEXT, "{\"mandatory\":true}",
 				"Invalid value for Attribute name: aaa*");
 	}
 
@@ -115,24 +108,24 @@ public class CreateAttributeServiceTest {
 	public void validateSeveralAttributesInTheSameClass() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				null, "pa", AttributeType.TEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", null, "pa",
+				AttributeType.TEXT, "");
 		Assert.assertEquals(new Integer(1), this.attributeService
 				.findAttributeByNameAndClassFullName("pa", "abc.a")
 				.getSequence());
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				null, "pb", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", null, "pb",
+				AttributeType.LONGTEXT, "");
 		Assert.assertEquals(new Integer(2), this.attributeService
 				.findAttributeByNameAndClassFullName("pb", "abc.a")
 				.getSequence());
 
 		ClassHelper.createClass(classService, "", "b");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "b",
-				new Integer(1), "pa", AttributeType.LONGTEXT, "");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "b",
-				new Integer(1), "pb", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "b", new Integer(1),
+				"pa", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "b", new Integer(1),
+				"pb", AttributeType.LONGTEXT, "");
 		Assert.assertEquals(new Integer(2), this.attributeService
 				.findAttributeByNameAndClassFullName("pa", "b").getSequence());
 		Assert.assertEquals(new Integer(1), this.attributeService
@@ -140,12 +133,12 @@ public class CreateAttributeServiceTest {
 
 		ClassHelper.createClass(classService, "", "c");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "c",
-				new Integer(1), "pa", AttributeType.TEXT, "");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "c",
-				new Integer(2), "pb", AttributeType.LONGTEXT, "");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "c",
-				new Integer(2), "pc", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "c", new Integer(1),
+				"pa", AttributeType.TEXT, "");
+		createAndVerifyOneAttribute(attributeService, "c", new Integer(2),
+				"pb", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "c", new Integer(2),
+				"pc", AttributeType.LONGTEXT, "");
 		Assert.assertEquals(new Integer(1), this.attributeService
 				.findAttributeByNameAndClassFullName("pa", "c").getSequence());
 		Assert.assertEquals(new Integer(3), this.attributeService
@@ -157,93 +150,83 @@ public class CreateAttributeServiceTest {
 	@Test
 	public void validateAttributeDuplicationInTheSameClass() {
 		ClassHelper.createClass(classService, "abc", "a");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				null, "pa", AttributeType.TEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", null, "pa",
+				AttributeType.TEXT, "");
 
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "pa", AttributeType.LONGTEXT, "",
-						"Attribute duplication on abc.a Class. It already has an attribute pa.");
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "pa", AttributeType.TEXT, "",
-						"Attribute duplication on abc.a Class. It already has an attribute pa.");
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "pA", AttributeType.TEXT, "",
-						"Attribute duplication on abc.a Class. It already has an attribute pa.");
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "PA", AttributeType.TEXT, "",
-						"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "pa", AttributeType.LONGTEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "pa", AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "pA", AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "PA", AttributeType.TEXT, "",
+				"Attribute duplication on abc.a Class. It already has an attribute pa.");
 	}
 
 	@Test
 	public void invalidClass() {
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "a", null, "abc123", AttributeType.TEXT, "",
-				"Invalid Class: a");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "a", null,
+				"abc123", AttributeType.TEXT, "", "Invalid Class: a");
 
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abca", null, "abc123", AttributeType.TEXT,
-				"", "Invalid Class: abca");
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "a", null, "abc123", AttributeType.TEXT, "",
-				"Invalid Class: a");
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.b", null, "abc123", AttributeType.TEXT,
-				"", "Invalid Class: abc.b");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abca", null,
+				"abc123", AttributeType.TEXT, "", "Invalid Class: abca");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "a", null,
+				"abc123", AttributeType.TEXT, "", "Invalid Class: a");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.b",
+				null, "abc123", AttributeType.TEXT, "", "Invalid Class: abc.b");
 
 		ClassHelper.createClass(classService, "", "b");
 
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "a", null, "abc123", null, "",
-				"Invalid Class: a");
-		AttributeHelper.expectExceptionOnCreateInvalidAttribute(
-				attributeService, "abc.b", null, "abc123", null, "",
-				"Invalid Class: abc.b");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "a", null,
+				"abc123", null, "", "Invalid Class: a");
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.b",
+				null, "abc123", null, "", "Invalid Class: abc.b");
 	}
 
 	@Test
 	public void validateConfigurationForTextAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper
-				.createAndVerifyOneAttribute(attributeService, "abc.a", 1,
-						"pa", AttributeType.TEXT,
-						"{\"regex\":\"(\\\\w[-.\\\\w]*\\\\w@\\\\w[-.\\\\w]\\\\w.\\\\w{2,3})\"}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pa",
+				AttributeType.TEXT,
+				"{\"regex\":\"(\\\\w[-.\\\\w]*\\\\w@\\\\w[-.\\\\w]\\\\w.\\\\w{2,3})\"}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pb", AttributeType.TEXT, "{\"minlength\":10}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pb",
+				AttributeType.TEXT, "{\"minlength\":10}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pc", AttributeType.TEXT, "{\"minlength\":100}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pc",
+				AttributeType.TEXT, "{\"minlength\":100}");
 
-		AttributeHelper
-				.createAndVerifyOneAttribute(
-						attributeService,
-						"abc.a",
-						1,
-						"pd",
-						AttributeType.TEXT,
-						"{\"mandatory\": true, \"regex\": \"(\\\\w[-._\\\\w]\\\\w@\\\\w[-.\\\\w]*\\\\w.\\\\w{2,3})\", \"minlength\": 5,\"maxlength\": 15}");
+		createAndVerifyOneAttribute(
+				attributeService,
+				"abc.a",
+				1,
+				"pd",
+				AttributeType.TEXT,
+				"{\"mandatory\": true, \"regex\": "
+						+ "\"(\\\\w[-._\\\\w]\\\\w@\\\\w[-.\\\\w]*\\\\w.\\\\w{2,3})\", "
+						+ "\"minlength\": 5,\"maxlength\": 15}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pe", AttributeType.TEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pe",
+				AttributeType.TEXT, "");
 
-		AttributeHelper
-				.createAndVerifyOneAttribute(
-						attributeService,
-						"abc.a",
-						1,
-						"pf",
-						AttributeType.TEXT,
-						"{\"default\": \"abc@abc.com\",\"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\",\"minlength\": 5,\"maxlength\": 15}");
+		createAndVerifyOneAttribute(
+				attributeService,
+				"abc.a",
+				1,
+				"pf",
+				AttributeType.TEXT,
+				"{\"default\": \"abc@abc.com\",\"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\","
+						+ "\"minlength\": 5,\"maxlength\": 15}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pg", AttributeType.TEXT, "{\"default\":\"abc\"}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pg",
+				AttributeType.TEXT, "{\"default\":\"abc\"}");
 
 	}
 
@@ -251,25 +234,23 @@ public class CreateAttributeServiceTest {
 	public void invalidConfigurationForTextAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(
-						attributeService,
-						"abc.a",
-						null,
-						"pa",
-						AttributeType.TEXT,
-						"{\"mandatory\":10}",
-						"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"mandatory\":10}",
+				"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
 
-		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(
-						attributeService,
-						"abc.a",
-						null,
-						"pa",
-						AttributeType.TEXT,
-						"{\"mandatory\":\"true\"}",
-						"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.TEXT,
+				"{\"mandatory\":\"true\"}",
+				"Invalid configuration for attribute pa: the mandatory value must be true or false literals");
 
 		AttributeHelper
 				.expectExceptionOnCreateInvalidAttribute(attributeService,
@@ -354,10 +335,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", null, "pa", AttributeType.TEXT,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						null,
+						"pa",
+						AttributeType.TEXT,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		// I think the message that validation should be 'Invalid configuration
 		// for pa attribute: the default value is smaller than minlength "as
@@ -376,11 +361,11 @@ public class CreateAttributeServiceTest {
 	public void validConfigurationForLongTextAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p1", AttributeType.LONGTEXT, "{\"minlength\":10}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p1",
+				AttributeType.LONGTEXT, "{\"minlength\":10}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p2", AttributeType.LONGTEXT, "{\"maxlength\":100000}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p2",
+				AttributeType.LONGTEXT, "{\"maxlength\":100000}");
 
 		AttributeHelper
 				.createAndVerifyOneAttribute(
@@ -391,8 +376,8 @@ public class CreateAttributeServiceTest {
 						AttributeType.LONGTEXT,
 						"{\"mandatory\":true, \"default\":\"long text\", \"minlength\":5, \"maxlength\":150000}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p4", AttributeType.LONGTEXT, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p4",
+				AttributeType.LONGTEXT, "");
 	}
 
 	@Test
@@ -466,10 +451,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", 1, "pa", AttributeType.LONGTEXT,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.LONGTEXT,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		AttributeHelper
 				.expectExceptionOnCreateInvalidAttribute(
@@ -486,26 +475,26 @@ public class CreateAttributeServiceTest {
 	public void validConfigurationForPasswordAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pa", AttributeType.PASSWORD, "{\"minlength\":10}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pa",
+				AttributeType.PASSWORD, "{\"minlength\":10}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pb", AttributeType.PASSWORD, "{\"maxlength\":100000}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pb",
+				AttributeType.PASSWORD, "{\"maxlength\":100000}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pc", AttributeType.PASSWORD, "{\"maxlength\":100000}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pc",
+				AttributeType.PASSWORD, "{\"maxlength\":100000}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pd", AttributeType.PASSWORD, "{\"minUppers\":1}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pd",
+				AttributeType.PASSWORD, "{\"minUppers\":1}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pe", AttributeType.PASSWORD, "{\"minNumbers\":2}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pe",
+				AttributeType.PASSWORD, "{\"minNumbers\":2}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pf", AttributeType.PASSWORD, "{\"minSymbols\":3}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pf",
+				AttributeType.PASSWORD, "{\"minSymbols\":3}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pg", AttributeType.PASSWORD, "{\"maxRepeat\":2}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pg",
+				AttributeType.PASSWORD, "{\"maxRepeat\":2}");
 
 		AttributeHelper
 				.createAndVerifyOneAttribute(
@@ -518,22 +507,22 @@ public class CreateAttributeServiceTest {
 								+ "\"minUppers\":1, \"minNumbers\":2, \"minSymbols\":3, "
 								+ "\"maxRepeat\":2}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pi", AttributeType.PASSWORD, "");
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pj", AttributeType.PASSWORD,
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pi",
+				AttributeType.PASSWORD, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pj",
+				AttributeType.PASSWORD,
 				"{\"default\":\"Abcdef\", \"minUppers\":1}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pk", AttributeType.PASSWORD,
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pk",
+				AttributeType.PASSWORD,
 				"{\"default\":\"abcdef10\", \"minNumbers\":2}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pl", AttributeType.PASSWORD,
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pl",
+				AttributeType.PASSWORD,
 				"{\"default\":\"abcdef!@#\", \"minSymbols\":3}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pm", AttributeType.PASSWORD,
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pm",
+				AttributeType.PASSWORD,
 				"{\"default\":\"aabcdef\", \"maxRepeat\":2}");
 
 		AttributeHelper
@@ -698,10 +687,14 @@ public class CreateAttributeServiceTest {
 						"Invalid configuration for attribute pa: the default value is greater than maxlength");
 
 		AttributeHelper
-				.expectExceptionOnCreateInvalidAttribute(attributeService,
-						"abc.a", 1, "pa", AttributeType.PASSWORD,
+				.expectExceptionOnCreateInvalidAttribute(
+						attributeService,
+						"abc.a",
+						1,
+						"pa",
+						AttributeType.PASSWORD,
 						"{\"minlength\":50, \"maxlength\":10}",
-						"Invalid configuration for attribute pa: minlength is greater than maxlength");
+						"Invalid configuration for attribute pa: the minlength is greater than maxlength");
 
 		AttributeHelper
 				.expectExceptionOnCreateInvalidAttribute(
@@ -832,17 +825,101 @@ public class CreateAttributeServiceTest {
 	public void validConfigurationForIntegerAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p1", AttributeType.INTEGER, "{\"minvalue\":-5}");
-		
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p2", AttributeType.INTEGER, "{\"maxvalue\":100000000000}");
-		
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p3", AttributeType.INTEGER, "{\"mandatory\":true, \"default\":10, \"minvalue\":5, \"maxvalue\":150000}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p1",
+				AttributeType.INTEGER, "{\"minvalue\":-5}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "p4", AttributeType.INTEGER, "");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p2",
+				AttributeType.INTEGER, "{\"maxvalue\":100000000000}");
+
+		AttributeHelper
+				.createAndVerifyOneAttribute(attributeService, "abc.a", 1,
+						"p3", AttributeType.INTEGER,
+						"{\"mandatory\":true, \"default\":10, \"minvalue\":5, \"maxvalue\":150000}");
+
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "p4",
+				AttributeType.INTEGER, "");
+	}
+
+	@Test
+	public void invalidConfigurationForIntegerAttributeType() {
+		ClassHelper.createClass(classService, "abc", "a");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"default\":\"abc\"}",
+				"Invalid configuration for attribute pa: the default value must be an integer number");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"minvalue\":\"abc\"}",
+				"Invalid configuration for attribute pa: the minvalue value must be an integer number");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"minvalue\":10.0}",
+				"Invalid configuration for attribute pa: the minvalue value must be an integer number");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"maxvalue\":\"abc\"}",
+				"Invalid configuration for attribute pa: the maxvalue value must be an integer number");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"maxvalue\":10.0}",
+				"Invalid configuration for attribute pa: the maxvalue value must be an integer number");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"default\":3, \"minvalue\":5}",
+				"Invalid configuration for attribute pa: the default value is smaller than minvalue");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"default\":12, \"maxvalue\":10}",
+				"Invalid configuration for attribute pa: the default value is greater than maxvalue");
+
+		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a",
+				null, "pa", AttributeType.INTEGER,
+				"{\"minvalue\":50, \"maxvalue\":10}",
+				"Invalid configuration for attribute pa: the minvalue is greater than maxvalue");
+
+		expectExceptionOnCreateInvalidAttribute(
+				attributeService,
+				"abc.a",
+				null,
+				"pa",
+				AttributeType.INTEGER,
+				"{\"default\":7, \"minvalue\":9, \"maxvalue\":10}",
+				"Invalid configuration for attribute pa: the default value is smaller than minvalue");
 	}
 
 	@Test
@@ -850,21 +927,18 @@ public class CreateAttributeServiceTest {
 	public void validConfigurationForObjectAttributeType() {
 		ClassHelper.createClass(classService, "abc", "a");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pa", AttributeType.OBJECT,
-				"{\"schema\":OBJECT WITH ONE ATTRIBUTE}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pa",
+				AttributeType.OBJECT, "{\"schema\":OBJECT WITH ONE ATTRIBUTE}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pb", AttributeType.OBJECT,
-				"{\"schema\":OBJECT WITH TWO ATTRIBUTE}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pb",
+				AttributeType.OBJECT, "{\"schema\":OBJECT WITH TWO ATTRIBUTE}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pc", AttributeType.OBJECT,
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pc",
+				AttributeType.OBJECT,
 				"{\"schema\":ARRAY OF OBJECTS WITH TWO ATTRIBUTES}");
 
-		AttributeHelper.createAndVerifyOneAttribute(attributeService, "abc.a",
-				1, "pd", AttributeType.OBJECT,
-				"{\"schema\":OBJECT WITH ONE SUB OBJECT}");
+		createAndVerifyOneAttribute(attributeService, "abc.a", 1, "pd",
+				AttributeType.OBJECT, "{\"schema\":OBJECT WITH ONE SUB OBJECT}");
 
 		AttributeHelper
 				.createAndVerifyOneAttribute(attributeService, "abc.a", 1,

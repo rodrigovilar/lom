@@ -6,17 +6,14 @@ import java.util.List;
 
 public class Class implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private Integer version;
 	private String name;
 	private String namespace;
-	private List<Attribute> attributes = new LinkedList<Attribute>();	
-	private List<Instance> instances = new LinkedList<Instance>();	
+	private List<Attribute> attributes = new LinkedList<Attribute>();
+	private List<Instance> instances = new LinkedList<Instance>();
 
 	public Long getId() {
 		return id;
@@ -50,14 +47,14 @@ public class Class implements Serializable {
 		this.namespace = namespace;
 	}
 
-	public String getFullName(){
+	public String getFullName() {
 		String fullName = "";
-		if(this.namespace != null && !this.namespace.isEmpty()){
+		if (this.namespace != null && !this.namespace.isEmpty()) {
 			fullName = this.namespace + ".";
 		}
 		return fullName + this.getName();
 	}
-	
+
 	public List<Attribute> getAttributes() {
 		return attributes;
 	}
