@@ -19,7 +19,7 @@ public class InstanceServiceImpl {
 		instance.setClazz(clazz);
 
 		for (AttributeValue attributeValue : instance.getValues()) {
-			if (!clazz.getAttributes().contains(attributeValue)) {
+			if (!(clazz.getAttributes().contains(attributeValue.getAttribute()))) {
 				throw new MetadataException("Unknown attribute for "
 						+ instance.getClazz().getFullName() + ": "
 						+ attributeValue.getAttribute().getName());

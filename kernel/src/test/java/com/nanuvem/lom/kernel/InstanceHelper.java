@@ -45,14 +45,14 @@ public class InstanceHelper {
 		Assert.assertEquals(new Integer(0), createdInstance.getVersion());
 		Assert.assertEquals(createdInstance,
 				instanceService.findInstanceById(createdInstance.getId()));
-		Assert.assertEquals(classFullName, createdInstance.getClazz()
-				.getFullName());
 
-		// Assert.assertTrue(createdInstance.getValues().contains(values));
-		boolean containsAllAttributesValues = false;
+		Assert.assertEquals(applyStandardNamingTheClassFullName(classFullName),
+				createdInstance.getClazz().getFullName());
+
 		if (values != null && values.length > 0) {
-			containsAllAttributesValues = false;
+			boolean containsAllAttributesValues = false;
 			for (AttributeValue value : createdInstance.getValues()) {
+				containsAllAttributesValues = false;
 				for (int i = 0; i < values.length; i++) {
 					if (value.getAttribute().equals(values[i].getAttribute())
 							&& value.getValue().equals(values[i].getValue())) {
@@ -60,44 +60,21 @@ public class InstanceHelper {
 						break;
 					}
 				}
-
+				Assert.assertTrue(containsAllAttributesValues);
 			}
-			Assert.assertTrue(containsAllAttributesValues);
 		}
 	}
 
-	// public static Attribute updateAttribute(
-	// AttributeServiceImpl attributeService, String fullClassName,
-	// Attribute oldAttribute, Integer newSequence, String newName,
-	// AttributeType newType, String newConfiguration) {
-	//
-	// Attribute attribute = attributeService
-	// .findAttributeByNameAndClassFullName(oldAttribute.getName(),
-	// fullClassName);
-	//
-	// attribute.setSequence(newSequence);
-	// attribute.setName(newName);
-	// attribute.setType(newType);
-	// attribute.setConfiguration(newConfiguration);
-	// attribute.setId(oldAttribute.getId());
-	// attribute.setVersion(oldAttribute.getVersion());
-	//
-	// return attributeService.update(attribute);
-	// }
-	//
-	// public static void expectExceptionOnUpdateInvalidAttribute(
-	// AttributeServiceImpl attributeService, String classFullName, Attribute
-	// oldAttribute,
-	// Integer newSequence, String newName,
-	// AttributeType newType, String newConfiguration, String exceptedMessage) {
-	//
-	// try {
-	// updateAttribute(attributeService, classFullName, oldAttribute,
-	// newSequence, newName, newType, newConfiguration);
-	// fail();
-	// } catch (MetadataException metadataException) {
-	// Assert.assertEquals(exceptedMessage, metadataException.getMessage());
-	// }
-	// }
-
+	private static String applyStandardNamingTheClassFullName(
+			String classFullName) {
+		try {
+			classFullName.substring(0, classFullName.lastIndexOf("."));
+			classFullName.substring(classFullName.lastIndexOf(".") + 1,
+					classFullName.length());
+		} catch (StringIndexOutOfBoundsException exception) {
+			classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
+					+ "." + classFullName;
+		}
+		return classFullName;
+	}
 }
