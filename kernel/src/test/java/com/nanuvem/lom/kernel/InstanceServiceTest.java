@@ -22,8 +22,7 @@ public class InstanceServiceTest {
 	@Test
 	public void unknownClass() {
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"default.a", "Unknown class: default.a",
-				attributeValue("age", 30));
+				"a", "Unknown class: default.a", attributeValue("age", 30));
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
 				"abc.a", "Unknown class: abc.a", attributeValue("age", 30));
@@ -46,10 +45,10 @@ public class InstanceServiceTest {
 		InstanceHelper.createAndVerifyOneInstance(instanceService, "abc.b");
 
 		ClassHelper.createClass(classService, "", "a");
-		InstanceHelper.createAndVerifyOneInstance(instanceService, "default.a");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "a");
 
 		ClassHelper.createClass(classService, "", "b");
-		InstanceHelper.createAndVerifyOneInstance(instanceService, "default.b");
+		InstanceHelper.createAndVerifyOneInstance(instanceService, "b");
 	}
 
 	@Test
