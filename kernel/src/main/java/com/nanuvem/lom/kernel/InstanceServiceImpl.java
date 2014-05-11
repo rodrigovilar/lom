@@ -17,8 +17,8 @@ public class InstanceServiceImpl {
 
 	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
 		this.classService = classService;
-		this.instanceDao = daoFactory.createInstanceDao();
 		this.attributeValueDao = daoFactory.createAttributeValueDao();
+		this.instanceDao = daoFactory.createInstanceDao();
 	}
 
 	public void create(Instance instance) {
