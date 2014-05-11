@@ -12,7 +12,7 @@ public class ClassServiceImpl {
 
 	static final String PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME = "default";
 
-	public ClassServiceImpl(DaoFactory factory) {
+	ClassServiceImpl(DaoFactory factory) {
 		this.dao = factory.createClassDao();
 	}
 

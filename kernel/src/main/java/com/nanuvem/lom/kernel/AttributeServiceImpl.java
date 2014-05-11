@@ -34,8 +34,9 @@ public class AttributeServiceImpl {
 
 	private Map<String, AttributeTypeDeployer> deployers = new HashMap<String, AttributeTypeDeployer>();
 
-	public AttributeServiceImpl(DaoFactory dao) {
-		this.classService = new ClassServiceImpl(dao);
+	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService) {
+//		this.classService = new ClassServiceImpl(dao);
+		this.classService = classService;
 		this.attributeDao = dao.createAttributeDao();
 
 		deployers.put(AttributeType.TEXT.name(),

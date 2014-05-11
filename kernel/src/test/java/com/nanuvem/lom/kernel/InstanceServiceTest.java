@@ -8,15 +8,17 @@ import com.nanuvem.lom.kernel.dao.memory.MemoryDaoFactory;
 public class InstanceServiceTest {
 
 	private ClassServiceImpl classService;
-	private AttributeServiceImpl attributeService;
+//	private AttributeServiceImpl attributeService;
 	private InstanceServiceImpl instanceService;
 
 	@Before
 	public void init() {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
-		this.classService = new ClassServiceImpl(daoFactory);
-		this.attributeService = new AttributeServiceImpl(daoFactory);
-		this.instanceService = new InstanceServiceImpl(daoFactory);
+		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
+		
+		this.classService = serviceFactory.createClassService();
+//		this.attributeService = serviceFactory.createAttributeService();
+		this.instanceService = serviceFactory.createInstanceService();
 	}
 
 	@Test
