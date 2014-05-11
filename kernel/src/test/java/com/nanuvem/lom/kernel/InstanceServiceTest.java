@@ -24,7 +24,7 @@ public class InstanceServiceTest {
 	@Test
 	public void unknownClass() {
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"a", "Unknown class: default.a", attributeValue("age", 30));
+				"a", "Unknown class: a", attributeValue("age", 30));
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
 				"abc.a", "Unknown class: abc.a", attributeValue("age", 30));
