@@ -8,8 +8,9 @@ public class InstanceServiceImpl {
 	private InstanceDao dao;
 	private ClassServiceImpl classService;
 
-	public InstanceServiceImpl(DaoFactory daoFactory) {
-		this.classService = new ClassServiceImpl(daoFactory);
+	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
+//		this.classService = new ClassServiceImpl(daoFactory);
+		this.classService = classService;
 		this.dao = daoFactory.createInstanceDao();
 	}
 
