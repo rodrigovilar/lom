@@ -15,10 +15,10 @@ public class InstanceServiceTest {
 	public void init() {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
-
-		this.classService = serviceFactory.createClassService();
-		this.attributeService = serviceFactory.createAttributeService();
-		this.instanceService = serviceFactory.createInstanceService();
+		
+		this.classService = serviceFactory.getClassService();
+		this.attributeService = serviceFactory.getAttributeService();
+		this.instanceService = serviceFactory.getInstanceService();
 	}
 
 	@Test
