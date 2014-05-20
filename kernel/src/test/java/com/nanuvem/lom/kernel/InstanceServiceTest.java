@@ -16,9 +16,9 @@ public class InstanceServiceTest {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
 		
-		this.classService = serviceFactory.createClassService();
+		this.classService = serviceFactory.getClassService();
 //		this.attributeService = serviceFactory.createAttributeService();
-		this.instanceService = serviceFactory.createInstanceService();
+		this.instanceService = serviceFactory.getInstanceService();
 	}
 
 	@Test
