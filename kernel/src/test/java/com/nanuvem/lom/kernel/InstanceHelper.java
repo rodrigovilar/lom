@@ -45,9 +45,10 @@ public class InstanceHelper {
 		Assert.assertEquals(new Integer(0), createdInstance.getVersion());
 		Assert.assertEquals(createdInstance,
 				instanceService.findInstanceById(createdInstance.getId()));
-
-		Assert.assertEquals(applyStandardNamingTheClassFullName(classFullName),
-				createdInstance.getClazz().getFullName());
+		Assert.assertEquals(
+				classFullName,
+				AttributeHelper.newClass(
+						createdInstance.getClazz().getFullName()).getFullName());
 
 		if (values != null && values.length > 0) {
 			boolean containsAllAttributesValues = false;
@@ -65,16 +66,14 @@ public class InstanceHelper {
 		}
 	}
 
-	private static String applyStandardNamingTheClassFullName(
-			String classFullName) {
-		try {
-			classFullName.substring(0, classFullName.lastIndexOf("."));
-			classFullName.substring(classFullName.lastIndexOf(".") + 1,
-					classFullName.length());
-		} catch (StringIndexOutOfBoundsException exception) {
-			classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
-					+ "." + classFullName;
-		}
-		return classFullName;
+	public static AttributeValue createOneAttributeValue(
+			AttributeServiceImpl attributeService, String attributeName,
+			String classFullName, Object value) {
+		
+		AttributeValue attributeValue = new AttributeValue();
+		attributeValue.setAttribute(attributeService.findAttributeByNameAndClassFullName(attributeName,classFullName));
+		attributeValue.setValue(value);
+		return attributeValue;
 	}
+
 }
