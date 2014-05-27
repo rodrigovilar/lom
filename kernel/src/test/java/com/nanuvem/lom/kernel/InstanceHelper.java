@@ -69,9 +69,11 @@ public class InstanceHelper {
 	public static AttributeValue createOneAttributeValue(
 			AttributeServiceImpl attributeService, String attributeName,
 			String classFullName, Object value) {
-		
+
 		AttributeValue attributeValue = new AttributeValue();
-		attributeValue.setAttribute(attributeService.findAttributeByNameAndClassFullName(attributeName,classFullName));
+		attributeValue.setAttribute(attributeService
+				.findAttributeByNameAndClassFullName(attributeName,
+						classFullName));
 		attributeValue.setValue(value);
 		return attributeValue;
 	}
