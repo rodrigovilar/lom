@@ -75,8 +75,6 @@ public class InstanceServiceImpl {
 				// TODO Auto-generated catch block
 			}
 		}
-		this.instanceDao.create(instance);
-		this.attributeValueDao.create(instance.getValues());
 	}
 
 	public Instance findInstanceById(Long id) {

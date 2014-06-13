@@ -7,14 +7,8 @@ import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 
 public class MemoryAttributeValueDao implements AttributeValueDao {
 
-	public void create(AttributeValue values) {
+	public void create(AttributeValue value) {
 		// TODO Auto-generated method stub
 
 	}
-
-	public void create(List<AttributeValue> values) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
