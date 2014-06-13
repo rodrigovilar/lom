@@ -13,7 +13,6 @@ public class InstanceServiceImpl {
 
 	private InstanceDao instanceDao;
 	private AttributeValueDao attributeValueDao;
-
 	private ClassServiceImpl classService;
 
 	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
@@ -76,7 +75,7 @@ public class InstanceServiceImpl {
 				throw new MetadataException(
 						"Invalid value for Attribute configuration: "
 								+ attributeValue.getAttribute()
-								.getConfiguration());
+										.getConfiguration());
 			}
 		}
 	}
