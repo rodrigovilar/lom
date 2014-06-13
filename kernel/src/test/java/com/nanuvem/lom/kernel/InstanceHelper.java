@@ -95,6 +95,7 @@ public class InstanceHelper {
 				allWereValidatedAttributesValues = allWereValidatedAttributesValues
 						&& valueParameterOfTheInteractionWasValidated;
 			}
+
 		}
 		Assert.assertTrue("There has been no validated AttributeValue",
 				allWereValidatedAttributesValues);
