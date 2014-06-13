@@ -26,10 +26,10 @@ public class AttributeServiceImpl {
 
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
-	private Deployers deployers; 
-	
+	private Deployers deployers;
 
-	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService, Deployers deployers) {
+	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService,
+			Deployers deployers) {
 		this.classService = classService;
 		this.deployers = deployers;
 		this.attributeDao = dao.createAttributeDao();

@@ -41,5 +41,4 @@ public class MemoryDaoFactory implements DaoFactory {
 		}
 		return this.attributeValueDao;
 	}
-
 }
