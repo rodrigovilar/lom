@@ -16,16 +16,15 @@ public class InstanceServiceTest {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
 
-		this.classService = serviceFactory.getClassService();
-		this.attributeService = serviceFactory.getAttributeService();
-		this.instanceService = serviceFactory.getInstanceService();
+		this.classService = serviceFactory.createClassService();
+		this.attributeService = serviceFactory.createAttributeService();
+		this.instanceService = serviceFactory.createInstanceService();
 	}
 
 	@Test
 	public void unknownClass() {
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
-				"default.a", "Unknown class: a",
-				attributeValue("age", 30));
+				"default.a", "Unknown class: a", attributeValue("age", 30));
 
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
 				"abc.a", "Unknown class: abc.a", attributeValue("age", 30));

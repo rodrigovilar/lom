@@ -13,7 +13,6 @@ public class InstanceServiceImpl {
 
 	private InstanceDao instanceDao;
 	private AttributeValueDao attributeValueDao;
-
 	private ClassServiceImpl classService;
 
 	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
@@ -40,15 +39,15 @@ public class InstanceServiceImpl {
 		this.validateAndAssignDefaultValueInAttributesValues(instance, clazz);
 
 		this.instanceDao.create(instance);
-		for(AttributeValue value : instance.getValues()){
+		for (AttributeValue value : instance.getValues()) {
 			this.attributeValueDao.create(value);
-			
+
 		}
 	}
 
 	private void validateAndAssignDefaultValueInAttributesValues(
 			Instance instance, Class clazz) {
-	
+
 		for (AttributeValue attributeValue : instance.getValues()) {
 			if (!(clazz.getAttributes().contains(attributeValue.getAttribute()))) {
 				throw new MetadataException("Unknown attribute for "
@@ -65,7 +64,8 @@ public class InstanceServiceImpl {
 				if (jsonNode
 						.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
 					String defaultField = jsonNode.get(
-							AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
+							AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)
+							.asText();
 					if (attributeValue.getValue() == null
 							&& defaultField != null) {
 						attributeValue.setValue(defaultField);
@@ -75,6 +75,8 @@ public class InstanceServiceImpl {
 				// TODO Auto-generated catch block
 			}
 		}
+		this.instanceDao.create(instance);
+		this.attributeValueDao.create(instance.getValues());
 	}
 
 	public Instance findInstanceById(Long id) {
