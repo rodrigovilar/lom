@@ -94,12 +94,11 @@ public class InstanceHelper {
 				wereAllAttributeValuesValidated = wereAllAttributeValuesValidated
 						&& valueParameterOfTheInteractionWasValidated;
 			}
-
 		}
 		Assert.assertTrue("There has been no validated AttributeValue",
 				wereAllAttributeValuesValidated);
 	}
-
+	
 	private static boolean existsDefaultConfiguration(
 			AttributeValue attributeValue) {
 
