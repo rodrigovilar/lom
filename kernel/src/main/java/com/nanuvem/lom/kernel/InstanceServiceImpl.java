@@ -17,8 +17,8 @@ public class InstanceServiceImpl {
 
 	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
 		this.classService = classService;
-		this.attributeValueDao = daoFactory.createAttributeValueDao();
 		this.instanceDao = daoFactory.createInstanceDao();
+		this.attributeValueDao = daoFactory.createAttributeValueDao();
 	}
 
 	public void create(Instance instance) {
@@ -75,7 +75,7 @@ public class InstanceServiceImpl {
 				throw new MetadataException(
 						"Invalid value for Attribute configuration: "
 								+ attributeValue.getAttribute()
-								.getConfiguration());
+										.getConfiguration());
 			}
 		}
 	}
