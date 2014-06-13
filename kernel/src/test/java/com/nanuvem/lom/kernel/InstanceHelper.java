@@ -65,7 +65,7 @@ public class InstanceHelper {
 
 	private static void verifyAllAttributesValues(Instance createdInstance,
 			AttributeValue... values) {
-		
+
 		boolean allWereValidatedAttributesValues = true;
 
 		for (AttributeValue attributeValue : values) {
