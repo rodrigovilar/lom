@@ -1,22 +1,36 @@
 package com.nanuvem.lom.kernel;
 
+import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.dao.InstanceDao;
 
 public class InstanceServiceImpl {
 
-	private InstanceDao dao;
+	private InstanceDao instanceDao;
+	private AttributeValueDao attributeValueDao;
+	
 	private ClassServiceImpl classService;
 
 	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
-//		this.classService = new ClassServiceImpl(daoFactory);
 		this.classService = classService;
-		this.dao = daoFactory.createInstanceDao();
+		this.instanceDao = daoFactory.createInstanceDao();
+		this.attributeValueDao = daoFactory.createAttributeValueDao();
 	}
 
 	public void create(Instance instance) {
-		Class clazz = this.classService.readClass(instance.getClazz()
-				.getFullName());
+		if (instance.getClazz() == null) {
+			throw new MetadataException(
+					"Invalid value for Instance class: The class is mandatory");
+		}
+
+		Class clazz;
+		try {
+			clazz = this.classService.readClass(instance.getClazz()
+					.getFullName());
+		} catch (MetadataException e) {
+			throw new MetadataException("Unknown class: "
+					+ instance.getClazz().getFullName());
+		}
 		instance.setClazz(clazz);
 
 		for (AttributeValue attributeValue : instance.getValues()) {
@@ -26,11 +40,11 @@ public class InstanceServiceImpl {
 						+ attributeValue.getAttribute().getName());
 			}
 		}
-
-		this.dao.create(instance);
+		this.attributeValueDao.create(instance.getValues());
+		this.instanceDao.create(instance);
 	}
 
 	public Instance findInstanceById(Long id) {
-		return this.dao.findInstanceById(id);
+		return this.instanceDao.findInstanceById(id);
 	}
 }

@@ -1,7 +1,7 @@
 package com.nanuvem.lom.kernel;
 
-import static com.nanuvem.lom.kernel.AttributeHelper.PASSWORD;
 import static com.nanuvem.lom.kernel.AttributeHelper.LONGTEXT;
+import static com.nanuvem.lom.kernel.AttributeHelper.PASSWORD;
 import static com.nanuvem.lom.kernel.AttributeHelper.TEXT;
 import static com.nanuvem.lom.kernel.AttributeHelper.createOneAttribute;
 import static com.nanuvem.lom.kernel.AttributeHelper.expectExceptionOnUpdateInvalidAttribute;

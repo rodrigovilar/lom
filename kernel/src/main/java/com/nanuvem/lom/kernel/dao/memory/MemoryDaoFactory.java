@@ -1,6 +1,7 @@
 package com.nanuvem.lom.kernel.dao.memory;
 
 import com.nanuvem.lom.kernel.dao.AttributeDao;
+import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 import com.nanuvem.lom.kernel.dao.ClassDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.dao.InstanceDao;
@@ -10,6 +11,7 @@ public class MemoryDaoFactory implements DaoFactory {
 	private MemoryClassDao classDao;
 	private MemoryAttributeDao attributeDao;
 	private MemoryInstanceDao instanceDao;
+	private MemoryAttributeValueDao attributeValueDao;
 
 	public ClassDao createClassDao() {
 		if (classDao == null) {
@@ -31,6 +33,13 @@ public class MemoryDaoFactory implements DaoFactory {
 		}
 		return this.instanceDao;
 
+	}
+
+	public AttributeValueDao createAttributeValueDao() {
+		if(this.attributeValueDao == null){
+			this.attributeValueDao = new MemoryAttributeValueDao();
+		}
+		return this.attributeValueDao;
 	}
 
 }
