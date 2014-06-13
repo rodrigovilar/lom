@@ -14,9 +14,11 @@ public class InstanceServiceTest {
 	@Before
 	public void init() {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
-		this.classService = new ClassServiceImpl(daoFactory);
-		this.attributeServiceImpl = new AttributeServiceImpl(daoFactory);
-		this.instanceService = new InstanceServiceImpl(daoFactory);
+		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
+
+		this.classService = serviceFactory.createClassService();
+		this.attributeServiceImpl = serviceFactory.createAttributeService();
+		this.instanceService = serviceFactory.createInstanceService();
 	}
 
 	@Test
