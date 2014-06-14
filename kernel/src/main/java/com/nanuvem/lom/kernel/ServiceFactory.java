@@ -14,25 +14,25 @@ public class ServiceFactory {
 		this.daoFactory = daoFactory;
 	}
 
-	public ClassServiceImpl createClassService() {
+	public ClassServiceImpl getClassService() {
 		if (this.classService == null) {
 			this.classService = new ClassServiceImpl(this.daoFactory);
 		}
 		return this.classService;
 	}
 
-	public AttributeServiceImpl createAttributeService() {
+	public AttributeServiceImpl getAttributeService() {
 		if (this.attributeService == null) {
 			this.attributeService = new AttributeServiceImpl(this.daoFactory,
-					this.createClassService());
+					this.getClassService());
 		}
 		return this.attributeService;
 	}
 
-	public InstanceServiceImpl createInstanceService() {
+	public InstanceServiceImpl getInstanceService() {
 		if (this.instanceService == null) {
 			this.instanceService = new InstanceServiceImpl(this.daoFactory,
-					this.createClassService());
+					this.getClassService());
 		}
 		return this.instanceService;
 	}
