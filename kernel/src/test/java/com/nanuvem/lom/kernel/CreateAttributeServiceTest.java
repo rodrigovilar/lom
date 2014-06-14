@@ -18,8 +18,10 @@ public class CreateAttributeServiceTest {
 	@Before
 	public void init() {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
-		this.classService = new ClassServiceImpl(daoFactory);
-		this.attributeService = new AttributeServiceImpl(daoFactory);
+		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
+
+		this.classService = serviceFactory.createClassService();
+		this.attributeService = serviceFactory.createAttributeService();
 	}
 
 	@Test
