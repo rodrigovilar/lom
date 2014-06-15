@@ -65,17 +65,15 @@ public class InstanceHelper {
 
 	private static void verifyAllAttributesValues(Instance createdInstance,
 			AttributeValue... values) {
-
-		boolean allWereValidatedAttributesValues = values == null
-				|| values.length == 0 ? true : false;
+		
+		boolean allWereValidatedAttributesValues = true;
 
 		for (AttributeValue attributeValue : values) {
 			boolean valueParameterOfTheInteractionWasValidated = false;
 
 			for (AttributeValue valueCreated : createdInstance.getValues()) {
 				try {
-					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated
-							.getId().equals(attributeValue.getId());
+					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated.equals(attributeValue);
 
 					if (existsDefaultConfiguration(attributeValue)
 							&& theAttributeValueIsEqualInAttributesCompared) {
