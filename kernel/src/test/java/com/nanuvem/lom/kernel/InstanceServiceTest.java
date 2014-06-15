@@ -136,7 +136,7 @@ public class InstanceServiceTest {
 		AttributeHelper
 				.createOneAttribute(this.attributeService, "abc.c", null,
 						"name", AttributeType.TEXT,
-						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": \"6\"}");
+						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": 6}");
 		AttributeValue value3 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.c", null);
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -145,7 +145,7 @@ public class InstanceServiceTest {
 		ClassHelper.createClass(classService, "abc", "d");
 		AttributeHelper.createOneAttribute(this.attributeService, "abc.d",
 				null, "name", AttributeType.TEXT,
-				"{\"mandatory\": true, \"minlength\": \"6\"}");
+				"{\"mandatory\": true, \"minlength\": 6}");
 		AttributeValue value4 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.d", "Johson");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -178,7 +178,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.TEXT,
-						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": \"6\", \"maxlength\" : 6}");
+						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": 6, \"maxlength\" : 6}");
 		AttributeValue value7 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.g", null);
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -188,7 +188,7 @@ public class InstanceServiceTest {
 		AttributeHelper
 				.createOneAttribute(this.attributeService, "abc.i", null,
 						"name", AttributeType.TEXT,
-						"{\"mandatory\": true, \"minlength\": \"6\", \"maxlength\" : 6}");
+						"{\"mandatory\": true, \"minlength\": 6, \"maxlength\" : 6}");
 		AttributeValue value8 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.i", "Johson");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -202,7 +202,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.TEXT,
-						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": \"3\", \"maxlength\" : 8}");
+						"{\"mandatory\": true, \"default\": \"Johson\", \"minlength\": 3, \"maxlength\" : 8}");
 		AttributeValue value9 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.j", null);
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -212,7 +212,7 @@ public class InstanceServiceTest {
 		AttributeHelper
 				.createOneAttribute(this.attributeService, "abc.k", null,
 						"name", AttributeType.TEXT,
-						"{\"mandatory\": true, \"minlength\": \"3\", \"maxlength\" : 8}");
+						"{\"mandatory\": true, \"minlength\": 3, \"maxlength\" : 8}");
 		AttributeValue value10 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.k", "Johnson");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -226,7 +226,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.TEXT,
-						"{\"mandatory\": true, \"default\": \"abc@abc.com\", \"minlength\": \"3\", \"maxlength\" : 15, \"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\"}");
+						"{\"mandatory\": true, \"default\": \"abc@abc.com\", \"minlength\": 3, \"maxlength\" : 15, \"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\"}");
 		AttributeValue value11 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.l", null);
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -240,7 +240,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.TEXT,
-						"{\"mandatory\": true, \"minlength\": \"3\", \"maxlength\" : 15, \"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\"}");
+						"{\"mandatory\": true, \"minlength\": 3, \"maxlength\" : 15, \"regex\": \"(\\\\w[-.\\\\w]\\\\w@\\\\w[-._\\\\w]\\\\w.\\\\w{2,3})\"}");
 		AttributeValue value12 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.m", "abc@abc.com");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -347,7 +347,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.LONGTEXT,
-						"{\"mandatory\" : true, \"default\" : \"Johson\", \"minlength\" : \"6\", \"maxlength\" : 6}");
+						"{\"mandatory\" : true, \"default\" : \"Johson\", \"minlength\" : 6, \"maxlength\" : 6}");
 		AttributeValue value11 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.k", null);
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
@@ -361,7 +361,7 @@ public class InstanceServiceTest {
 						null,
 						"name",
 						AttributeType.LONGTEXT,
-						"{\"mandatory\" : true, \"default\" : \"Johson\", \"minlength\" : \"6\", \"maxlength\" : 6}");
+						"{\"mandatory\" : true, \"default\" : \"Johson\", \"minlength\" : 6, \"maxlength\" : 6}");
 		AttributeValue value12 = InstanceHelper.createOneAttributeValue(
 				this.attributeService, "name", "abc.l", "abccba");
 		InstanceHelper.createAndVerifyOneInstance(this.instanceService,
