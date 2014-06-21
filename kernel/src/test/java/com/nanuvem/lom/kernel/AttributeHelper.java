@@ -41,7 +41,7 @@ public class AttributeHelper {
 		}
 
 		Class clazz = new Class();
-		clazz.setNamespace(ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
+		clazz.setNamespace(ClassServiceImpl.DEFAULT_NAMESPACE
 				.equals(namespace) ? "" : namespace);
 		clazz.setName(name);
 		return clazz;
