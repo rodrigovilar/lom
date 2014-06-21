@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.SerializationUtils;
 
 import com.nanuvem.lom.kernel.Class;
+import com.nanuvem.lom.kernel.ClassServiceImpl;
 import com.nanuvem.lom.kernel.MetadataException;
 import com.nanuvem.lom.kernel.dao.ClassDao;
 
@@ -107,8 +108,21 @@ public class MemoryClassDao implements ClassDao {
 	}
 
 	public Class readClassByFullName(String classFullName) {
+		String namespace = null;
+		String name = null;
+
+		if (classFullName.contains(".")) {
+			namespace = classFullName.substring(0,
+					classFullName.lastIndexOf("."));
+			name = classFullName.substring(classFullName.lastIndexOf(".") + 1,
+					classFullName.length());
+		} else {
+			namespace = ClassServiceImpl.DEFAULT_NAMESPACE;
+			name = classFullName;
+		}
+
 		for (Class clazz : this.classes) {
-			if (classFullName.equalsIgnoreCase(clazz.getFullName())) {
+			if ((namespace + "." + name).equalsIgnoreCase(clazz.getFullName())) {
 				return (Class) SerializationUtils.clone(clazz);
 			}
 		}

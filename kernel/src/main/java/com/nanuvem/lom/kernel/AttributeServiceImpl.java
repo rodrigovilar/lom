@@ -233,7 +233,7 @@ public class AttributeServiceImpl {
 		if ((nameAttribute != null && !nameAttribute.isEmpty())
 				&& (classFullName != null && !classFullName.isEmpty())) {
 			if (!classFullName.contains(".")) {
-				classFullName = ClassServiceImpl.PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME
+				classFullName = ClassServiceImpl.DEFAULT_NAMESPACE
 						+ "." + classFullName;
 			}
 			return this.attributeDao.findAttributeByNameAndClassFullName(

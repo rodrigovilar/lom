@@ -39,8 +39,11 @@ public class InstanceServiceImpl {
 		instance.setClazz(clazz);
 		this.validateAndAssignDefaultValueInAttributesValues(instance, clazz);
 
-		this.attributeValueDao.create(instance.getValues());
 		this.instanceDao.create(instance);
+		for(AttributeValue value : instance.getValues()){
+			this.attributeValueDao.create(value);
+			
+		}
 	}
 
 	private void validateAndAssignDefaultValueInAttributesValues(

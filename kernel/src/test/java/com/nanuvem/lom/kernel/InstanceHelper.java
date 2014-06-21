@@ -132,7 +132,6 @@ public class InstanceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
-			return false;
 		}
 		String defaultField = jsonNode.get(
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
