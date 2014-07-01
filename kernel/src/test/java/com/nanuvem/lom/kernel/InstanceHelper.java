@@ -109,7 +109,7 @@ public class InstanceHelper {
 						.contains(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME));
 	}
 
-	public static AttributeValue createOneAttributeValue(
+	public static AttributeValue newAttributeValue(
 			AttributeServiceImpl attributeService, String attributeName,
 			String classFullName, Object value) {
 
@@ -137,5 +137,15 @@ public class InstanceHelper {
 		String defaultField = jsonNode.get(
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
+	}
+	
+	static AttributeValue attributeValue(String attributeName,
+			Object objValue) {
+		Attribute attribute = new Attribute();
+		attribute.setName(attributeName);
+		AttributeValue value = new AttributeValue();
+		value.setValue(objValue);
+		value.setAttribute(attribute);
+		return value;
 	}
 }

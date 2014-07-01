@@ -56,5 +56,4 @@ public class PasswordAttributeTypeDeployer implements AttributeTypeDeployer {
 				|| MINSYMBOLS_CONFIGURATION_NAME.equals(fieldName)
 				|| MAXREPEAT_CONFIGURATION_NAME.equals(fieldName);
 	}
-
 }
