@@ -22,6 +22,7 @@ public class CreateAttributeServiceTest {
 
 		this.classService = serviceFactory.createClassService();
 		this.attributeService = serviceFactory.createAttributeService();
+
 	}
 
 	@Test

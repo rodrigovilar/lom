@@ -66,16 +66,14 @@ public class InstanceHelper {
 	private static void verifyAllAttributesValues(Instance createdInstance,
 			AttributeValue... values) {
 
-		boolean allWereValidatedAttributesValues = values == null
-				|| values.length == 0 ? true : false;
+		boolean allWereValidatedAttributesValues = true;
 
 		for (AttributeValue attributeValue : values) {
 			boolean valueParameterOfTheInteractionWasValidated = false;
-
+			Assert.assertNotNull("Id was null", attributeValue.getId());
 			for (AttributeValue valueCreated : createdInstance.getValues()) {
 				try {
-					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated
-							.getId().equals(attributeValue.getId());
+					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated.equals(attributeValue);
 
 					if (existsDefaultConfiguration(attributeValue)
 							&& theAttributeValueIsEqualInAttributesCompared) {
@@ -110,7 +108,7 @@ public class InstanceHelper {
 						.contains(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME));
 	}
 
-	public static AttributeValue createOneAttributeValue(
+	public static AttributeValue newAttributeValue(
 			AttributeServiceImpl attributeService, String attributeName,
 			String classFullName, Object value) {
 
@@ -134,11 +132,19 @@ public class InstanceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
-			return false;
 		}
 		String defaultField = jsonNode.get(
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
-
+	}
+	
+	static AttributeValue attributeValue(String attributeName,
+			Object objValue) {
+		Attribute attribute = new Attribute();
+		attribute.setName(attributeName);
+		AttributeValue value = new AttributeValue();
+		value.setValue(objValue);
+		value.setAttribute(attribute);
+		return value;
 	}
 }

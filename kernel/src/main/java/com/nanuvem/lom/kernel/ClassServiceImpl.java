@@ -10,7 +10,7 @@ public class ClassServiceImpl {
 
 	private ClassDao dao;
 
-	static final String PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME = "default";
+	public static final String DEFAULT_NAMESPACE = "default";
 
 	ClassServiceImpl(DaoFactory factory) {
 		this.dao = factory.createClassDao();
@@ -22,7 +22,7 @@ public class ClassServiceImpl {
 		}
 
 		if (clazz.getNamespace() == null || clazz.getNamespace().equals("")) {
-			clazz.setNamespace(PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME);
+			clazz.setNamespace(DEFAULT_NAMESPACE);
 		}
 
 		if (!Pattern.matches("[a-zA-Z1-9.]{1,}", clazz.getNamespace())) {
@@ -48,7 +48,7 @@ public class ClassServiceImpl {
 			StringBuilder message = new StringBuilder();
 			message.append("The ");
 			if (!clazz.getNamespace().equals(
-					PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME)) {
+					DEFAULT_NAMESPACE)) {
 				message.append(clazz.getNamespace());
 				message.append(".");
 			}
@@ -105,7 +105,7 @@ public class ClassServiceImpl {
 			name = classFullName.substring(classFullName.lastIndexOf(".") + 1,
 					classFullName.length());
 		} else {
-			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
+			namespace = DEFAULT_NAMESPACE;
 			name = classFullName;
 		}
 
@@ -119,7 +119,7 @@ public class ClassServiceImpl {
 		}
 
 		if (namespace.isEmpty()) {
-			namespace = PREVIOUS_NAME_DEFAULT_OF_THE_CLASSFULLNAME;
+			namespace = DEFAULT_NAMESPACE;
 		}
 
 		Class classByNamespaceAndName = this.dao.readClassByFullName(namespace
