@@ -66,14 +66,15 @@ public class InstanceHelper {
 	private static void verifyAllAttributesValues(Instance createdInstance,
 			AttributeValue... values) {
 
-		boolean allWereValidatedAttributesValues = true;
+		boolean wereAllAttributeValuesValidated = true;
 
 		for (AttributeValue attributeValue : values) {
 			boolean valueParameterOfTheInteractionWasValidated = false;
 			Assert.assertNotNull("Id was null", attributeValue.getId());
 			for (AttributeValue valueCreated : createdInstance.getValues()) {
 				try {
-					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated.equals(attributeValue);
+					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated
+							.equals(attributeValue);
 
 					if (existsDefaultConfiguration(attributeValue)
 							&& theAttributeValueIsEqualInAttributesCompared) {
@@ -90,13 +91,13 @@ public class InstanceHelper {
 				} catch (Exception e) {
 					fail();
 				}
-				allWereValidatedAttributesValues = allWereValidatedAttributesValues
+				wereAllAttributeValuesValidated = wereAllAttributeValuesValidated
 						&& valueParameterOfTheInteractionWasValidated;
 			}
 
 		}
 		Assert.assertTrue("There has been no validated AttributeValue",
-				allWereValidatedAttributesValues);
+				wereAllAttributeValuesValidated);
 	}
 
 	private static boolean existsDefaultConfiguration(
@@ -137,9 +138,8 @@ public class InstanceHelper {
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
 	}
-	
-	static AttributeValue attributeValue(String attributeName,
-			Object objValue) {
+
+	static AttributeValue attributeValue(String attributeName, Object objValue) {
 		Attribute attribute = new Attribute();
 		attribute.setName(attributeName);
 		AttributeValue value = new AttributeValue();

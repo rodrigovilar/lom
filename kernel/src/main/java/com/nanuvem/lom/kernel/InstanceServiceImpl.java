@@ -40,7 +40,7 @@ public class InstanceServiceImpl {
 		this.validateAndAssignDefaultValueInAttributesValues(instance, clazz);
 
 		this.instanceDao.create(instance);
-		for(AttributeValue value : instance.getValues()){
+		for (AttributeValue value : instance.getValues()) {
 			this.attributeValueDao.create(value);
 
 		}
@@ -65,14 +65,18 @@ public class InstanceServiceImpl {
 				if (jsonNode
 						.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
 					String defaultField = jsonNode.get(
-							AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
+							AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)
+							.asText();
 					if (attributeValue.getValue() == null
 							&& defaultField != null) {
 						attributeValue.setValue(defaultField);
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				throw new MetadataException(
+						"Invalid value for Attribute configuration: "
+								+ attributeValue.getAttribute()
+								.getConfiguration());
 			}
 		}
 	}
