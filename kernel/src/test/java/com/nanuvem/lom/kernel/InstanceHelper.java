@@ -138,9 +138,8 @@ public class InstanceHelper {
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
 	}
-	
-	static AttributeValue attributeValue(String attributeName,
-			Object objValue) {
+
+	static AttributeValue attributeValue(String attributeName, Object objValue) {
 		Attribute attribute = new Attribute();
 		attribute.setName(attributeName);
 		AttributeValue value = new AttributeValue();

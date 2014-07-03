@@ -72,7 +72,10 @@ public class InstanceServiceImpl {
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				throw new MetadataException(
+						"Invalid value for Attribute configuration: "
+								+ attributeValue.getAttribute()
+								.getConfiguration());
 			}
 		}
 	}
