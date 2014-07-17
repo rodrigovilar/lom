@@ -37,7 +37,8 @@ public class MemoryDaoFactory implements DaoFactory {
 
 	public AttributeValueDao createAttributeValueDao() {
 		if (this.attributeValueDao == null) {
-			this.attributeValueDao = new MemoryAttributeValueDao();
+			this.attributeValueDao = new MemoryAttributeValueDao(
+					this.createInstanceDao());
 		}
 		return this.attributeValueDao;
 	}

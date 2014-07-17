@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
@@ -103,32 +102,18 @@ public class AttributeServiceImpl {
 	private void validateConfigurationAttribute(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
-			JsonNode jsonNode = validateJson(configuration);
+			JsonNode jsonNode = JsonNodeUtil.validate(configuration,
+					"Invalid value for Attribute configuration: "
+							+ configuration);
 			validateFieldNames(attribute, jsonNode);
 			validateFieldValues(attribute, jsonNode);
 		}
-	}
-
-	private JsonNode validateJson(String configuration) {
-		JsonNode jsonNode = null;
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			jsonNode = objectMapper.readTree(factory
-					.createJsonParser(configuration));
-		} catch (Exception e) {
-			throw new MetadataException(
-					"Invalid value for Attribute configuration: "
-							+ configuration);
-		}
-		return jsonNode;
 	}
 
 	private void validateFieldNames(Attribute attribute, JsonNode jsonNode) {
 		Iterator<String> fieldNames = jsonNode.getFieldNames();
 		while (fieldNames.hasNext()) {
 			String fieldName = fieldNames.next();
-
 			if (!this.deployers.get(attribute.getType().name())
 					.containsConfigurationField(fieldName)) {
 
