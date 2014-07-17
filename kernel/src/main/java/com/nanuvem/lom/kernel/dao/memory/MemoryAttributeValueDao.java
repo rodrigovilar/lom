@@ -5,7 +5,11 @@ import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 
 public class MemoryAttributeValueDao implements AttributeValueDao {
 
-	public void create(AttributeValue values) {
-		// TODO Auto-generated method stub
+	private Long id = 1L;
+
+
+	public void create(AttributeValue value) {
+		value.setId(id++);
+		value.setVersion(0);
 	}
 }

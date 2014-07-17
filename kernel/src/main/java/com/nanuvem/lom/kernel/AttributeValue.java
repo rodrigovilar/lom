@@ -9,9 +9,8 @@ public class AttributeValue implements Serializable {
 	private Long id;
 	private Integer version;
 
-	private Attribute attribute;
 	private Instance instance;
-
+	private Attribute attribute;
 	private Object value;
 
 	public Long getId() {

@@ -1,9 +1,8 @@
 package com.nanuvem.lom.kernel;
 
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.dao.InstanceDao;
@@ -26,7 +25,6 @@ public class InstanceServiceImpl {
 			throw new MetadataException(
 					"Invalid value for Instance class: The class is mandatory");
 		}
-
 		Class clazz;
 		try {
 			clazz = this.classService.readClass(instance.getClazz()
@@ -40,6 +38,7 @@ public class InstanceServiceImpl {
 
 		this.instanceDao.create(instance);
 		for (AttributeValue value : instance.getValues()) {
+			value.setInstance(instance);
 			this.attributeValueDao.create(value);
 
 		}
@@ -54,12 +53,19 @@ public class InstanceServiceImpl {
 						+ instance.getClazz().getFullName() + ": "
 						+ attributeValue.getAttribute().getName());
 			}
-			try {
-				ObjectMapper objectMapper = new ObjectMapper();
-				JsonFactory factory = objectMapper.getJsonFactory();
-				JsonNode jsonNode = objectMapper.readTree(factory
-						.createJsonParser(attributeValue.getAttribute()
-								.getConfiguration()));
+			validateTypeOfValue(attributeValue);
+
+			boolean attributeConfigurationIsNotNullAndNotEmpty = attributeValue
+					.getAttribute().getConfiguration() != null
+					&& (!attributeValue.getAttribute().getConfiguration()
+							.isEmpty());
+			if (attributeConfigurationIsNotNullAndNotEmpty) {
+
+				JsonNode jsonNode = JsonNodeUtil.validate(attributeValue
+						.getAttribute().getConfiguration(),
+						"Invalid value for Attribute configuration: "
+								+ attributeValue.getAttribute()
+										.getConfiguration());
 
 				if (jsonNode
 						.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
@@ -71,11 +77,34 @@ public class InstanceServiceImpl {
 						attributeValue.setValue(defaultField);
 					}
 				}
-			} catch (Exception e) {
+			}
+		}
+	}
+
+	private void validateTypeOfValue(AttributeValue attributeValue) {
+		// Refactor this method.
+		if (attributeValue.getValue() != null) {
+			if (attributeValue.getAttribute().getType()
+					.equals(AttributeType.TEXT)
+					&& !(attributeValue.getValue() instanceof String)) {
 				throw new MetadataException(
-						"Invalid value for Attribute configuration: "
-								+ attributeValue.getAttribute()
-										.getConfiguration());
+						"Invalid value for the Instance. The '"
+								+ attributeValue.getAttribute().getName()
+								+ "' attribute can only get values ​​of type TEXT");
+			} else if (attributeValue.getAttribute().getType()
+					.equals(AttributeType.LONGTEXT)
+					&& !(attributeValue.getValue() instanceof String)) {
+				throw new MetadataException(
+						"Invalid value for the Instance. The '"
+								+ attributeValue.getAttribute().getName()
+								+ "' attribute can only get values ​​of type LONGTEXT");
+			} else if (attributeValue.getAttribute().getType()
+					.equals(AttributeType.INTEGER)
+					&& !(attributeValue.getValue() instanceof Integer)) {
+				throw new MetadataException(
+						"Invalid value for the Instance. The '"
+								+ attributeValue.getAttribute().getName()
+								+ "' attribute can only get values ​​of type INTEGER");
 			}
 		}
 	}

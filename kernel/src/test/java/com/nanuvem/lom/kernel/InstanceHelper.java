@@ -3,10 +3,9 @@ package com.nanuvem.lom.kernel;
 import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
 
 public class InstanceHelper {
@@ -98,7 +97,7 @@ public class InstanceHelper {
 		Assert.assertTrue("There has been no validated AttributeValue",
 				wereAllAttributeValuesValidated);
 	}
-	
+
 	private static boolean existsDefaultConfiguration(
 			AttributeValue attributeValue) {
 
@@ -124,11 +123,8 @@ public class InstanceHelper {
 			AttributeValue attributeValue) {
 		JsonNode jsonNode = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			jsonNode = objectMapper.readTree(factory
-					.createJsonParser(attributeValue.getAttribute()
-							.getConfiguration()));
+			jsonNode = JsonNodeUtil.validate(attributeValue.getAttribute()
+					.getConfiguration(), null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
