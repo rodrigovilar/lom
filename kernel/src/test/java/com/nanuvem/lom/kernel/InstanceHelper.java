@@ -3,10 +3,9 @@ package com.nanuvem.lom.kernel;
 import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
 
 public class InstanceHelper {
@@ -65,15 +64,16 @@ public class InstanceHelper {
 
 	private static void verifyAllAttributesValues(Instance createdInstance,
 			AttributeValue... values) {
-		
-		boolean allWereValidatedAttributesValues = true;
+
+		boolean wereAllAttributeValuesValidated = true;
 
 		for (AttributeValue attributeValue : values) {
 			boolean valueParameterOfTheInteractionWasValidated = false;
-
+			Assert.assertNotNull("Id was null", attributeValue.getId());
 			for (AttributeValue valueCreated : createdInstance.getValues()) {
 				try {
-					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated.equals(attributeValue);
+					boolean theAttributeValueIsEqualInAttributesCompared = valueCreated
+							.equals(attributeValue);
 
 					if (existsDefaultConfiguration(attributeValue)
 							&& theAttributeValueIsEqualInAttributesCompared) {
@@ -90,13 +90,12 @@ public class InstanceHelper {
 				} catch (Exception e) {
 					fail();
 				}
-				allWereValidatedAttributesValues = allWereValidatedAttributesValues
+				wereAllAttributeValuesValidated = wereAllAttributeValuesValidated
 						&& valueParameterOfTheInteractionWasValidated;
 			}
-
 		}
 		Assert.assertTrue("There has been no validated AttributeValue",
-				allWereValidatedAttributesValues);
+				wereAllAttributeValuesValidated);
 	}
 
 	private static boolean existsDefaultConfiguration(
@@ -108,7 +107,7 @@ public class InstanceHelper {
 						.contains(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME));
 	}
 
-	public static AttributeValue createOneAttributeValue(
+	public static AttributeValue newAttributeValue(
 			AttributeServiceImpl attributeService, String attributeName,
 			String classFullName, Object value) {
 
@@ -124,11 +123,8 @@ public class InstanceHelper {
 			AttributeValue attributeValue) {
 		JsonNode jsonNode = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			jsonNode = objectMapper.readTree(factory
-					.createJsonParser(attributeValue.getAttribute()
-							.getConfiguration()));
+			jsonNode = JsonNodeUtil.validate(attributeValue.getAttribute()
+					.getConfiguration(), null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -136,6 +132,14 @@ public class InstanceHelper {
 		String defaultField = jsonNode.get(
 				AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
 		return attributeValue.getValue().equals(defaultField);
+	}
 
+	static AttributeValue attributeValue(String attributeName, Object objValue) {
+		Attribute attribute = new Attribute();
+		attribute.setName(attributeName);
+		AttributeValue value = new AttributeValue();
+		value.setValue(objValue);
+		value.setAttribute(attribute);
+		return value;
 	}
 }

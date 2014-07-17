@@ -36,5 +36,4 @@ public class ServiceFactory {
 		}
 		return this.instanceService;
 	}
-
 }
