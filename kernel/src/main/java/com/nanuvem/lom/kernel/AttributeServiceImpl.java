@@ -1,25 +1,20 @@
 package com.nanuvem.lom.kernel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
+import com.nanuvem.lom.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.IntegerAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.LongTextAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.PasswordAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.TextAttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.Deployers;
 
 public class AttributeServiceImpl {
 
@@ -31,20 +26,14 @@ public class AttributeServiceImpl {
 
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
-	private Map<String, AttributeTypeDeployer> deployers = new HashMap<String, AttributeTypeDeployer>();
+	private Deployers deployers; 
+	
 
-	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService) {
+	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService, Deployers deployers) {
 		this.classService = classService;
+		this.deployers = deployers;
 		this.attributeDao = dao.createAttributeDao();
 
-		deployers.put(AttributeType.TEXT.name(),
-				new TextAttributeTypeDeployer());
-		deployers.put(AttributeType.LONGTEXT.name(),
-				new LongTextAttributeTypeDeployer());
-		deployers.put(AttributeType.PASSWORD.name(),
-				new PasswordAttributeTypeDeployer());
-		deployers.put(AttributeType.INTEGER.name(),
-				new IntegerAttributeTypeDeployer());
 	}
 
 	private void validateCreate(Attribute attribute) {

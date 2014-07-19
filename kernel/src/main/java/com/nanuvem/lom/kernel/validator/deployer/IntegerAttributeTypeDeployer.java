@@ -38,4 +38,8 @@ public class IntegerAttributeTypeDeployer implements AttributeTypeDeployer {
 				|| MAXVALUE_CONFIGURATION_NAME.equals(fieldName);
 	}
 
+	public Class<?> getAttributeClass() {
+		return Integer.class;
+	}
+
 }

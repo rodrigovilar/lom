@@ -41,4 +41,8 @@ public class TextAttributeTypeDeployer implements AttributeTypeDeployer {
 				|| REGEX_CONFIGURATION_NAME.equals(fieldName);
 	}
 
+	public Class<?> getAttributeClass() {
+		return String.class;
+	}
+
 }
