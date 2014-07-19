@@ -2,20 +2,24 @@ package com.nanuvem.lom.kernel;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.dao.AttributeValueDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
 import com.nanuvem.lom.kernel.dao.InstanceDao;
+import com.nanuvem.lom.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.Deployers;
 
 public class InstanceServiceImpl {
 
 	private InstanceDao instanceDao;
 	private AttributeValueDao attributeValueDao;
 	private ClassServiceImpl classService;
+	private Deployers deployers;
 
-	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService) {
+	InstanceServiceImpl(DaoFactory daoFactory, ClassServiceImpl classService,
+			Deployers deployers) {
 		this.classService = classService;
+		this.deployers = deployers;
 		this.instanceDao = daoFactory.createInstanceDao();
 		this.attributeValueDao = daoFactory.createAttributeValueDao();
 	}
@@ -53,58 +57,49 @@ public class InstanceServiceImpl {
 						+ instance.getClazz().getFullName() + ": "
 						+ attributeValue.getAttribute().getName());
 			}
-			validateTypeOfValue(attributeValue);
+			this.validateTypeOfValue(attributeValue);
 
-			boolean attributeConfigurationIsNotNullAndNotEmpty = attributeValue
-					.getAttribute().getConfiguration() != null
-					&& (!attributeValue.getAttribute().getConfiguration()
-							.isEmpty());
-			if (attributeConfigurationIsNotNullAndNotEmpty) {
-
+			boolean nullConfiguration = attributeValue.getAttribute()
+					.getConfiguration() == null;
+			boolean emptyConfiguration = (attributeValue.getAttribute()
+					.getConfiguration().isEmpty());
+			if (!nullConfiguration && !emptyConfiguration) {
 				JsonNode jsonNode = JsonNodeUtil.validate(attributeValue
 						.getAttribute().getConfiguration(),
 						"Invalid value for Attribute configuration: "
 								+ attributeValue.getAttribute()
 										.getConfiguration());
+				this.applyDefaultValueWhenAvailable(attributeValue, jsonNode);
+			}
+		}
+	}
 
-				if (jsonNode
-						.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
-					String defaultField = jsonNode.get(
-							AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)
-							.asText();
-					if (attributeValue.getValue() == null
-							&& defaultField != null) {
-						attributeValue.setValue(defaultField);
-					}
-				}
+	private void applyDefaultValueWhenAvailable(AttributeValue attributeValue,
+			JsonNode jsonNode) {
+		if (jsonNode.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
+			String defaultField = jsonNode.get(
+					AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
+			if (attributeValue.getValue() == null && defaultField != null) {
+				attributeValue.setValue(defaultField);
 			}
 		}
 	}
 
 	private void validateTypeOfValue(AttributeValue attributeValue) {
-		// Refactor this method.
 		if (attributeValue.getValue() != null) {
-			if (attributeValue.getAttribute().getType()
-					.equals(AttributeType.TEXT)
-					&& !(attributeValue.getValue() instanceof String)) {
+
+			Attribute attribute = attributeValue.getAttribute();
+			AttributeType attributeType = attribute.getType();
+			AttributeTypeDeployer deployer = deployers
+					.get(attributeType.name());
+			java.lang.Class<?> attributeClass = deployer.getAttributeClass();
+
+			if (!attributeClass.isInstance(attributeValue.getValue())) {
 				throw new MetadataException(
 						"Invalid value for the Instance. The '"
-								+ attributeValue.getAttribute().getName()
-								+ "' attribute can only get values ​​of type TEXT");
-			} else if (attributeValue.getAttribute().getType()
-					.equals(AttributeType.LONGTEXT)
-					&& !(attributeValue.getValue() instanceof String)) {
-				throw new MetadataException(
-						"Invalid value for the Instance. The '"
-								+ attributeValue.getAttribute().getName()
-								+ "' attribute can only get values ​​of type LONGTEXT");
-			} else if (attributeValue.getAttribute().getType()
-					.equals(AttributeType.INTEGER)
-					&& !(attributeValue.getValue() instanceof Integer)) {
-				throw new MetadataException(
-						"Invalid value for the Instance. The '"
-								+ attributeValue.getAttribute().getName()
-								+ "' attribute can only get values ​​of type INTEGER");
+								+ attribute.getName()
+								+ "' attribute can only get values ​​of type "
+								+ attributeType);
 			}
 		}
 	}

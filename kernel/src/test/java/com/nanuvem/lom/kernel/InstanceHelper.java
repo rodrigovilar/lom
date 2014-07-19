@@ -5,7 +5,7 @@ import junit.framework.Assert;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.kernel.util.JsonNodeUtil;
+import com.nanuvem.lom.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
 
 public class InstanceHelper {
