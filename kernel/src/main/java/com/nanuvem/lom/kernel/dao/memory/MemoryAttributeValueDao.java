@@ -7,7 +7,6 @@ public class MemoryAttributeValueDao implements AttributeValueDao {
 
 	private Long id = 1L;
 
-
 	public void create(AttributeValue value) {
 		value.setId(id++);
 		value.setVersion(0);

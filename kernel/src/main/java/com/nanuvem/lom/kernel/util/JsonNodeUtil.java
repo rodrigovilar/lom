@@ -1,4 +1,5 @@
-package com.nanuvem.kernel.util;
+package com.nanuvem.lom.kernel.util;
+
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
