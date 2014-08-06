@@ -1,5 +1,10 @@
 package com.nanuvem.lom.kernel;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -687,5 +692,303 @@ public class InstanceServiceTest {
 				"abc.a", 5L);
 		InstanceHelper.expectExceptionOnCreateInvalidInstance(
 				this.instanceService, "abc.a", messageException, value);
+	}
+
+	@Test
+	public void instanceWithInvalidValuesForTheConfigurationOfAttributesText() {
+		ClassHelper.createClass(this.classService, "abc", "a");
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameA", AttributeType.TEXT, "{\"mandatory\" : true}");
+		AttributeValue valueA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameA", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameA' attribute is mandatory",
+						valueA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameB", AttributeType.TEXT, "{\"minlength\" : 5}");
+		AttributeValue valueB = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameB", "abc.a", "abcd");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameB' must have a minimum length of 5 characters",
+						valueB);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameBA", AttributeType.TEXT,
+				"{\"mandatory\" : true, \"minlength\" : 5}");
+		AttributeValue valueBA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameBA", "abc.a", "");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameBA' attribute is mandatory, "
+								+ "the value for 'nameBA' must have a minimum length of 5 characters",
+						valueBA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameC", AttributeType.TEXT, "{\"maxlength\" : 5}");
+		AttributeValue valueC = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameC", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameC' must have a maximum length of 5 characters",
+						valueC);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameCA", AttributeType.TEXT, "{\"maxlength\" : 5}");
+		AttributeValue valueCA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameCA", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameCA' attribute is mandatory, "
+								+ "the value for 'nameCA' must have a maximum length of 5 characters",
+						valueCA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameD", AttributeType.TEXT,
+				"{\"minlength\" : 5, \"maxlength\" : 5}");
+		AttributeValue valueD = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameD", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameD' should have maximum length and minimum length of 5 characters",
+						valueD);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameDA", AttributeType.TEXT,
+				"{\"mandatory\" : true, \"minlength\" : 5, \"maxlength\" : 5}");
+		AttributeValue valueDA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameDA", "abc.a", "");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameDA' attribute is mandatory, "
+								+ "the value for 'nameDA' should have maximum length and minimum length of 5 characters",
+						valueDA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameE", AttributeType.TEXT,
+				"{\"regex\" :\"\\d\\d\\d([,\\s])?\\d\\d\\d\\d\"}");
+		AttributeValue valueE = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameE", "abc.a", "12345678");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value of the 'nameE' attribute does not meet the defined regular expression",
+						valueE);
+
+		AttributeHelper
+				.createOneAttribute(
+						this.attributeService,
+						"abc.a",
+						null,
+						"nameF",
+						AttributeType.TEXT,
+						"{\"mandatory\" : true, \"minlength\" : 4, \"maxlength\" : 4, \"regex\" : \"\\d\\d\\d\\s\\d\\d\\d\\s\\d\\d\\d\\s\\d\\d\"}");
+		AttributeValue valueF = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameF", "abc.a", "123 456 789");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameF' should have maximum length and minimum length of 4 characters, "
+								+ "the value of the 'nameF' attribute does not meet the defined regular expression",
+						valueF);
+
+	}
+
+	@Test
+	public void instanceWithInvalidValuesForTheConfigurationOfAttributesLongText() {
+		ClassHelper.createClass(this.classService, "abc", "a");
+
+		AttributeHelper
+				.createOneAttribute(this.attributeService, "abc.a", null,
+						"nameA", AttributeType.LONGTEXT,
+						"{\"mandatory\" : true}");
+		AttributeValue valueA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameA", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameA' attribute is mandatory",
+						valueA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameB", AttributeType.LONGTEXT, "{\"minlength\" : 5}");
+		AttributeValue valueB = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameB", "abc.a", "abcd");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameB' must have a minimum length of 5 characters",
+						valueB);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameBA", AttributeType.LONGTEXT,
+				"{\"mandatory\" : true, \"minlength\" : 5}");
+		AttributeValue valueBA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameBA", "abc.a", "");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameBA' attribute is mandatory, "
+								+ "the value for 'nameBA' must have a minimum length of 5 characters",
+						valueBA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameC", AttributeType.LONGTEXT, "{\"maxlength\" : 5}");
+		AttributeValue valueC = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameC", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameC' must have a maximum length of 5 characters",
+						valueC);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameCA", AttributeType.LONGTEXT, "{\"maxlength\" : 5}");
+		AttributeValue valueCA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameCA", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameCA' attribute is mandatory, "
+								+ "the value for 'nameCA' must have a maximum length of 5 characters",
+						valueCA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameD", AttributeType.LONGTEXT,
+				"{\"minlength\" : 5, \"maxlength\" : 5}");
+		AttributeValue valueD = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameD", "abc.a", "abcdef");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nameD' should have maximum length and minimum length of 5 characters",
+						valueD);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameE", AttributeType.LONGTEXT,
+				"{\"mandatory\" : true, \"minlength\" : 5, \"maxlength\" : 5}");
+		AttributeValue valueE = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameE", "abc.a", "");
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameE' attribute is mandatory, "
+								+ "the value for 'nameE' should have maximum length and minimum length of 5 characters",
+						valueE);
+	}
+
+	@Test
+	public void instanceWithInvalidValuesForTheConfigurationOfAttributesInteger() {
+		ClassHelper.createClass(this.classService, "abc", "a");
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameA", AttributeType.INTEGER, "{\"mandatory\" : true}");
+		AttributeValue valueA = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameA", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameA' attribute is mandatory",
+						valueA);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameB", AttributeType.INTEGER, "{\"minvalue\" : 3}");
+		AttributeValue valueB = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameB", "abc.a", 2);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nomeB' must be greater than or equal to 3",
+						valueB);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameC", AttributeType.INTEGER,
+				"{\"mandatory\" : true, \"minvalue\" : 3}");
+		AttributeValue valueC = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameC", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameC' attribute is mandatory, "
+								+ "the value for 'nomeC' must be greater than or equal to 3",
+						valueC);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameD", AttributeType.INTEGER, "{\"maxvalue\" : 3}");
+		AttributeValue valueD = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameD", "abc.a", 4);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nomeD' must be smaller or equal to 3",
+						valueD);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameE", AttributeType.INTEGER,
+				"{\"mandatory\" : true, \"maxvalue\" : 3}");
+		AttributeValue valueE = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameC", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameC' attribute is mandatory, "
+								+ "the value for 'nomeE' must be smaller or equal to 3",
+						valueE);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameF", AttributeType.INTEGER,
+				"{\"minvalue\" : 3, \"maxvalue\" : 3}");
+		AttributeValue valueF = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameF", "abc.a", 4);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for 'nomeF' must be smaller or equal to and greater than or equal to 3 ",
+						valueF);
+
+		AttributeHelper.createOneAttribute(this.attributeService, "abc.a",
+				null, "nameG", AttributeType.INTEGER,
+				"{\"mandatory\" : true, \"minvalue\" : 3, \"maxvalue\" : 3}");
+		AttributeValue valueG = InstanceHelper.newAttributeValue(
+				this.attributeService, "nameG", "abc.a", null);
+		InstanceHelper
+				.expectExceptionOnCreateInvalidInstance(
+						this.instanceService,
+						"abc.a",
+						"Invalid value for the Instance. The value for the 'nameG' attribute is mandatory, "
+								+ "the value for 'nomeG' must be smaller or equal to and greater than or equal to 3 ",
+						valueG);
 	}
 }
