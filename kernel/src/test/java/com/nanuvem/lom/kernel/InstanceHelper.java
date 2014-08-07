@@ -143,4 +143,20 @@ public class InstanceHelper {
 		value.setAttribute(attribute);
 		return value;
 	}
+	
+	public static void invalidValueForInstance(AttributeServiceImpl attributeService, InstanceServiceImpl instanceService,
+			String className, Integer sequence, String attributeName,
+			AttributeType type, String configuration, Object value,
+			String expectedMessage) {
+		
+		AttributeHelper.createOneAttribute(attributeService, className,
+				sequence, attributeName, type, configuration);
+		
+		AttributeValue attributeValue = InstanceHelper.newAttributeValue(
+				attributeService, attributeName, className, value);
+		
+		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
+				className, expectedMessage, attributeValue);
+		
+	}
 }
