@@ -3,10 +3,9 @@ package com.nanuvem.lom.kernel;
 import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.nanuvem.lom.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
 
 public class InstanceHelper {
@@ -125,11 +124,8 @@ public class InstanceHelper {
 			AttributeValue attributeValue) {
 		JsonNode jsonNode = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			jsonNode = objectMapper.readTree(factory
-					.createJsonParser(attributeValue.getAttribute()
-							.getConfiguration()));
+			jsonNode = JsonNodeUtil.validate(attributeValue.getAttribute()
+					.getConfiguration(), null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -146,5 +142,21 @@ public class InstanceHelper {
 		value.setValue(objValue);
 		value.setAttribute(attribute);
 		return value;
+	}
+	
+	public static void invalidValueForInstance(AttributeServiceImpl attributeService, InstanceServiceImpl instanceService,
+			String className, Integer sequence, String attributeName,
+			AttributeType type, String configuration, Object value,
+			String expectedMessage) {
+		
+		AttributeHelper.createOneAttribute(attributeService, className,
+				sequence, attributeName, type, configuration);
+		
+		AttributeValue attributeValue = InstanceHelper.newAttributeValue(
+				attributeService, attributeName, className, value);
+		
+		InstanceHelper.expectExceptionOnCreateInvalidInstance(instanceService,
+				className, expectedMessage, attributeValue);
+		
 	}
 }

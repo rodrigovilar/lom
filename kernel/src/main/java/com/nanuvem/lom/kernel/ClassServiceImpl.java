@@ -47,8 +47,7 @@ public class ClassServiceImpl {
 				&& found.getNamespace().equals(clazz.getNamespace())) {
 			StringBuilder message = new StringBuilder();
 			message.append("The ");
-			if (!clazz.getNamespace().equals(
-					DEFAULT_NAMESPACE)) {
+			if (!clazz.getNamespace().equals(DEFAULT_NAMESPACE)) {
 				message.append(clazz.getNamespace());
 				message.append(".");
 			}

@@ -37,4 +37,8 @@ public class LongTextAttributeTypeDeployer implements AttributeTypeDeployer {
 				|| MAXLENGTH_CONFIGURATION_NAME.equals(fieldName);
 	}
 
+	public Class<?> getAttributeClass() {
+		return String.class;
+	}
+
 }

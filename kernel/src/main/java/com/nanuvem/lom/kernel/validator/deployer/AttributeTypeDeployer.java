@@ -23,4 +23,6 @@ public interface AttributeTypeDeployer {
 	List<AttributeConfigurationValidator> getValidators();
 
 	boolean containsConfigurationField(String fieldName);
+	
+	Class<?> getAttributeClass();
 }

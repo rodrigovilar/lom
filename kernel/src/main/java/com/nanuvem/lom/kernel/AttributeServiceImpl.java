@@ -1,26 +1,20 @@
 package com.nanuvem.lom.kernel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.nanuvem.lom.kernel.dao.AttributeDao;
 import com.nanuvem.lom.kernel.dao.DaoFactory;
+import com.nanuvem.lom.kernel.util.JsonNodeUtil;
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.ValidationError;
 import com.nanuvem.lom.kernel.validator.deployer.AttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.IntegerAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.LongTextAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.PasswordAttributeTypeDeployer;
-import com.nanuvem.lom.kernel.validator.deployer.TextAttributeTypeDeployer;
+import com.nanuvem.lom.kernel.validator.deployer.Deployers;
 
 public class AttributeServiceImpl {
 
@@ -32,20 +26,14 @@ public class AttributeServiceImpl {
 
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
-	private Map<String, AttributeTypeDeployer> deployers = new HashMap<String, AttributeTypeDeployer>();
+	private Deployers deployers;
 
-	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService) {
+	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService,
+			Deployers deployers) {
 		this.classService = classService;
+		this.deployers = deployers;
 		this.attributeDao = dao.createAttributeDao();
 
-		deployers.put(AttributeType.TEXT.name(),
-				new TextAttributeTypeDeployer());
-		deployers.put(AttributeType.LONGTEXT.name(),
-				new LongTextAttributeTypeDeployer());
-		deployers.put(AttributeType.PASSWORD.name(),
-				new PasswordAttributeTypeDeployer());
-		deployers.put(AttributeType.INTEGER.name(),
-				new IntegerAttributeTypeDeployer());
 	}
 
 	private void validateCreate(Attribute attribute) {
@@ -103,32 +91,18 @@ public class AttributeServiceImpl {
 	private void validateConfigurationAttribute(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
-			JsonNode jsonNode = validateJson(configuration);
+			JsonNode jsonNode = JsonNodeUtil.validate(configuration,
+					"Invalid value for Attribute configuration: "
+							+ configuration);
 			validateFieldNames(attribute, jsonNode);
 			validateFieldValues(attribute, jsonNode);
 		}
-	}
-
-	private JsonNode validateJson(String configuration) {
-		JsonNode jsonNode = null;
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonFactory factory = objectMapper.getJsonFactory();
-			jsonNode = objectMapper.readTree(factory
-					.createJsonParser(configuration));
-		} catch (Exception e) {
-			throw new MetadataException(
-					"Invalid value for Attribute configuration: "
-							+ configuration);
-		}
-		return jsonNode;
 	}
 
 	private void validateFieldNames(Attribute attribute, JsonNode jsonNode) {
 		Iterator<String> fieldNames = jsonNode.getFieldNames();
 		while (fieldNames.hasNext()) {
 			String fieldName = fieldNames.next();
-
 			if (!this.deployers.get(attribute.getType().name())
 					.containsConfigurationField(fieldName)) {
 
@@ -233,8 +207,8 @@ public class AttributeServiceImpl {
 		if ((nameAttribute != null && !nameAttribute.isEmpty())
 				&& (classFullName != null && !classFullName.isEmpty())) {
 			if (!classFullName.contains(".")) {
-				classFullName = ClassServiceImpl.DEFAULT_NAMESPACE
-						+ "." + classFullName;
+				classFullName = ClassServiceImpl.DEFAULT_NAMESPACE + "."
+						+ classFullName;
 			}
 			return this.attributeDao.findAttributeByNameAndClassFullName(
 					nameAttribute, classFullName);

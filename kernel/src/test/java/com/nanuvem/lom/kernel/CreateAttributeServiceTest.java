@@ -20,9 +20,8 @@ public class CreateAttributeServiceTest {
 		MemoryDaoFactory daoFactory = new MemoryDaoFactory();
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
 
-		this.classService = serviceFactory.createClassService();
-		this.attributeService = serviceFactory.createAttributeService();
-
+		this.classService = serviceFactory.getClassService();
+		this.attributeService = serviceFactory.getAttributeService();
 	}
 
 	@Test
