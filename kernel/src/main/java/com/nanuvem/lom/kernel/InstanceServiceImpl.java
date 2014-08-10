@@ -76,9 +76,10 @@ public class InstanceServiceImpl {
 
 	private void applyDefaultValueWhenAvailable(AttributeValue attributeValue,
 			JsonNode jsonNode) {
-		if (jsonNode.has(AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME)) {
-			String defaultField = jsonNode.get(
-					AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME).asText();
+
+		String defaultConfiguration = AttributeTypeDeployer.DEFAULT_CONFIGURATION_NAME;
+		if (jsonNode.has(defaultConfiguration)) {
+			String defaultField = jsonNode.get(defaultConfiguration).asText();
 			if (attributeValue.getValue() == null && defaultField != null) {
 				attributeValue.setValue(defaultField);
 			}
