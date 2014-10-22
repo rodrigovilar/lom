@@ -6,30 +6,20 @@ import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidat
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
+public class MinimumValueAttributeConfigurationValidator implements ValueValidator<Integer> {
 
-public class MinimumValueAttributeConfigurationValidator extends
-		AttributeConfigurationValidatorWithDefault {
+	public void validate(List<ValidationError> errors,
+			JsonNode configuration, String value, Integer minValue) {
 
-	public MinimumValueAttributeConfigurationValidator(String field,
-			String defaultField) {
-		super(field, defaultField);
-	}
-
-	@Override
-	protected void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue) {
-
-		Integer intDefaultValue = Integer.parseInt(defaultValue);
-		if (intDefaultValue < configuration.get(field).asInt()) {
+		Integer intDefaultValue = Integer.parseInt(value);
+		if (intDefaultValue < minValue) {
 
 			addError(errors, "the default value is smaller than minvalue");
 		}
 
 	}
 
-	@Override
-	protected AttributeConfigurationValidator createFieldValidator(String field) {
+	public AttributeConfigurationValidator createFieldValidator(String field) {
 		return new IntegerAttributeConfigurationValidator(field);
 	}
 

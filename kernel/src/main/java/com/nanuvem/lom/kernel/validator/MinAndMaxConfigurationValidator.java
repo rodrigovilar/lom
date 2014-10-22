@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
-
 public class MinAndMaxConfigurationValidator implements
 		AttributeConfigurationValidator {
 
@@ -19,8 +17,7 @@ public class MinAndMaxConfigurationValidator implements
 		this.minField = minField;
 	}
 
-	public void validate(List<ValidationError> errors, Attribute attribute,
-			JsonNode configuration) {
+	public void validate(List<ValidationError> errors, JsonNode configuration) {
 
 		if (configuration.has(maxField) && configuration.has(minField)) {
 

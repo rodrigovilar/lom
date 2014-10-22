@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
-
 public abstract class AttributeTypeConfigurationValidator implements
 		AttributeConfigurationValidator {
 
@@ -18,10 +16,9 @@ public abstract class AttributeTypeConfigurationValidator implements
 		this.suffixExceptionMessage = suffixExceptionMessage;
 	}
 
-	public void validate(List<ValidationError> errors, Attribute attribute,
-			JsonNode configuration) {
+	public void validate(List<ValidationError> errors, JsonNode configuration) {
 
-		if (!this.validate(attribute, configuration)) {
+		if (!this.validate(configuration)) {
 			addError(errors, "the " + this.field + " value must be "
 					+ this.suffixExceptionMessage);
 		}
@@ -32,5 +29,5 @@ public abstract class AttributeTypeConfigurationValidator implements
 		errors.add(validationError);
 	}
 
-	public abstract boolean validate(Attribute attribute, JsonNode configuration);
+	public abstract boolean validate(JsonNode configuration);
 }

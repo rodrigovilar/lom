@@ -6,26 +6,16 @@ import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidat
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
+public class MaximumLengthAttributeConfigurationValidator implements ValueValidator<Integer> {
 
-public class MaximumLengthAttributeConfigurationValidator extends
-		AttributeConfigurationValidatorWithDefault {
-
-	public MaximumLengthAttributeConfigurationValidator(String field,
-			String defaultField) {
-		super(field, defaultField);
-	}
-
-	@Override
-	protected void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue) {
-		if (defaultValue.length() > configuration.get(field).asInt()) {
+	public void validate(List<ValidationError> errors,
+			JsonNode configuration, String value, Integer maxLength) {
+		if (value.length() > maxLength) {
 			addError(errors, "the default value is greater than maxlength");
 		}
 	}
 
-	@Override
-	protected AttributeConfigurationValidator createFieldValidator(String field) {
+	public AttributeConfigurationValidator createFieldValidator(String field) {
 		return new IntegerAttributeConfigurationValidator(field);
 	}
 }

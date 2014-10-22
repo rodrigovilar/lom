@@ -4,31 +4,21 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
-
 import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
 
-public class RegexAttributeConfigurationValidator extends
-		AttributeConfigurationValidatorWithDefault {
+public class RegexAttributeConfigurationValidator implements ValueValidator<String> {
 
-	public RegexAttributeConfigurationValidator(String field,
-			String defaultField) {
-		super(field, defaultField);
-	}
 
-	@Override
-	protected void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue) {
+	public void validate(List<ValidationError> errors,
+			JsonNode configuration, String value, String regexValue) {
 
-		String regexValue = configuration.get(field).asText();
-		if (!defaultValue.matches(regexValue)) {
+		if (!value.matches(regexValue)) {
 			addError(errors,
 					"the default value does not match regex configuration");
 		}
 	}
 
-	@Override
-	protected AttributeConfigurationValidator createFieldValidator(String field) {
+	public AttributeConfigurationValidator createFieldValidator(String field) {
 		return new StringAttributeConfigurationValidator(field);
 	}
 }

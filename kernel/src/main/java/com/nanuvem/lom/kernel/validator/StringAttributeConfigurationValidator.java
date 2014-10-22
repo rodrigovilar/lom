@@ -2,8 +2,6 @@ package com.nanuvem.lom.kernel.validator;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
-
 public class StringAttributeConfigurationValidator extends
 		AttributeTypeConfigurationValidator {
 
@@ -12,7 +10,7 @@ public class StringAttributeConfigurationValidator extends
 	}
 
 	@Override
-	public boolean validate(Attribute attribute, JsonNode configuration) {
+	public boolean validate(JsonNode configuration) {
 		if (configuration.has(super.field)) {
 			return configuration.get(field).isTextual();
 		}

@@ -38,6 +38,17 @@ public class AttributeServiceImpl {
 
 	private void validateCreate(Attribute attribute) {
 		this.validateExistingAttributeNotInClass(attribute);
+		defineAttributeSequenceNumber(attribute);
+
+		this.validateNameAttribute(attribute);
+
+		if (attribute.getType() == null) {
+			throw new MetadataException("The type of a Attribute is mandatory");
+		}
+		this.validateConfigurationAttribute(attribute);
+	}
+
+	private void defineAttributeSequenceNumber(Attribute attribute) {
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
 		if (attribute.getSequence() != null) {
@@ -53,17 +64,6 @@ public class AttributeServiceImpl {
 		} else {
 			attribute.setSequence(currentNumberOfAttributes + 1);
 		}
-
-		if (attribute.getName() == null || attribute.getName().isEmpty()) {
-			throw new MetadataException("The name of a Attribute is mandatory");
-		}
-
-		this.validateNameAttribute(attribute);
-
-		if (attribute.getType() == null) {
-			throw new MetadataException("The type of a Attribute is mandatory");
-		}
-		this.validateConfigurationAttribute(attribute);
 	}
 
 	private void validateNameAttribute(Attribute attribute) {
@@ -120,7 +120,7 @@ public class AttributeServiceImpl {
 				.name());
 		for (AttributeConfigurationValidator validator : deployer
 				.getValidators()) {
-			validator.validate(errors, attribute, jsonNode);
+			validator.validate(errors, jsonNode);
 		}
 
 		if (!errors.isEmpty()) {
