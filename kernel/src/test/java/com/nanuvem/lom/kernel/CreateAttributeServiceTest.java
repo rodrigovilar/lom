@@ -21,9 +21,6 @@ public class CreateAttributeServiceTest {
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
 		this.classService = serviceFactory.getClassService();
 		this.attributeService = serviceFactory.getAttributeService();
-
-		this.classService = serviceFactory.getClassService();
-		this.attributeService = serviceFactory.getAttributeService();
 	}
 
 	@Test
