@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidatorWithDefault;
 import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.IntAttributeConfigurationValidatorWithDefault;
 import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MinimumLengthAttributeConfigurationValidator;
@@ -18,10 +18,12 @@ public class LongTextAttributeTypeDeployer implements AttributeTypeDeployer {
 
 		validators.add(new StringAttributeConfigurationValidator(
 				DEFAULT_CONFIGURATION_NAME));
-		validators.add(new AttributeConfigurationValidatorWithDefault(
-				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME, new MinimumLengthAttributeConfigurationValidator()));
-		validators.add(new AttributeConfigurationValidatorWithDefault(
-				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME, new MaximumLengthAttributeConfigurationValidator()));
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
+				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
+				new MinimumLengthAttributeConfigurationValidator()));
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
+				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
+				new MaximumLengthAttributeConfigurationValidator()));
 		validators.add(new MinAndMaxConfigurationValidator(
 				MAXLENGTH_CONFIGURATION_NAME, MINLENGTH_CONFIGURATION_NAME));
 

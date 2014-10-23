@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidator;
-import com.nanuvem.lom.kernel.validator.AttributeConfigurationValidatorWithDefault;
 import com.nanuvem.lom.kernel.validator.BooleanAttributeConfigurationValidator;
+import com.nanuvem.lom.kernel.validator.IntAttributeConfigurationValidatorWithDefault;
 import com.nanuvem.lom.kernel.validator.MaximumLengthAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MaximumRepeatAttributeConfigurationValidator;
 import com.nanuvem.lom.kernel.validator.MinAndMaxConfigurationValidator;
@@ -20,28 +20,28 @@ public class PasswordAttributeTypeDeployer implements AttributeTypeDeployer {
 	public List<AttributeConfigurationValidator> getValidators() {
 		List<AttributeConfigurationValidator> validators = new ArrayList<AttributeConfigurationValidator>();
 
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MINUPPERS_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MinimumUppersAttributeConfigurationValidator()));
 
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MINNUMBERS_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MinimumNumbersAttributeConfigurationValidator()));
 
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MINSYMBOLS_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MinimumSymbolsAttributeConfigurationValidator()));
 
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MAXREPEAT_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MaximumRepeatAttributeConfigurationValidator()));
 
 		validators.add(new StringAttributeConfigurationValidator(
 				DEFAULT_CONFIGURATION_NAME));
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MINLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MinimumLengthAttributeConfigurationValidator()));
-		validators.add(new AttributeConfigurationValidatorWithDefault(
+		validators.add(new IntAttributeConfigurationValidatorWithDefault(
 				MAXLENGTH_CONFIGURATION_NAME, DEFAULT_CONFIGURATION_NAME,
 				new MaximumLengthAttributeConfigurationValidator()));
 		validators.add(new MinAndMaxConfigurationValidator(
