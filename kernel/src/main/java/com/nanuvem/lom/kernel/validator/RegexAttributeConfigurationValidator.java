@@ -1,16 +1,14 @@
 package com.nanuvem.lom.kernel.validator;
 
-import java.util.List;
-
-import org.codehaus.jackson.JsonNode;
-
 import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidator.addError;
+
+import java.util.List;
 
 public class RegexAttributeConfigurationValidator implements ValueValidator<String> {
 
 
 	public void validate(List<ValidationError> errors,
-			JsonNode configuration, String value, String regexValue) {
+			String value, String regexValue) {
 
 		if (!value.matches(regexValue)) {
 			addError(errors,

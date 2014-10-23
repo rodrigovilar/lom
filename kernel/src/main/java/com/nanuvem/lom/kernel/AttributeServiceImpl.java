@@ -45,7 +45,7 @@ public class AttributeServiceImpl {
 		if (attribute.getType() == null) {
 			throw new MetadataException("The type of a Attribute is mandatory");
 		}
-		this.validateConfigurationAttribute(attribute);
+		this.validateAttributeConfiguration(attribute);
 	}
 
 	private void defineAttributeSequenceNumber(Attribute attribute) {
@@ -88,7 +88,7 @@ public class AttributeServiceImpl {
 		return null;
 	}
 
-	private void validateConfigurationAttribute(Attribute attribute) {
+	private void validateAttributeConfiguration(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
 			JsonNode jsonNode = JsonNodeUtil.validate(configuration,
@@ -221,7 +221,7 @@ public class AttributeServiceImpl {
 		this.validateUpdateSequence(attribute);
 		this.validateUpdateType(attribute);
 		this.validateExistingAttributeNotInClassOnUpdate(attribute);
-		this.validateConfigurationAttribute(attribute);
+		this.validateAttributeConfiguration(attribute);
 
 		return this.attributeDao.update(attribute);
 	}

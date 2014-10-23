@@ -4,12 +4,10 @@ import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidat
 
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
-
 public class MinimumUppersAttributeConfigurationValidator implements ValueValidator<Integer> {
 
 	public void validate(List<ValidationError> errors,
-			JsonNode configuration, String value, Integer minUppers) {
+			String value, Integer minUppers) {
 
 		int uppercaseCharacterCounter = 0;
 		for (int i = 0; i < value.length(); i++) {

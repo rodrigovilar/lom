@@ -6,12 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-
 public class MaximumRepeatAttributeConfigurationValidator implements ValueValidator<Integer> {
 
 	public void validate(List<ValidationError> errors,
-			JsonNode configuration, String value, Integer maxRepeat) {
+			String value, Integer maxRepeat) {
 
 		Map<String, Integer> mapCounter = new HashMap<String, Integer>();
 		int characterCounter = 0;

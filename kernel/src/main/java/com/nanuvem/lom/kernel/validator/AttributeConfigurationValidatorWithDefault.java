@@ -29,8 +29,8 @@ public abstract class AttributeConfigurationValidatorWithDefault<T> implements
 				String defaultValue = configuration.get(defaultField).asText();
 
 				T configurationValue = getConfigurationValue(configuration);
-				valueValidator.validate(errors, configuration,
-						defaultValue, configurationValue);
+				valueValidator.validate(errors, defaultValue,
+						configurationValue);
 			}
 		}
 	}
