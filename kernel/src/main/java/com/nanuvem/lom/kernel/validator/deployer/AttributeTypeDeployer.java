@@ -22,6 +22,10 @@ public interface AttributeTypeDeployer {
 
 	List<AttributeConfigurationValidator> getValidators();
 
+	/**
+	 * Returns true when this attribute type deployer accepts
+	 * the 'fieldName' configuration field 
+	 */
 	boolean containsConfigurationField(String fieldName);
 	
 	Class<?> getAttributeClass();

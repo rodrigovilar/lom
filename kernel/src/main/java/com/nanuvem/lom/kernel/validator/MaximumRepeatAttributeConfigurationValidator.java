@@ -6,41 +6,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
+public class MaximumRepeatAttributeConfigurationValidator implements ValueValidator<Integer> {
 
-import com.nanuvem.lom.kernel.Attribute;
-
-public class MaximumRepeatAttributeConfigurationValidator extends
-		AttributeConfigurationValidatorWithDefault {
-
-	public MaximumRepeatAttributeConfigurationValidator(String field,
-			String defaultField) {
-		super(field, defaultField);
-	}
-
-	@Override
-	protected void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue) {
+	public void validate(List<ValidationError> errors,
+			String value, Integer maxRepeat) {
 
 		Map<String, Integer> mapCounter = new HashMap<String, Integer>();
 		int characterCounter = 0;
 
-		for (int i = 0; i < defaultValue.toCharArray().length; i++) {
-			Integer count = mapCounter.get(String.valueOf(defaultValue
+		for (int i = 0; i < value.toCharArray().length; i++) {
+			Integer count = mapCounter.get(String.valueOf(value
 					.toCharArray()[i]));
 			if (count == null) {
 				count = new Integer(-1);
 			}
 			count++;
 			mapCounter
-					.put(String.valueOf(defaultValue.toCharArray()[i]), count);
+					.put(String.valueOf(value.toCharArray()[i]), count);
 
 			if (characterCounter < count) {
 				characterCounter = count;
 			}
 		}
 
-		int maxRepeat = configuration.get(field).asInt();
 		if (characterCounter > maxRepeat) {
 			String messagePlural = characterCounter > 1 ? " more than "
 					+ (maxRepeat + 1) + " " : " ";
@@ -49,8 +37,7 @@ public class MaximumRepeatAttributeConfigurationValidator extends
 		}
 	}
 
-	@Override
-	protected AttributeConfigurationValidator createFieldValidator(String field) {
+	public AttributeConfigurationValidator createFieldValidator(String field) {
 		return new IntegerAttributeConfigurationValidator(field);
 	}
 

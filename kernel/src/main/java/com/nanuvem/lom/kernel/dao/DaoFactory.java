@@ -7,7 +7,7 @@ public interface DaoFactory {
 	AttributeDao createAttributeDao();
 
 	InstanceDao createInstanceDao();
-
+	
 	AttributeValueDao createAttributeValueDao();
 
 }

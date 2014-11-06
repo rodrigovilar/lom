@@ -26,10 +26,11 @@ public class AttributeServiceImpl {
 
 	private final String PREFIX_EXCEPTION_MESSAGE_CONFIGURATION = "Invalid configuration for attribute";
 
-	private Deployers deployers; 
-	
 
-	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService, Deployers deployers) {
+	private Deployers deployers;
+
+	AttributeServiceImpl(DaoFactory dao, ClassServiceImpl classService,
+			Deployers deployers) {
 		this.classService = classService;
 		this.deployers = deployers;
 		this.attributeDao = dao.createAttributeDao();
@@ -38,6 +39,17 @@ public class AttributeServiceImpl {
 
 	private void validateCreate(Attribute attribute) {
 		this.validateExistingAttributeNotInClass(attribute);
+		defineAttributeSequenceNumber(attribute);
+
+		this.validateNameAttribute(attribute);
+
+		if (attribute.getType() == null) {
+			throw new MetadataException("The type of a Attribute is mandatory");
+		}
+		this.validateAttributeConfiguration(attribute);
+	}
+
+	private void defineAttributeSequenceNumber(Attribute attribute) {
 		int currentNumberOfAttributes = attribute.getClazz().getAttributes()
 				.size();
 		if (attribute.getSequence() != null) {
@@ -53,17 +65,6 @@ public class AttributeServiceImpl {
 		} else {
 			attribute.setSequence(currentNumberOfAttributes + 1);
 		}
-
-		if (attribute.getName() == null || attribute.getName().isEmpty()) {
-			throw new MetadataException("The name of a Attribute is mandatory");
-		}
-
-		this.validateNameAttribute(attribute);
-
-		if (attribute.getType() == null) {
-			throw new MetadataException("The type of a Attribute is mandatory");
-		}
-		this.validateConfigurationAttribute(attribute);
 	}
 
 	private void validateNameAttribute(Attribute attribute) {
@@ -88,7 +89,7 @@ public class AttributeServiceImpl {
 		return null;
 	}
 
-	private void validateConfigurationAttribute(Attribute attribute) {
+	private void validateAttributeConfiguration(Attribute attribute) {
 		String configuration = attribute.getConfiguration();
 		if (configuration != null && !configuration.isEmpty()) {
 			JsonNode jsonNode = JsonNodeUtil.validate(configuration,
@@ -120,7 +121,7 @@ public class AttributeServiceImpl {
 				.name());
 		for (AttributeConfigurationValidator validator : deployer
 				.getValidators()) {
-			validator.validate(errors, attribute, jsonNode);
+			validator.validate(errors, jsonNode);
 		}
 
 		if (!errors.isEmpty()) {
@@ -221,7 +222,7 @@ public class AttributeServiceImpl {
 		this.validateUpdateSequence(attribute);
 		this.validateUpdateType(attribute);
 		this.validateExistingAttributeNotInClassOnUpdate(attribute);
-		this.validateConfigurationAttribute(attribute);
+		this.validateAttributeConfiguration(attribute);
 
 		return this.attributeDao.update(attribute);
 	}

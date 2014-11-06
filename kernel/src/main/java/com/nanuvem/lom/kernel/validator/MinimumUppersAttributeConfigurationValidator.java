@@ -4,41 +4,29 @@ import static com.nanuvem.lom.kernel.validator.AttributeTypeConfigurationValidat
 
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
+public class MinimumUppersAttributeConfigurationValidator implements ValueValidator<Integer> {
 
-import com.nanuvem.lom.kernel.Attribute;
-
-public class MinimumUppersAttributeConfigurationValidator extends
-		AttributeConfigurationValidatorWithDefault {
-
-	public MinimumUppersAttributeConfigurationValidator(String field,
-			String defaultField) {
-		super(field, defaultField);
-	}
-
-	@Override
-	protected void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue) {
+	public void validate(List<ValidationError> errors,
+			String value, Integer minUppers) {
 
 		int uppercaseCharacterCounter = 0;
-		for (int i = 0; i < defaultValue.length(); i++) {
-			if (defaultValue.toCharArray()[i] == Character
-					.toUpperCase(defaultValue.toCharArray()[i])) {
+		for (int i = 0; i < value.length(); i++) {
+			if (value.toCharArray()[i] == Character
+					.toUpperCase(value.toCharArray()[i])) {
 				uppercaseCharacterCounter++;
 			}
 		}
-		if (uppercaseCharacterCounter < configuration.get(field).asInt()) {
-			String messagePlural = configuration.get(field).asInt() > 1 ? "s"
+		if (uppercaseCharacterCounter < minUppers) {
+			String messagePlural = minUppers > 1 ? "s"
 					: "";
 
 			addError(errors, "the default value must have at least "
-					+ configuration.get(field).asInt()
+					+ minUppers
 					+ " upper case character" + messagePlural);
 		}
 	}
 
-	@Override
-	protected AttributeConfigurationValidator createFieldValidator(String field) {
+	public AttributeConfigurationValidator createFieldValidator(String field) {
 		return new IntegerAttributeConfigurationValidator(field);
 	}
 
