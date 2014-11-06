@@ -4,37 +4,37 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 
-import com.nanuvem.lom.kernel.Attribute;
-
-public abstract class AttributeConfigurationValidatorWithDefault implements
+public abstract class AttributeConfigurationValidatorWithDefault<T> implements
 		AttributeConfigurationValidator {
 
-	protected AttributeConfigurationValidator validator;
+	protected ValueValidator<T> valueValidator;
 	protected String defaultField;
 	protected String field;
 
 	public AttributeConfigurationValidatorWithDefault(String field,
-			String defaultField) {
+			String defaultField, ValueValidator<T> valueValidator) {
 		this.field = field;
 		this.defaultField = defaultField;
-		this.validator = createFieldValidator(field);
+		this.valueValidator = valueValidator;
 	}
 
-	protected abstract AttributeConfigurationValidator createFieldValidator(
-			String field);
+	public void validate(List<ValidationError> errors, JsonNode configuration) {
+		AttributeConfigurationValidator fieldValidator = valueValidator
+				.createFieldValidator(field);
+		fieldValidator.validate(errors, configuration);
 
-	public void validate(List<ValidationError> errors, Attribute attribute,
-			JsonNode configuration) {
-
-		this.validator.validate(errors, attribute, configuration);
 		if (configuration.has(field)) {
 			if (configuration.has(defaultField)) {
+
 				String defaultValue = configuration.get(defaultField).asText();
-				validateDefault(errors, attribute, configuration, defaultValue);
+
+				T configurationValue = getConfigurationValue(configuration);
+				valueValidator.validate(errors, defaultValue,
+						configurationValue);
 			}
 		}
 	}
 
-	protected abstract void validateDefault(List<ValidationError> errors,
-			Attribute attribute, JsonNode configuration, String defaultValue);
+	protected abstract T getConfigurationValue(JsonNode configuration);
+
 }

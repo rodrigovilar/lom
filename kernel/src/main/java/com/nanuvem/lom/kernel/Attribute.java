@@ -134,4 +134,5 @@ public class Attribute implements Serializable {
 	public void setClazz(Class clazz) {
 		this.clazz = clazz;
 	}
+
 }

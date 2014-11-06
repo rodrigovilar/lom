@@ -21,9 +21,6 @@ public class CreateAttributeServiceTest {
 		ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
 		this.classService = serviceFactory.getClassService();
 		this.attributeService = serviceFactory.getAttributeService();
-
-		this.classService = serviceFactory.getClassService();
-		this.attributeService = serviceFactory.getAttributeService();
 	}
 
 	@Test
@@ -62,7 +59,7 @@ public class CreateAttributeServiceTest {
 
 		expectExceptionOnCreateInvalidAttribute(attributeService, "abc.a", 1,
 				"", AttributeType.TEXT, "{\"mandatory\":true}",
-				"The name of a Attribute is mandatory");
+				"The name of an Attribute is mandatory");
 
 		// It is impossible to make a test case with the AttributeType being
 		// equal to an empty String. Attribute.type is defined as enum
