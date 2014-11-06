@@ -2,6 +2,7 @@ package com.nanuvem.lom.kernel;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Attribute implements Serializable {
 
 	private Long id;

@@ -141,7 +141,7 @@ public class ClassServiceTest {
 	@Test
 	public void renameCausingTwoClassesWithSameNameInDifferentPackages() {
 		Class ea = this.createAndSaveOneClass("a", "aaa");
-		Class eb = this.createAndSaveOneClass("b", "bbb");
+		this.createAndSaveOneClass("b", "bbb");
 		service.update("c", "bbb", ea.getId(), ea.getVersion());
 	}
 
@@ -289,7 +289,7 @@ public class ClassServiceTest {
 		expectExceptionOnInvalidClassUpdateUsingId("a", "aaa", clazz2.getId(),
 				null, "The version of an Class is mandatory on update");
 
-		Class clazz3 = this.createAndSaveOneClass("a", "aaa");
+		this.createAndSaveOneClass("a", "aaa");
 		expectExceptionOnInvalidClassUpdateUsingId("a", "aaa", (Long) null,
 				null, "The version and id of an Class are mandatory on update");
 

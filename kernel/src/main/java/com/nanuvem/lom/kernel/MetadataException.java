@@ -1,9 +1,10 @@
 package com.nanuvem.lom.kernel;
 
+@SuppressWarnings("serial")
 public class MetadataException extends RuntimeException {
 
 	public MetadataException() {
-		super("");
+		super();
 	}
 
 	public MetadataException(String msg) {
